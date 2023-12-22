@@ -5,7 +5,7 @@ VisualStudioVersion = 17.8.34112.27
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Win11ThemeTest", "Win11ThemeTest\Win11ThemeTest.csproj", "{38873268-98C3-4090-B1B7-AE90E77C0589}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Win11ThemeSampleApp", "Winn11ThemeSampleApp\Win11ThemeSampleApp.csproj", "{B46630F2-08F2-4883-B581-9AB61DF68384}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Win11ThemeSampleApp", "Win11ThemeSampleApp\Win11ThemeSampleApp.csproj", "{B46630F2-08F2-4883-B581-9AB61DF68384}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
