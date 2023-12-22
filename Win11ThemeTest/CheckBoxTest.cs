@@ -15,7 +15,7 @@ namespace Win11ThemeTest
         [Test]
         public void CheckBoxCheckedTest()
         {
-            var app = FlaUI.Core.Application.Launch(@"..\\..\\..\\..\\..\\Win11ThemeSampleApp\\bin\\x64\\Debug\\net9.0-windows\\win-x64\\Win11ThemeSampleApp.exe");
+            var app = FlaUI.Core.Application.Launch(@"..\\..\\..\\..\\Win11ThemeSampleApp\\bin\\x64\\Debug\\net9.0-windows\\win-x64\\Win11ThemeSampleApp.exe");
             using (var automation = new UIA3Automation())
             {
                 var window = app.GetMainWindow(automation);
