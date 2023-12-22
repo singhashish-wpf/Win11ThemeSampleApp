@@ -1,0 +1,41 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.8.34112.27
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Win11ThemeTest", "Win11ThemeTest\Win11ThemeTest.csproj", "{38873268-98C3-4090-B1B7-AE90E77C0589}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Win11ThemeSampleApp", "Winn11ThemeSampleApp\Win11ThemeSampleApp.csproj", "{B46630F2-08F2-4883-B581-9AB61DF68384}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Debug|x64 = Debug|x64
+		Release|Any CPU = Release|Any CPU
+		Release|x64 = Release|x64
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{38873268-98C3-4090-B1B7-AE90E77C0589}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{38873268-98C3-4090-B1B7-AE90E77C0589}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{38873268-98C3-4090-B1B7-AE90E77C0589}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{38873268-98C3-4090-B1B7-AE90E77C0589}.Debug|x64.Build.0 = Debug|Any CPU
+		{38873268-98C3-4090-B1B7-AE90E77C0589}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{38873268-98C3-4090-B1B7-AE90E77C0589}.Release|Any CPU.Build.0 = Release|Any CPU
+		{38873268-98C3-4090-B1B7-AE90E77C0589}.Release|x64.ActiveCfg = Release|Any CPU
+		{38873268-98C3-4090-B1B7-AE90E77C0589}.Release|x64.Build.0 = Release|Any CPU
+		{B46630F2-08F2-4883-B581-9AB61DF68384}.Debug|Any CPU.ActiveCfg = Debug|x64
+		{B46630F2-08F2-4883-B581-9AB61DF68384}.Debug|Any CPU.Build.0 = Debug|x64
+		{B46630F2-08F2-4883-B581-9AB61DF68384}.Debug|x64.ActiveCfg = Debug|x64
+		{B46630F2-08F2-4883-B581-9AB61DF68384}.Debug|x64.Build.0 = Debug|x64
+		{B46630F2-08F2-4883-B581-9AB61DF68384}.Release|Any CPU.ActiveCfg = Release|x64
+		{B46630F2-08F2-4883-B581-9AB61DF68384}.Release|Any CPU.Build.0 = Release|x64
+		{B46630F2-08F2-4883-B581-9AB61DF68384}.Release|x64.ActiveCfg = Release|x64
+		{B46630F2-08F2-4883-B581-9AB61DF68384}.Release|x64.Build.0 = Release|x64
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {BB157467-1328-47B5-BBBD-5D0B1CEE020E}
+	EndGlobalSection
+EndGlobal
