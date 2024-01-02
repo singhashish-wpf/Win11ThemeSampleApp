@@ -7,10 +7,20 @@
         mc:Ignorable="d"
         Title="MainWindow" Height="450" Width="800">
     <Grid>
-        <StackPanel Orientation="Vertical">
-            <Button Content="Click Me" Appearance="Light"/>
-            <CheckBox Content="Test Checkbox"/>
-            <RadioButton>Hello World</RadioButton>
+        <StackPanel Orientation="Vertical" Margin="10">
+            <GroupBox Header="Group 1" Margin="10">
+                <StackPanel>
+                    <RadioButton Content="RadioButton1" Name="RadioButton1_1" GroupName="Group1" />
+                    <RadioButton Content="RadioButton2" Name="RadioButton1_2" GroupName="Group1" />
+                    <RadioButton Content="RadioButton3" Name="RadioButton1_3" GroupName="Group1" IsEnabled="false" />
+                </StackPanel>
+            </GroupBox>
+
+            <GroupBox Header="Group 2" Margin="10">
+                <StackPanel Name="getRadioButtons">
+                    <!-- Getting radio buttons from code behind -->
+                </StackPanel>
+            </GroupBox>
         </StackPanel>
     </Grid>
 </Window>
