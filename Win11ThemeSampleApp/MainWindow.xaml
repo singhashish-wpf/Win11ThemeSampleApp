@@ -8,6 +8,16 @@
         Title="MainWindow" Height="450" Width="800">
     <Grid>
         <StackPanel Orientation="Vertical">
+            <Label Content="Demo label" Height="30" Width="100" IsEnabled="False" >
+                <Label.ToolTip>
+                    <ToolTip>
+                        <TextBlock>
+                            Demo help text
+                        </TextBlock>
+                    </ToolTip>
+                </Label.ToolTip>
+            </Label>
+            
             <Button Content="Click Me" Appearance="Light"/>
             <CheckBox Content="Test Checkbox"/>
             <RadioButton>Hello World</RadioButton>
