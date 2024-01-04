@@ -13,6 +13,10 @@
                 <ResourceDictionary Source="pack://application:,,,/PresentationFramework.Win11;component/styles/button.xaml" />
                 <ResourceDictionary Source="pack://application:,,,/PresentationFramework.Win11;component/styles/checkbox.xaml" />
                 <ResourceDictionary Source="pack://application:,,,/PresentationFramework.Win11;component/styles/RadioButton.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/PresentationFramework.Win11;component/styles/textblock.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/PresentationFramework.Win11;component/styles/progressbar.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/PresentationFramework.Win11;component/styles/label.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/PresentationFramework.Win11;component/styles/statusbar.xaml" />
 
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
