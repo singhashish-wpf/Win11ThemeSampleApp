@@ -17,6 +17,21 @@
                         <ToolTip Content="Hello World"/>
                     </Button.ToolTip>
                 </Button>
+                <StackPanel >
+                    <RadioButton
+                    Content="Option 1"
+                    FlowDirection="LeftToRight"
+                    GroupName="radio_group_two"
+                    IsChecked="True" />
+                    <RadioButton
+                    Content="Option 2"
+                    FlowDirection="LeftToRight"
+                    GroupName="radio_group_two" />
+                    <RadioButton
+                    Content="Option 3"
+                    FlowDirection="LeftToRight"
+                    GroupName="radio_group_two" />
+                </StackPanel>
                 <TextBox />
                 <ComboBox
     MinWidth="200"
@@ -29,6 +44,7 @@
                 </ComboBox>
                 <TextBlock Name="abc">Standard Text Block for larger texts.</TextBlock>
                 <CheckBox Content="Test Checkbox"/>
+                <CheckBox IsThreeState="True" Content="Tri-State Checkbox"/>
                 <Calendar ></Calendar>
                 <Expander Header="Hey there I am an expander" />
                 <Slider />
