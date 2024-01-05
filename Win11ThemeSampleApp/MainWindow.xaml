@@ -7,10 +7,85 @@
         mc:Ignorable="d"
         Title="MainWindow" Height="450" Width="800">
     <Grid>
-        <StackPanel Orientation="Vertical">
-            <Button Content="Click Me" Appearance="Light"/>
-            <CheckBox Content="Test Checkbox"/>
-            <RadioButton>Hello World</RadioButton>
-        </StackPanel>
+        <PassiveScrollViewer>
+            <StackPanel Orientation="Vertical">
+                <Button Content="Click Me">
+                    <Button.Icon>
+                        <SymbolIcon Symbol="Home24"/>
+                    </Button.Icon>
+                    <Button.ToolTip>
+                        <ToolTip Content="Hello World"/>
+                    </Button.ToolTip>
+                </Button>
+                <TextBox />
+                <ComboBox
+    MinWidth="200"
+    HorizontalAlignment="Left"
+    SelectedIndex="0">
+                    <ComboBoxItem Content="Blue" />
+                    <ComboBoxItem Content="Green" />
+                    <ComboBoxItem Content="Red" />
+                    <ComboBoxItem Content="Yellow" />
+                </ComboBox>
+                <TextBlock Name="abc">Standard Text Block for larger texts.</TextBlock>
+                <CheckBox Content="Test Checkbox"/>
+                <Calendar ></Calendar>
+                <Expander Header="Hey there I am an expander" />
+                <Slider />
+                <ProgressBar Value="35"/>
+                <ProgressBar IsIndeterminate="True"/>
+
+                <ListBox>
+                    <ListBoxItem>WWE</ListBoxItem>
+                    <ListBoxItem>Windows</ListBoxItem>
+                    <ListBoxItem>MXP</ListBoxItem>
+                    <ListBoxItem>Copilot</ListBoxItem>
+                </ListBox>
+                <TabControl >
+                    <TabItem Header="Tab 1">
+                        <TextBlock>Tab 1</TextBlock>
+                    </TabItem>
+                    <TabItem Header="Tab 2">
+                        <TextBlock>Tab 2</TextBlock>
+                    </TabItem>
+                </TabControl>
+                <Menu >
+                    <MenuItem Header="File"
+                            >
+                        <MenuItem.Icon>
+                            <SymbolIcon Symbol="Save24"/>
+                        </MenuItem.Icon>
+                        
+                        <MenuItem Header="Edit" />
+                        <MenuItem Header="Open" />
+                        <Separator />
+
+                        <MenuItem Header="Save" />
+                    </MenuItem>
+                </Menu>
+                <TreeView >
+                    <TreeViewItem Header="Pankaj">
+                        <TreeViewItem Header="Ashish"/>
+                        <TreeViewItem Header="Dipesh"/>
+                        <TreeViewItem Header="Anjali"/>
+                        <TreeViewItem Header="Kuldeep"/>
+                        <TreeViewItem Header="Harshit"/>
+                        <TreeViewItem Header="Rishabh"/>
+                    </TreeViewItem>
+                    <TreeViewItem Header="Madhuvan">
+                        <TreeViewItem Header="Sachin"/>
+                        <TreeViewItem Header="Pankaj"/>
+                    </TreeViewItem>
+                </TreeView>
+                <DataGrid />
+                <RichTextBox />
+                <PasswordBox />
+                <ScrollViewer VerticalScrollBarVisibility="Visible" Height="200" Width="300">
+                    <TextBlock TextWrapping="Wrap">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec euismod, nisl eget aliquam ultricies, nunc nisl aliquet nunc, eget aliquam nisl nisl eget nisl. Donec euismod, nisl eget aliquam ultricies, nunc nisl aliquet nunc, eget aliquam nisl nisl eget nisl. Donec euismod, nisl eget aliquam ultricies, nunc nisl aliquet nunc, eget aliquam nisl nisl eget nisl. Donec euismod, nisl eget aliquam ultricies, nunc nisl aliquet nunc, eget aliquam nisl nisl eget nisl. Donec euismod, nisl eget aliquam ultricies, nunc nisl aliquet nunc, eget aliquam nisl nisl eget nisl. Donec euismod, nisl eget aliquam ultricies, nunc nisl aliquet nunc, eget aliquam nisl nisl eget nisl. Donec euismod, nisl eget aliquam ultricies, nunc nisl aliquet nunc, eget aliquam nisl nisl eget nisl. Donec euismod, nisl eget aliquam ultricies, nunc nisl aliquet nunc, eget aliquam nisl nisl eget nisl.</TextBlock>
+                </ScrollViewer>
+                <DatePicker />
+                <ToggleButton  Content="Standard Toggle Button"/>
+            </StackPanel>
+        </PassiveScrollViewer>
     </Grid>
 </Window>
