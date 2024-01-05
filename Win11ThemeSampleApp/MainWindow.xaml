@@ -6,6 +6,7 @@
         xmlns:local="clr-namespace:Win11ThemeSampleApp"
         mc:Ignorable="d"
         Title="MainWindow" Height="450" Width="800">
+
     <Grid>
         <PassiveScrollViewer>
             <StackPanel Orientation="Vertical">
@@ -95,14 +96,17 @@
                         <TreeViewItem Header="Pankaj"/>
                     </TreeViewItem>
                 </TreeView>
-                <DataGrid />
+
+
+                <DataGrid x:Name="dgSimple"/>
+
                 <RichTextBox />
                 <PasswordBox />
                 <ScrollViewer VerticalScrollBarVisibility="Visible" Height="200" Width="300">
                     <TextBlock TextWrapping="Wrap">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec euismod, nisl eget aliquam ultricies, nunc nisl aliquet nunc, eget aliquam nisl nisl eget nisl. Donec euismod, nisl eget aliquam ultricies, nunc nisl aliquet nunc, eget aliquam nisl nisl eget nisl. Donec euismod, nisl eget aliquam ultricies, nunc nisl aliquet nunc, eget aliquam nisl nisl eget nisl. Donec euismod, nisl eget aliquam ultricies, nunc nisl aliquet nunc, eget aliquam nisl nisl eget nisl. Donec euismod, nisl eget aliquam ultricies, nunc nisl aliquet nunc, eget aliquam nisl nisl eget nisl. Donec euismod, nisl eget aliquam ultricies, nunc nisl aliquet nunc, eget aliquam nisl nisl eget nisl. Donec euismod, nisl eget aliquam ultricies, nunc nisl aliquet nunc, eget aliquam nisl nisl eget nisl. Donec euismod, nisl eget aliquam ultricies, nunc nisl aliquet nunc, eget aliquam nisl nisl eget nisl.</TextBlock>
                 </ScrollViewer>
                 <DatePicker />
-                <ToggleButton  Content="Standard Toggle Button"/>
+                <ToggleButton  Content="Switch Theme" Click="ToggleButton_Click"/>
             </StackPanel>
         </PassiveScrollViewer>
     </Grid>
