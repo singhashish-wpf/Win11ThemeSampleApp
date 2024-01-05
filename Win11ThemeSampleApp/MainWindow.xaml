@@ -17,7 +17,8 @@
                         <ToolTip Content="Hello World"/>
                     </Button.ToolTip>
                 </Button>
-                <StackPanel >
+                <GroupBox Header="Radio Buttons Box">
+                    <StackPanel>
                     <RadioButton
                     Content="Option 1"
                     FlowDirection="LeftToRight"
@@ -31,7 +32,8 @@
                     Content="Option 3"
                     FlowDirection="LeftToRight"
                     GroupName="radio_group_two" />
-                </StackPanel>
+                    </StackPanel>
+                </GroupBox>
                 <TextBox />
                 <ComboBox
     MinWidth="200"
