@@ -7,8 +7,8 @@
         <ResourceDictionary>
 
             <ResourceDictionary.MergedDictionaries>
-                <x:ThemesDictionary  Theme="Light"/>
-                <x:ControlsDictionary />
+                <ThemesDictionary  Theme="Light"/>
+                <ControlsDictionary />
 
             </ResourceDictionary.MergedDictionaries>
             

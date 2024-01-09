@@ -13,4 +13,12 @@
 		<WpfRepoRoot>D:\repos\Dec2023\ashish\wpf</WpfRepoRoot>
 	</PropertyGroup>
 	<Import Project="$(WpfRepoRoot)\eng\wpf-debug.targets" />
+	<ItemGroup>
+	  <None Remove="Image2.png" />
+	</ItemGroup>
+	<ItemGroup>
+	  <Content Include="Image2.png">
+	    <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+	  </Content>
+	</ItemGroup>
 </Project>

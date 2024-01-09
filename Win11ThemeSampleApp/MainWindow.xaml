@@ -3,14 +3,33 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:Win11ThemeSampleApp"
+        xmlns:local="clr-namespace:Win11ThemeSampleApp" xmlns:wpf="http://schemas.microsoft.com/netfx/2007/xaml/presentation"
         mc:Ignorable="d"
         Title="MainWindow" Height="450" Width="800">
 
     <Grid>
         <PassiveScrollViewer>
             <StackPanel Orientation="Vertical">
-                <Button Content="Click Me">
+                    <Button Content="Click Me">
+                        <Button.Icon>
+                            <SymbolIcon Symbol="Home24"/>
+                        </Button.Icon>
+                        <Button.ToolTip>
+                            <ToolTip Content="Hello World"/>
+                        </Button.ToolTip>
+                    </Button>
+                <Button Content="FontIcon Button">
+                    <Button.Icon>
+                        <FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xE7BA;"/>
+                    </Button.Icon>
+                </Button>
+                <Button Content="ImageIcon Button" >
+                    <Button.Icon>
+                        <ImageIcon Source="pack://application:,,,/Image2.png"/>
+                    </Button.Icon>
+
+                </Button>
+                <Button Content="Click Me" Appearance="Primary">
                     <Button.Icon>
                         <SymbolIcon Symbol="Home24"/>
                     </Button.Icon>
@@ -18,28 +37,23 @@
                         <ToolTip Content="Hello World"/>
                     </Button.ToolTip>
                 </Button>
-                <GroupBox Header="Radio Buttons Box">
-                    <StackPanel>
-                    <RadioButton
+                <StackPanel>
+                        <RadioButton
                     Content="Option 1"
                     FlowDirection="LeftToRight"
                     GroupName="radio_group_two"
                     IsChecked="True" />
-                    <RadioButton
+                        <RadioButton
                     Content="Option 2"
                     FlowDirection="LeftToRight"
                     GroupName="radio_group_two" />
-                    <RadioButton
+                        <RadioButton
                     Content="Option 3"
                     FlowDirection="LeftToRight"
                     GroupName="radio_group_two" />
                     </StackPanel>
-                </GroupBox>
-                <TextBox />
-                <ComboBox
-    MinWidth="200"
-    HorizontalAlignment="Left"
-    SelectedIndex="0">
+                <TextBox  PlaceholderText="Enter some Text" Icon="Home24" IconPlacement="Left"/>
+                <ComboBox MinWidth="200" HorizontalAlignment="Left" SelectedIndex="0">
                     <ComboBoxItem Content="Blue" />
                     <ComboBoxItem Content="Green" />
                     <ComboBoxItem Content="Red" />
@@ -74,7 +88,7 @@
                         <MenuItem.Icon>
                             <SymbolIcon Symbol="Save24"/>
                         </MenuItem.Icon>
-                        
+
                         <MenuItem Header="Edit" />
                         <MenuItem Header="Open" />
                         <Separator />
