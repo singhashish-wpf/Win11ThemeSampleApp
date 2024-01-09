@@ -52,7 +52,11 @@
                     FlowDirection="LeftToRight"
                     GroupName="radio_group_two" />
                     </StackPanel>
-                <TextBox  PlaceholderText="Enter some Text" Icon="Home24" IconPlacement="Left"/>
+                <TextBox  PlaceholderText="Enter some Text" IconPlacement="Right">
+                    <TextBox.Icon>
+                        <SymbolIcon Symbol="Search24"/>
+                    </TextBox.Icon>
+                </TextBox>
                 <ComboBox MinWidth="200" HorizontalAlignment="Left" SelectedIndex="0">
                     <ComboBoxItem Content="Blue" />
                     <ComboBoxItem Content="Green" />
