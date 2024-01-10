@@ -50,8 +50,8 @@ namespace Win11ThemeSampleApp
 
     internal class User
     {
-        public int Id { get; internal set; }
-        public string Name { get; internal set; }
-        public DateTime Birthday { get; internal set; }
+        public int Id { get; set; }
+        public string Name { get; set; }
+        public DateTime Birthday { get; set; }
     }
 }
