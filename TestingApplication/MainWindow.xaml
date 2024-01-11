@@ -1,0 +1,17 @@
+﻿<Window x:Class="TestingApplication.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:TestingApplication"
+        mc:Ignorable="d"
+        Title="MainWindow" Height="450" Width="800">
+    <Grid>
+        <StackPanel Margin="10">
+            <Button Content="Click Me" Click="clickEvent" Width="200" />
+            <TextBlock Text="Loren Ipsum Dolor Sit" />
+            <Slider  />
+            <TextBox Text="TextBox Content..." />
+        </StackPanel>
+    </Grid>
+</Window>

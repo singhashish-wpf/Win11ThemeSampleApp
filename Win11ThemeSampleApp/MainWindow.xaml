@@ -96,17 +96,29 @@
                     </TabItem>
                 </TabControl>
                 <Menu >
-                    <MenuItem Header="File"
-                            >
+                    <MenuItem Header="File">
                         <MenuItem.Icon>
                             <SymbolIcon Symbol="Save24"/>
                         </MenuItem.Icon>
-
-                        <MenuItem Header="Edit" />
+                        <MenuItem Header="New" />
+                        <MenuItem Header="New Window" />
                         <MenuItem Header="Open" />
-                        <Separator />
-
                         <MenuItem Header="Save" />
+                        <MenuItem Header="Save As" />
+                        <Separator />
+                        <MenuItem Header="Exit" />
+                    </MenuItem>
+                    <MenuItem Header="Edit">
+                        <MenuItem Header="Undo" />
+                        <MenuItem Header="Cut" />
+                        <MenuItem Header="Copy" />
+                        <MenuItem Header="Paste" />
+                        <Separator />
+                        <MenuItem Header="Search with browser" />
+                        <MenuItem Header="Find" />
+                        <MenuItem Header="Find next" />
+                        <Separator />
+                        <MenuItem Header="Select All" />
                     </MenuItem>
                 </Menu>
                 <TreeView >
