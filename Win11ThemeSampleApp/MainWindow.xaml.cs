@@ -15,26 +15,30 @@ namespace Win11ThemeSampleApp
     /// <summary>
     /// Interaction logic for MainWindow.xaml
     /// </summary>
-    public partial class MainWindow : Window
+    public partial class MainWindow : FluentWindow
     {
         public MainWindow()
         {
             InitializeComponent();
             SetupDatagrid();
+            SystemThemeWatcher.Watch(this);
         }
 
         private void ToggleButton_Click(object sender, RoutedEventArgs e)
         {
-            ApplicationTheme theme = ApplicationThemeManager.GetAppTheme();
-            if (theme == ApplicationTheme.Light)
-            {
-                ApplicationThemeManager.Apply(ApplicationTheme.Dark);
-            }
-            else
-            {
-                ApplicationThemeManager.Apply(ApplicationTheme.Light);
-            }       
-
+            //String themeName = (sender as RadioButton).Content as string;
+            //switch (themeName)
+            //{
+            //    case "Light":
+            //        ApplicationThemeManager.Apply(ApplicationTheme.Light);
+            //        break;
+            //    case "Dark":
+            //        ApplicationThemeManager.Apply(ApplicationTheme.Dark);
+            //        break;
+            //    case "HighContrast":
+            //        ApplicationThemeManager.Apply(ApplicationTheme.HighContrast);
+            //        break;
+            //}
         }
 
         private void SetupDatagrid()
@@ -48,10 +52,10 @@ namespace Win11ThemeSampleApp
         }
     }
 
-    internal class User
+    public class User
     {
-        public int Id { get; internal set; }
-        public string Name { get; internal set; }
-        public DateTime Birthday { get; internal set; }
+        public int Id { get;  set; }
+        public string Name { get;  set; }
+        public DateTime Birthday { get;  set; }
     }
 }
