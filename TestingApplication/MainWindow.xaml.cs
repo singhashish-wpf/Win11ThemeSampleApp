@@ -25,5 +25,12 @@ namespace TestingApplication
         {
             MessageBox.Show("Button Clicked");
         }
+
+        private void textBoxButton_Click(object sender, RoutedEventArgs e)
+        {
+            TextWindow tw = new TextWindow();
+            tw.Owner = this;
+            tw.Show();
+        }
     }
 }
