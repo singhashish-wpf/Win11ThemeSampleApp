@@ -15,13 +15,13 @@ namespace Win11ThemeSampleApp
     /// <summary>
     /// Interaction logic for MainWindow.xaml
     /// </summary>
-    public partial class MainWindow : FluentWindow
+    public partial class MainWindow : Window
     {
         public MainWindow()
         {
             InitializeComponent();
-            SetupDatagrid();
-            SystemThemeWatcher.Watch(this);
+            //SetupDatagrid();
+            //SystemThemeWatcher.Watch(this);
         }
 
         private void ToggleButton_Click(object sender, RoutedEventArgs e)
