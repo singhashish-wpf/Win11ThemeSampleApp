@@ -9,5 +9,6 @@
     <Grid>
         <TextBox Name="tbTxt" Text="TextBoxValue" Margin="11,14,365,336" />
         <TextBox Name="tbTxt_disabled" Text="TextBox Disabled" Margin="11,116,368,246" IsEnabled="False" />
+        <TextBox Name="tbTxt_multiline" PlaceholderText="Type something..." TextWrapping="Wrap" Margin="16,229,372,114"/>
     </Grid>
 </Window>

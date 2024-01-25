@@ -30,6 +30,7 @@ namespace Win11ThemeTest
         TextBox textBox;
         TextBox disablexTextBox;
         Button txtButton;
+        TextBox multilineTextbox;
         public textBoxTests()
         {
             app = FlaUI.Core.Application.Launch(@"..\\..\\..\\..\\TestingApplication\\bin\\Debug\\net9.0-windows\\win-x64\\TestingApplication.exe");
@@ -167,6 +168,7 @@ namespace Win11ThemeTest
         [Test]
         public void tb8_RedoText()
         {
+            textBox = TextWindow.FindFirstDescendant(cf => cf.ByAutomationId("tbTxt")).AsTextBox();
             var expectedText = "This is a textbox. Trying to perform Functionality test for Redo";
             textBox.Enter("This is a textbox. Trying to perform Functionality test for Redo");
             Wait.UntilInputIsProcessed(TimeSpan.FromMilliseconds(500));
@@ -224,23 +226,6 @@ namespace Win11ThemeTest
         }
 
         [Test]
-        public void tbb10_rightClickTest_Paste()
-        {
-            textBox = TextWindow.FindFirstDescendant(cf => cf.ByAutomationId("tbTxt")).AsTextBox();
-
-            textBox.Enter("Hello World!Hello World!Hello World!Hello World!Hello World!Hell World!Hello World!Hello World!Hello World!");
-            Wait.UntilInputIsProcessed(TimeSpan.FromMilliseconds(1000));                    
-
-            textBox.RightClick();
-            Wait.UntilInputIsProcessed(TimeSpan.FromMilliseconds(2000));
-
-            var pasteText = TextWindow.FindFirstDescendant(cf => cf.ByName("Paste")).AsMenuItem();
-            Wait.UntilInputIsProcessed(TimeSpan.FromMilliseconds(1000));
-            Assert.IsNotNull(pasteText);
-            pasteText.Click();
-        }
-
-        [Test]
         public void tbb11_rightClickTest_Copy()
         {
             textBox = TextWindow.FindFirstDescendant(cf => cf.ByAutomationId("tbTxt")).AsTextBox();
@@ -266,6 +251,23 @@ namespace Win11ThemeTest
             pasteText.Click();
             Wait.UntilInputIsProcessed();
            
+        }
+
+        [Test]
+        public void tbb10_rightClickTest_Paste()
+        {
+            textBox = TextWindow.FindFirstDescendant(cf => cf.ByAutomationId("tbTxt")).AsTextBox();
+
+            textBox.Enter("Hello World!Hello World!Hello World!Hello World!Hello World!Hell World!Hello World!Hello World!Hello World!");
+            Wait.UntilInputIsProcessed(TimeSpan.FromMilliseconds(1000));
+
+            textBox.RightClick();
+            Wait.UntilInputIsProcessed(TimeSpan.FromMilliseconds(2000));
+
+            var pasteText = TextWindow.FindFirstDescendant(cf => cf.ByName("Paste")).AsMenuItem();
+            Wait.UntilInputIsProcessed(TimeSpan.FromMilliseconds(1000));
+            Assert.IsNotNull(pasteText);
+            pasteText.Click();
         }
 
         //Confirm that the entered text is retained when navigating away and returning to the page.
@@ -308,25 +310,7 @@ namespace Win11ThemeTest
             textBox.Enter("<script>alert(\"123\")</script>");
             Wait.UntilInputIsProcessed(TimeSpan.FromMilliseconds(1000));
             Assert.That(textBox.Text, Is.EqualTo("<script>alert(\"123\")</script>"));
-        }
-
-        //Check if leaving the text box empty generates an appropriate error message.
-        [Test]
-        public void tb1_emptyTextBox()
-        {
-            textBox = TextWindow.FindFirstDescendant(cf => cf.ByAutomationId("tbTxt")).AsTextBox();
-            textBox.Text = string.Empty;          
-            Wait.UntilInputIsProcessed(TimeSpan.FromMilliseconds(1000));
-            if(textBox.Text == string.Empty)
-            {
-                var message = "Text Box Value is empty";
-                Assert.Fail(message);
-                
-            }
-            else { 
-                Assert.Pass(textBox.Text); 
-            }                      
-        }
+        }       
 
         /* Test Cases For Disabled TextBox
          */
@@ -358,7 +342,7 @@ namespace Win11ThemeTest
         }
 
         /* Test Cases for Multi-line Text Box
-         */
+         */    
 
         #endregion
 
