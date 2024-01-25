@@ -12,7 +12,6 @@
             <TextBlock Text="Loren Ipsum Dolor Sit" />
             <Slider  />
             <TextBox Text="TextBox Content..." />
-            <Button Name="testbtn" Content="Test Button" Click="Button_Click"/>
         </StackPanel>
     </Grid>
 </Window>

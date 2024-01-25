@@ -25,12 +25,5 @@ namespace TestingApplication
         {
             MessageBox.Show("Button Clicked");
         }
-        private void Button_Click(object sender, RoutedEventArgs e)
-        {
-            //  this.NavigationService.Navigate(new Uri("Page3.xaml", UriKind.Relative));         
-            ButtonWindow btnwindow = new ButtonWindow();
-            btnwindow.Owner = this;
-            btnwindow.Show();
-        }
     }
 }
