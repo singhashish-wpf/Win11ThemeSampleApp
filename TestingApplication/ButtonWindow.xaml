@@ -1,0 +1,28 @@
+﻿<Window x:Class="TestingApplication.ButtonWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:TestingApplication"
+        mc:Ignorable="d"
+        Title="ButtonWindow" Height="450" Width="800">
+    <Grid Margin="93,40,186,0" RenderTransformOrigin="0.5,0.5">
+        <Grid.RenderTransform>
+            <TransformGroup>
+                <ScaleTransform/>
+                <SkewTransform/>
+                <RotateTransform Angle="0.052"/>
+                <TranslateTransform/>
+            </TransformGroup>
+        </Grid.RenderTransform>
+        <Button Name="btn" Content="Click Me" RenderTransformOrigin="4.035,-1.289" Margin="323,185,0,0" VerticalAlignment="Top" Click="btn_Click" />
+        <Button Name="btnicon" Content="Click Me">
+            <Button.Icon>
+                <SymbolIcon Symbol="Home24"/>
+            </Button.Icon>
+           
+        </Button>
+        <Button Name="disbtn" Content="Disabled Button" RenderTransformOrigin="4.035,-1.289" Margin="296,236,0,0" VerticalAlignment="Top" Click="btn_Click" IsEnabled="False" />
+        <!--<TextBox Text="TextBox Content" Name="tbTxt" Margin="34,170,269,157"/>-->
+    </Grid>
+</Window>
