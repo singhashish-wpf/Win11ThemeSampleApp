@@ -22,6 +22,7 @@
             </Button.Icon>
            
         </Button>
+        <Button Name="disbtn" Content="Disabled Button" RenderTransformOrigin="4.035,-1.289" Margin="296,236,0,0" VerticalAlignment="Top" Click="btn_Click" IsEnabled="False" />
         <!--<TextBox Text="TextBox Content" Name="tbTxt" Margin="34,170,269,157"/>-->
     </Grid>
 </Window>
