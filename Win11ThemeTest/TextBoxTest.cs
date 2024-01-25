@@ -13,6 +13,8 @@ using FlaUI.UIA3.Patterns;
 using System.Drawing;
 using System.Linq;
 using NuGet.Frameworks;
+using static System.Runtime.InteropServices.JavaScript.JSType;
+using System.Runtime.ConstrainedExecution;
 
 namespace Win11ThemeTest
 {
@@ -20,35 +22,40 @@ namespace Win11ThemeTest
     public class textBoxTests
     {
         private Application app;
-        private Window window;
-        private Window[] txtWindow;
-        private Window[] textWindow;
+        private Window window;      
+        private Window MainWindow;
+        private Window TextWindow;
+        private Window btnWindow;
         MenuItems menuItemWindow;
         TextBox textBox;
+        TextBox disablexTextBox;
         Button txtButton;
         public textBoxTests()
         {
             app = FlaUI.Core.Application.Launch(@"..\\..\\..\\..\\TestingApplication\\bin\\Debug\\net9.0-windows\\win-x64\\TestingApplication.exe");
             using (var automation = new UIA3Automation())
             {
-                window = app.GetMainWindow(automation);
-                txtButton = window.FindFirstDescendant(cf => cf.ByAutomationId("txtBoxButton")).AsButton();
+                MainWindow = app.GetMainWindow(automation);
+                txtButton = MainWindow.FindFirstDescendant(cf => cf.ByAutomationId("txtBoxButton")).AsButton();
                 Mouse.Click(txtButton.GetClickablePoint());
-                textWindow = app.GetAllTopLevelWindows(automation);
-                for (int i = 0; i < textWindow.Length; i++)
-                {
-                    if (textWindow[i].FindFirstDescendant(cf => cf.ByAutomationId("tbTxt")).AsTextBox().IsAvailable)
-                    {
-                        //txtwindow = app.GetMainWindow(textWindow[i].Automation);
-                        textBox = textWindow[i].FindFirstDescendant(cf => cf.ByAutomationId("tbTxt")).AsTextBox();
-                    }
-                }
+                Wait.UntilInputIsProcessed(TimeSpan.FromMilliseconds(2000));
+                TextWindow = MainWindow.FindFirstDescendant(cf => cf.ByName("TextWindow")).AsWindow();
+                btnWindow = MainWindow.FindFirstDescendant(cf => cf.ByName("lbl")).AsWindow();               
             }
         }
-        #region FunctionalTests
-        
+
         [Test]
-        public void tb_enterText()
+        public void tb1_findTextBox()
+        {
+            Assert.IsNotNull(TextWindow);
+            textBox = TextWindow.FindFirstDescendant(cf => cf.ByAutomationId("tbTxt")).AsTextBox();
+            Assert.IsNotNull(textBox);
+        }
+
+        #region FunctionalTests
+
+        [Test]
+        public void tb2_enterText()
         {
             textBox.Enter("Hello World!");
             Wait.UntilInputIsProcessed(TimeSpan.FromMilliseconds(500));
@@ -57,7 +64,7 @@ namespace Win11ThemeTest
 
         //Verify that the text box accepts alphanumeric characters.
         [Test]
-        public void tb_enterAplhaNumericText()
+        public void tb3_enterAplhaNumericText()
         {
             var expectedText = "/\\d.*[a-zA-Z]|[a-zA-Z].*\\d/";
 
@@ -76,7 +83,7 @@ namespace Win11ThemeTest
 
         //Verify that the text box accepts special characters.
         [Test]
-        public void tb_enterSpecialCharText()
+        public void tb4_enterSpecialCharText()
         {
             var expectedText = "@#$%^&*";
 
@@ -95,7 +102,7 @@ namespace Win11ThemeTest
 
         //Check if the text box can handle empty input.
         [Test]
-        public void tb_enterEmptyText()
+        public void tb5_enterEmptyText()
         {
             var emptyText = string.Empty;
 
@@ -117,7 +124,7 @@ namespace Win11ThemeTest
 
         //Test input validation for correct data formats (e.g., email validation).
         [Test]
-        public void tb_enterEmailIdText()
+        public void tb6_enterEmailIdText()
         {
             var expectedText = "ram.shyam1234@yahoo.com";
             textBox.Enter("ram.shyam1234@yahoo.com");
@@ -136,7 +143,7 @@ namespace Win11ThemeTest
 
         //Test the undo and redo functionality within the text box.
         [Test]
-        public void tb_UndoText()
+        public void tb7_UndoText()
         {
             var expectedText = "";
             textBox.Enter("This is a textbox. Trying to perform Functionality test for Undo");
@@ -158,7 +165,7 @@ namespace Win11ThemeTest
         }
 
         [Test]
-        public void tb_RedoText()
+        public void tb8_RedoText()
         {
             var expectedText = "This is a textbox. Trying to perform Functionality test for Redo";
             textBox.Enter("This is a textbox. Trying to perform Functionality test for Redo");
@@ -187,6 +194,79 @@ namespace Win11ThemeTest
         }
 
         //Verify that users can copy and paste text from and to the text box.
+        [Test]
+        public void tb9_rightClickTest_Cut()
+        {
+            textBox = TextWindow.FindFirstDescendant(cf => cf.ByAutomationId("tbTxt")).AsTextBox();
+
+            textBox.Enter("Hello World!Hello World!Hello World!Hello World!Hello World!Hell World!Hello World!Hello World!Hello World!");
+            Wait.UntilInputIsProcessed(TimeSpan.FromMilliseconds(1000));
+
+            Keyboard.Press(FlaUI.Core.WindowsAPI.VirtualKeyShort.CONTROL);
+            Keyboard.Press(FlaUI.Core.WindowsAPI.VirtualKeyShort.KEY_A);
+            Keyboard.Release(FlaUI.Core.WindowsAPI.VirtualKeyShort.KEY_A);
+            Keyboard.Release(FlaUI.Core.WindowsAPI.VirtualKeyShort.CONTROL);
+            Wait.UntilInputIsProcessed(TimeSpan.FromMilliseconds(1000));
+
+            textBox.RightClick();
+            Wait.UntilInputIsProcessed(TimeSpan.FromMilliseconds(2000));
+
+            var cutText = TextWindow.FindFirstDescendant(cf => cf.ByName("Cut")).AsMenuItem();
+            Wait.UntilInputIsProcessed(TimeSpan.FromMilliseconds(1000));
+            Assert.IsNotNull(cutText);
+            
+            Assert.IsTrue(cutText.IsEnabled);
+            Wait.UntilInputIsProcessed(TimeSpan.FromMilliseconds(1000));
+
+            cutText.Click();
+            Wait.UntilInputIsProcessed();      
+
+        }
+
+        [Test]
+        public void tbb10_rightClickTest_Paste()
+        {
+            textBox = TextWindow.FindFirstDescendant(cf => cf.ByAutomationId("tbTxt")).AsTextBox();
+
+            textBox.Enter("Hello World!Hello World!Hello World!Hello World!Hello World!Hell World!Hello World!Hello World!Hello World!");
+            Wait.UntilInputIsProcessed(TimeSpan.FromMilliseconds(1000));                    
+
+            textBox.RightClick();
+            Wait.UntilInputIsProcessed(TimeSpan.FromMilliseconds(2000));
+
+            var pasteText = TextWindow.FindFirstDescendant(cf => cf.ByName("Paste")).AsMenuItem();
+            Wait.UntilInputIsProcessed(TimeSpan.FromMilliseconds(1000));
+            Assert.IsNotNull(pasteText);
+            pasteText.Click();
+        }
+
+        [Test]
+        public void tbb11_rightClickTest_Copy()
+        {
+            textBox = TextWindow.FindFirstDescendant(cf => cf.ByAutomationId("tbTxt")).AsTextBox();
+
+            textBox.Enter("Hello World!Hello World!Hello World!Hello World!Hello World!Hell World!Hello World!Hello World!Hello World!");
+            Wait.UntilInputIsProcessed(TimeSpan.FromMilliseconds(1000));
+
+            Keyboard.Press(FlaUI.Core.WindowsAPI.VirtualKeyShort.CONTROL);
+            Keyboard.Press(FlaUI.Core.WindowsAPI.VirtualKeyShort.KEY_A);
+           
+            Wait.UntilInputIsProcessed(TimeSpan.FromMilliseconds(2000));
+            Keyboard.Release(FlaUI.Core.WindowsAPI.VirtualKeyShort.KEY_A);
+            Keyboard.Release(FlaUI.Core.WindowsAPI.VirtualKeyShort.CONTROL);
+
+            //Assert.IsNotNull(textBox);
+            textBox.RightClick();
+            Wait.UntilInputIsProcessed(TimeSpan.FromMilliseconds(2000));
+
+            var pasteText = TextWindow.FindFirstDescendant(cf => cf.ByName("Copy")).AsMenuItem();
+            Wait.UntilInputIsProcessed(TimeSpan.FromMilliseconds(3000));
+            pasteText.GetClickablePoint();
+            Assert.IsNotNull(pasteText);
+            pasteText.Click();
+            Wait.UntilInputIsProcessed();
+           
+        }
 
         //Confirm that the entered text is retained when navigating away and returning to the page.
 
@@ -215,58 +295,91 @@ namespace Win11ThemeTest
 
         #region NegativeTests
         /* Negative Test Scenarios
-       * 
-       *  
-       *  
-       * 
+       *        
        */
 
+
         //Attempt to enter code snippets or HTML code into the input box to see if the same is rejected.
+        [Test]
+        public void tb1_htmlTextBox()
+        {
+            textBox = TextWindow.FindFirstDescendant(cf => cf.ByAutomationId("tbTxt")).AsTextBox();
+            textBox.Text = string.Empty;
+            textBox.Enter("<script>alert(\"123\")</script>");
+            Wait.UntilInputIsProcessed(TimeSpan.FromMilliseconds(1000));
+            Assert.That(textBox.Text, Is.EqualTo("<script>alert(\"123\")</script>"));
+        }
+
         //Check if leaving the text box empty generates an appropriate error message.
+        [Test]
+        public void tb1_emptyTextBox()
+        {
+            textBox = TextWindow.FindFirstDescendant(cf => cf.ByAutomationId("tbTxt")).AsTextBox();
+            textBox.Text = string.Empty;          
+            Wait.UntilInputIsProcessed(TimeSpan.FromMilliseconds(1000));
+            if(textBox.Text == string.Empty)
+            {
+                var message = "Text Box Value is empty";
+                Assert.Fail(message);
+                
+            }
+            else { 
+                Assert.Pass(textBox.Text); 
+            }                      
+        }
 
         /* Test Cases For Disabled TextBox
          */
 
-        /* Test Cases For Enabled TextBox
-        */
+        [Test]
+        public void tb1_disabledTextBoxAvailability()
+        {
+            Assert.IsNotNull(TextWindow);
+            disablexTextBox = TextWindow.FindFirstDescendant(cf => cf.ByAutomationId("tbTxt_disabled")).AsTextBox();
+            Assert.IsNotNull(disablexTextBox);
+        }
 
-        /* Test Cases for Single-Line Text Box
-        */
+        //Check if any pre-populated value should be displayed as per requirement.
+        [Test]
+        public void tb1_disabledTextBox()
+        {
+            Assert.IsNotNull(TextWindow);
+            disablexTextBox = TextWindow.FindFirstDescendant(cf => cf.ByAutomationId("tbTxt_disabled")).AsTextBox();    
+            Assert.That(disablexTextBox.Text, Is.EqualTo("TextBox Disabled"));
+        }
 
+        //Check if you cannot edit disabled TextBox.
+        [Test]
+        public void tb1_disabledEditTextBox()
+        {
+            Assert.IsNotNull(TextWindow);
+            disablexTextBox = TextWindow.FindFirstDescendant(cf => cf.ByAutomationId("tbTxt_disabled")).AsTextBox();
+            Assert.That(disablexTextBox.IsEnabled, Is.False);           
+        }
 
         /* Test Cases for Multi-line Text Box
          */
 
-        /* Test Cases For Text Field Validation
-        */
-
-        /* Test Cases for Single-Line Text Box
-        */
         #endregion
 
         #region UITests
-        [Test]
-        public void tb_isAvailable()
-        {
-            Assert.That(textBox.IsAvailable);
-        }
 
         [Test]
-        public void tb_clickOnTextbox()
+        public void tbb1_clickOnTextbox()
         {
             Mouse.Click(textBox.GetClickablePoint());
             Assert.That(textBox.IsEnabled, Is.True);
         }
 
         [Test]
-        public void tb_mouseHover()
+        public void tbb2_mouseHover()
         {
             Mouse.MoveTo(textBox.GetClickablePoint());
-            Assert.That(textBox.Text, Is.EqualTo("TextBoxValue"));
+            Assert.That(textBox.Text, Is.EqualTo("Hello World!Hello World!Hello World!Hello World!Hello World!Hell World!Hello World!Hello World!Hello World!"));
         }
 
         [Test]
-        public void tb_fontFamily()
+        public void tbb3_fontFamily()
         {
             using (var automation = new UIA3Automation())
             {
@@ -280,7 +393,7 @@ namespace Win11ThemeTest
         }
 
         [Test]
-        public void tb_fontSize()
+        public void tbb4_fontSize()
         {
             using (var automation = new UIA3Automation())
             {
@@ -297,7 +410,7 @@ namespace Win11ThemeTest
         }
 
         [Test]
-        public void tb_textForegroundColor()
+        public void tbb5_textForegroundColor()
         {
             var automation = new UIA3Automation();
             textBox.Enter("Hello World!");
@@ -312,7 +425,7 @@ namespace Win11ThemeTest
         }
 
         [Test]
-        public void tb_textBackgroundColor()
+        public void tbb6_textBackgroundColor()
         {
             using (var automation = new UIA3Automation())
             {
@@ -347,146 +460,6 @@ namespace Win11ThemeTest
                 Assert.Pass(message);
             }
         }
-
-
-        //Functional Testing
-        [Test]
-        public void tb_OnMouseRightClick()
-        {
-            using (var automation = new UIA3Automation())
-            {
-                textBox.Enter("Hello World!Hello World!Hello World!Hello World!Hello World!Hello World!Hello World!Hello World!Hello World!Hello World!Hello World!Hello World!Hello World!Hello World!Hello World!Hello World!Hello World!Hello World!Hello World!Hello World!Hello World!Hello World!Hello World!Hello World!Hello World!Hello World!Hello World!Hello World!Hello World!Hello World!Hello World!Hello World!Hello World!Hello World!Hello World!Hello World!Hello World!Hello World!Hello World!Hello World!Hello World!Hello World!Hello World!");
-                Wait.UntilInputIsProcessed(TimeSpan.FromMilliseconds(1000));
-                Keyboard.Press(FlaUI.Core.WindowsAPI.VirtualKeyShort.CONTROL);
-                Keyboard.Press(FlaUI.Core.WindowsAPI.VirtualKeyShort.KEY_A);
-                //Mouse.MoveTo(textBox.GetClickablePoint()); 
-                textBox.RightClick();
-
-
-
-
-                Menu x;
-                //window.FindFirstDescendant(cf => cf.ByClassName("PopupRoot")).AsMenu();
-
-
-                textWindow = app.GetAllTopLevelWindows(automation);
-                for (int i = 0; i < textWindow.Length; i++)
-                {
-                    if (textWindow[i].FindFirstDescendant(cf => cf.ByClassName("PopupRoot")).AsMenu().IsAvailable)
-                    {
-                        //txtwindow = app.GetMainWindow(textWindow[i].Automation);
-                        x = textWindow[i].FindFirstDescendant(cf => cf.ByClassName("PopupRoot")).AsMenu();
-                    }
-                }
-
-
-                //Window txtwindow2;
-                //txtwindow = app.GetAllTopLevelWindows(automation);
-                //for (int i = 0; i < txtwindow.Length; i++)
-                //{
-                //    if (textWindow[i].FindFirstDescendant(cf => cf.ByAutomationId("tbTxt")).AsTextBox().IsAvailable)
-                //    {
-                //        //txtwindow = app.GetMainWindow(textWindow[i].Automation);
-                //        txtwindow2 = app.GetMainWindow(txtwindow[i].Automation);
-                //        //txtwindow2 = app.GetMainWindow(txtwindow[i].FindFirstDescendant(condition => condition.ByAutomationId("ContextMenu")).AsWindow());
-                //        textBox = textWindow[i].FindFirstDescendant(cf => cf.ByAutomationId("tbTxt")).AsTextBox();
-                //    }
-                //}
-
-
-
-                //var txtwindow2 = app.GetMainWindow(automation);
-                // var contextMenu = txtwindow2.GetContextMenuByFrameworkType(FrameworkType.Wpf);
-                //  var menuItem = contextMenu.FindFirstDescendant(cf => cf.ByText("Paste")).AsMenuItem();
-                //  menuItem.Click();
-
-
-                ////var txtwindow2 = app.GetMainWindow(automation);
-
-
-                ////ConditionFactory condition = new ConditionFactory(new UIA3PropertyLibrary());
-                ////MenuItem item = txtwindow2.FindFirst(TreeScope.Subtree, condition.ByText("Copy")).AsMenuItem();
-                //////This line works in sample but not for my legacy winform application
-                ////item.Click();
-
-
-                // ConditionFactory cf = new ConditionFactory(new UIA3PropertyLibrary());
-
-                //// textWindow.FindFirstDescendant().AsTextBox().RightClick();
-                // textWindow.FirstOrDefault(cf => cf.ByAutomationId("ContextMenu"))
-                // var contextMenu = txtwindow.ContextMenu;
-                // contextMenu.DrawHighlight();
-                // contextMenu.Items[0].DrawHighlight();
-                // //menuItemWindow = 
-                // //int fillCcolor = textBox.Properties.FillColor;
-                // //for (int i = 0; i < menuItemWindow.Length; i++)
-                // //{
-                // //    if (textWindow[i].FindFirstDescendant(cf => cf.ByAutomationId("tbTxt")).AsTextBox().IsAvailable)
-                // //    {
-                // //        textBox = textWindow[i].FindFirstDescendant(cf => cf.ByAutomationId("tbTxt")).AsTextBox();
-                // //    }
-                // //}
-
-                //txtwindow = app.GetAllTopLevelWindows(automation);
-                //for (int i = 0; i < txtwindow.Length; i++)
-                //{
-                //    //if (txtwindow[i].FindFirstDescendant(cf => cf.ByName("ContextMenu").And(x.ByControlType(ControlType.Menu)).AsMenu()).IsAvailable)
-                //    //{
-                //    //    //txtwindow = app.GetMainWindow(textWindow[i].Automation);
-                //    //    textBox = textWindow[i].FindFirstDescendant(cf => cf.ByAutomationId("ContextMenu")).AsTextBox();
-                //    //}
-                //}
-
-                //var menu = txtwindow.FindFirstDescendant(x => x.ByName("ContextMenu").And(x.ByControlType(ControlType.Menu))).AsMenu();
-                //var menu2 = textWindow.FirstOrDefault(x => x.ContextMenu.Items.Count > 0);
-                //var menuItems = menu.Items;
-                //var menuItem = menuItems.First(x => x.Name == "Copy");
-                //Console.WriteLine("{0}", menuItem);
-                //menuItem.Click();
-
-                //  Console.WriteLine("{0}", count);
-                //for (int i = 0; i < count; i++)
-                //{
-                //    Console.WriteLine(menu.Items[i]);
-                //    //if (textWindow[i].FindFirstDescendant(cf => cf.ByAutomationId("Copy")).AsWindow().IsAvailable)
-                //    //{
-                //    //    // txtwindow = app.GetMainWindow(textWindow[i].Automation);
-                //    //    txtwindow = textWindow[i].FindFirstDescendant(cf => cf.ByAutomationId("Copy")).AsWindow();
-                //    //}
-                //}
-
-                //Mouse.MoveTo(menu.);
-                //var contextMenu = txtwindow.ContextMenu;
-                //contextMenu.DrawHighlight();
-                //contextMenu.Items[0].DrawHighlight();
-
-                ////textWindow = app.GetAllTopLevelWindows(automation);
-                ////for (int i = 0; i < textWindow.Length; i++)
-                ////{
-                ////    if (textWindow[i].FindFirstDescendant(cf => cf.ByAutomationId("Copy")).AsWindow().IsAvailable)
-                ////    {
-                ////        // txtwindow = app.GetMainWindow(textWindow[i].Automation);
-                ////        txtwindow = textWindow[i].FindFirstDescendant(cf => cf.ByAutomationId("Copy")).AsWindow();
-                ////    }
-                ////}
-
-                ////Keyboard.Press(FlaUI.Core.WindowsAPI.VirtualKeyShort.DOWN);
-                //textBox.RightClick(2);
-                //var contextMenu = window.GetContextMenuByFrameworkType(FrameworkType.Wpf);
-                // var menu = textBox.AsMenuItem();
-                // var menuItem = contextMenu.FindFirstDescendant(cf => cf.ByText("Paste")).AsMenuItem();
-                // Console.WriteLine(" menu.....{0}", contextMenu);
-                // Console.WriteLine(" menuItem.....{0}", menuItem);
-                //menuItem.Click();
-                Keyboard.Release(FlaUI.Core.WindowsAPI.VirtualKeyShort.CONTROL);
-                Keyboard.Release(FlaUI.Core.WindowsAPI.VirtualKeyShort.KEY_A);
-                Keyboard.Release(FlaUI.Core.WindowsAPI.VirtualKeyShort.DOWN);
-
-                //Keyboard.Press(FlaUI.Core.WindowsAPI.VirtualKeyShort.CONTROL);            
-                //textBox.RightClick();
-            }
-            #endregion
-
-        }
+        #endregion
     }
 }

@@ -7,6 +7,7 @@
         mc:Ignorable="d"
         Title="TextWindow" Height="450" Width="800">
     <Grid>
-        <TextBox Name="tbTxt" Text="TextBoxValue" />
+        <TextBox Name="tbTxt" Text="TextBoxValue" Margin="11,14,365,336" />
+        <TextBox Name="tbTxt_disabled" Text="TextBox Disabled" Margin="11,116,368,246" IsEnabled="False" />
     </Grid>
 </Window>
