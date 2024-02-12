@@ -26,7 +26,6 @@ namespace Win11ThemeTest
         Button testButton;
         Button button;
         Button disabledbutton;
-        // Button iconbutton;
 
         public ButtonTest()
         {
@@ -40,7 +39,8 @@ namespace Win11ThemeTest
                 Mouse.Click(testButton.GetClickablePoint());
                 Wait.UntilInputIsProcessed(TimeSpan.FromMilliseconds(2000));
                 btnwindow = window.FindFirstDescendant(cf => cf.ByName("ButtonWindow")).AsWindow();
-
+                button = btnwindow.FindFirstDescendant(cf => cf.ByAutomationId("btn")).AsButton();
+                disabledbutton = btnwindow.FindFirstDescendant(cf => cf.ByAutomationId("disbtn")).AsButton();
             }
 
         }
@@ -50,7 +50,6 @@ namespace Win11ThemeTest
         public void btn1_isButtonAvailable()
         {
             Assert.IsNotNull(btnwindow);
-            button = btnwindow.FindFirstDescendant(cf => cf.ByAutomationId("btn")).AsButton();
             Assert.IsNotNull(button);
         }
 
@@ -58,7 +57,6 @@ namespace Win11ThemeTest
         [Test]
         public void btn2_isClicked()
         {
-            // button = btnwindow.FindFirstDescendant(cf => cf.ByAutomationId("btn")).AsButton();
             button.Click();
             Wait.UntilInputIsProcessed();
             var popup = btnwindow.FindFirstDescendant(cf => cf.ByName("Button Clicked")).AsWindow();
@@ -71,8 +69,6 @@ namespace Win11ThemeTest
         [Test]
         public void btn3_isClickableWithEnterKey()
         {
-
-            // button = btnwindow.FindFirstDescendant(cf => cf.ByAutomationId("btn")).AsButton();
             button.Focus();
             Keyboard.Press(FlaUI.Core.WindowsAPI.VirtualKeyShort.ENTER);
             Keyboard.Release(FlaUI.Core.WindowsAPI.VirtualKeyShort.ENTER);
@@ -81,15 +77,12 @@ namespace Win11ThemeTest
             Assert.That(popup, Is.Not.Null);
             Button pBtn = btnwindow.FindFirstDescendant(cf => cf.ByName("OK")).AsButton();
             pBtn.Click();
-
         }
 
         //test if button clicked with space key
         [Test]
         public void btn4_isClickableWithSpaceKey()
         {
-
-            //  button = btnwindow.FindFirstDescendant(cf => cf.ByAutomationId("btn")).AsButton();
             button.Focus();
             Keyboard.Press(FlaUI.Core.WindowsAPI.VirtualKeyShort.SPACE);
             Keyboard.Release(FlaUI.Core.WindowsAPI.VirtualKeyShort.SPACE);
@@ -100,39 +93,10 @@ namespace Win11ThemeTest
             pBtn.Click();
         }
 
-        //[Test]
-        //public void btn_backgroundColor()
-        //{
-
-        //}
-
-        //[Test]
-        //public void btn_foregroundColor()
-        //{
-
-        //}
-
-        //[Test]
-        //public void btn_fontFamily()
-        //{
-
-
-        //}
-
-        //[Test]
-        //public void btn_onMouseHover()
-        //{
-        //    button = btnwindow.FindFirstDescendant(cf => cf.ByAutomationId("btn")).AsButton();
-        //    Mouse.MoveTo(button.GetClickablePoint());
-
-
-        //}
-
         //test no action on mouse right click on button
         [Test]
         public void btn5_onMouseRightclick()
         {
-            // button = btnwindow.FindFirstDescendant(cf => cf.ByAutomationId("btn")).AsButton();
             button.RightClick();
             var popup = btnwindow.FindFirstDescendant(cf => cf.ByName("Button Clicked")).AsWindow();
             Assert.That(popup, Is.Null);
@@ -142,19 +106,21 @@ namespace Win11ThemeTest
         [Test]
         public void btn6_isDisabled()
         {
-            disabledbutton = btnwindow.FindFirstDescendant(cf => cf.ByAutomationId("disbtn")).AsButton();
             Assert.IsNotNull(disabledbutton);
-            Assert.That(disabledbutton.IsEnabled,Is.False);
+            Assert.That(disabledbutton.IsEnabled, Is.False);
         }
 
         //Test disabled button
         [Test]
         public void btn7_isDisabledClick()
-        {         
+        {
             Assert.That(disabledbutton.IsEnabled, Is.False);
             disabledbutton.Click();
             var popup = disabledbutton.FindFirstDescendant(cf => cf.ByName("Button Clicked")).AsWindow();
             Assert.That(popup, Is.Null);
+            btnwindow.Close();
+            window.Close();
         }
+
     }
 }
