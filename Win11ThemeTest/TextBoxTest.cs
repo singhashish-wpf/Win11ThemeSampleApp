@@ -265,8 +265,7 @@ namespace Win11ThemeTest
         //Attempt to enter code snippets or HTML code into the input box to see if the same is rejected.
         [Test]
         public void tb7_htmlTextBox()
-        {
-            textBox = TextWindow.FindFirstDescendant(cf => cf.ByAutomationId("tbTxt")).AsTextBox();
+        {            
             textBox.Text = string.Empty;
             textBox.Enter("<script>alert(\"123\")</script>");
             Wait.UntilInputIsProcessed(TimeSpan.FromMilliseconds(500));
