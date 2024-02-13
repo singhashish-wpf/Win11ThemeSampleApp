@@ -12,4 +12,7 @@
 		<WpfRepoRoot>C:\Users\hmishra\Desktop\Git\dotnet\wpf</WpfRepoRoot>
 	</PropertyGroup>
 	<Import Project="$(WpfRepoRoot)\eng\wpf-debug.targets" />
+	<ItemGroup>
+	  <PackageReference Include="CommunityToolkit.Mvvm" Version="8.2.2" />
+	</ItemGroup>
 </Project>
