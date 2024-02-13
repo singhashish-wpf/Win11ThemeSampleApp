@@ -25,5 +25,12 @@ namespace TestingApplication
         {
             MessageBox.Show("Button Clicked");
         }
+
+        private void Button_Click(object sender, RoutedEventArgs e)
+        {          
+            CalendarWindow clndrwindow = new CalendarWindow();
+            clndrwindow.Owner = this;
+            clndrwindow.Show();
+        }
     }
 }
