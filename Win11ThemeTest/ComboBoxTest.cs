@@ -119,5 +119,12 @@ namespace Win11ThemeTest
             Wait.UntilInputIsProcessed(TimeSpan.FromMilliseconds(1000));
             Assert.That(comboBox.SelectedItem.Name, Is.EqualTo("Green"));                    
         }
+
+        [Test]
+        public void z_Cleanup()
+        {
+            comboWindow.Close();
+            MainWindow.Close();
+        }
     }
 }
