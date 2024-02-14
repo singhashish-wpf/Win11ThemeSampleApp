@@ -12,6 +12,7 @@
             <TextBlock Text="Loren Ipsum Dolor Sit" />
             <Slider  />
             <TextBox Text="TextBox Content..." />
+            <Button Name="cmbBoxButton" Content="Combo Button" Width="200" Click="comboBoxButton_Click" />
         </StackPanel>
     </Grid>
 </Window>

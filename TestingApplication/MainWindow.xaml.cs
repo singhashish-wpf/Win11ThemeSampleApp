@@ -8,6 +8,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using TestingApplication.ViewModel;
 
 namespace TestingApplication
 {
@@ -24,6 +25,14 @@ namespace TestingApplication
         private void clickEvent(object sender, RoutedEventArgs e)
         {
             MessageBox.Show("Button Clicked");
+        }
+
+        private void comboBoxButton_Click(object sender, RoutedEventArgs e)
+        {
+            ComboBoxViewModel vm = new ComboBoxViewModel();
+            ComboBoxWindow cbw = new ComboBoxWindow(vm);
+            cbw.Owner = this;
+            cbw.Show();
         }
     }
 }

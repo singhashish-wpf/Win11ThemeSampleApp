@@ -1,0 +1,35 @@
+﻿<Window x:Class="TestingApplication.ComboBoxWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:TestingApplication"
+        mc:Ignorable="d"
+        Title="ComboBoxWindow" Height="450" Width="800">
+    <Grid>
+        <ComboBox Name="comboBoxList" Margin="105,30,0,0"
+                MinWidth="200"
+                HorizontalAlignment="Left"
+                SelectedIndex="0" VerticalAlignment="Top">
+            <ComboBoxItem Content="Blue" />
+            <ComboBoxItem Content="Green" />
+            <ComboBoxItem Content="Red" />
+            <ComboBoxItem Content="Yellow" />
+        </ComboBox>
+
+        <ComboBox
+         MinWidth="200"
+         Name ="comboBoxBind2"
+         HorizontalAlignment="Left"         
+         ItemsSource="{Binding ViewModel.ComboBoxFontFamilies, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=local:ComboBoxWindow}, Mode=OneWay}"
+         SelectedIndex="0" Margin="105,116,329,0" VerticalAlignment="Top" />
+        
+        <ComboBox
+                MinWidth="200"
+                Name ="comboBoxBind"
+                HorizontalAlignment="Left"
+                IsEditable="True"
+                ItemsSource="{Binding ViewModel.ComboBoxFontSizes, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=local:ComboBoxWindow}, Mode=OneWay}"
+                SelectedIndex="0" Margin="102,205,0,0" VerticalAlignment="Top" />
+    </Grid>
+</Window>
