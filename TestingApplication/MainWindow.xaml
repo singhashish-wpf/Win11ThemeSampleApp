@@ -12,6 +12,7 @@
             <TextBlock Text="Loren Ipsum Dolor Sit" />
             <Slider  />
             <TextBox Text="TextBox Content..." />
+            <Button Name="testbtn" Content="Test Listbox" RenderTransformOrigin="1.562,1.132" Width="104" Click="Button_Click"/>
         </StackPanel>
     </Grid>
 </Window>
