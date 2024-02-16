@@ -133,7 +133,9 @@ namespace Win11ThemeTest
             double defaultScroll = 0;
             Assert.That(listBoxlength.Patterns.Scroll.Pattern.VerticalScrollPercent, Is.EqualTo(defaultScroll));
             listBoxlength.Patterns.Scroll.Pattern.Scroll(ScrollAmount.NoAmount, ScrollAmount.SmallIncrement);
-            Assert.That(listBoxlength.Patterns.Scroll.Pattern.VerticalScrollPercent, Is.Not.EqualTo(defaultScroll));            
+            Assert.That(listBoxlength.Patterns.Scroll.Pattern.VerticalScrollPercent, Is.Not.EqualTo(defaultScroll)); 
+            listBoxWindow.Close();
+            window.Close();
         }
      
     }
