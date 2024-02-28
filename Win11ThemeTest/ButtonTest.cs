@@ -2,18 +2,6 @@
 using FlaUI.Core.AutomationElements;
 using FlaUI.Core.Input;
 using FlaUI.UIA3;
-using FlaUI.Core;
-using FlaUI.Core.AutomationElements;
-using FlaUI.Core.Conditions;
-using FlaUI.Core.Definitions;
-using FlaUI.Core.Input;
-using FlaUI.UIA3;
-using FlaUI.UIA3.Identifiers;
-using FlaUI.UIA3.Patterns;
-using System.Drawing;
-using System.Linq;
-using NuGet.Frameworks;
-
 
 namespace Win11ThemeTest
 {
@@ -21,7 +9,6 @@ namespace Win11ThemeTest
     {
         private Application app;
         private Window window;
-        //  private Window window2;
         public Window btnwindow;
         Button testButton;
         Button button;
@@ -29,7 +16,6 @@ namespace Win11ThemeTest
 
         public ButtonTest()
         {
-
             app = Application.Launch(@"..\\..\\..\\..\\TestingApplication\\bin\\Debug\\net9.0-windows\\win-x64\\TestingApplication.exe");
 
             using (var automation = new UIA3Automation())
@@ -42,12 +28,11 @@ namespace Win11ThemeTest
                 button = btnwindow.FindFirstDescendant(cf => cf.ByAutomationId("btn")).AsButton();
                 disabledbutton = btnwindow.FindFirstDescendant(cf => cf.ByAutomationId("disbtn")).AsButton();
             }
-
         }
 
         //test if button is available in window
         [Test]
-        public void btn1_isButtonAvailable()
+        public void button1_isButtonAvailable()
         {
             Assert.IsNotNull(btnwindow);
             Assert.IsNotNull(button);
@@ -55,7 +40,7 @@ namespace Win11ThemeTest
 
         //test if button is clicked
         [Test]
-        public void btn2_isClicked()
+        public void button2_isClicked()
         {
             button.Click();
             Wait.UntilInputIsProcessed();
@@ -67,12 +52,11 @@ namespace Win11ThemeTest
 
         //test if button clicked with enter key
         [Test]
-        public void btn3_isClickableWithEnterKey()
+        public void button3_isClickableWithEnterKey()
         {
             button.Focus();
             Keyboard.Press(FlaUI.Core.WindowsAPI.VirtualKeyShort.ENTER);
             Keyboard.Release(FlaUI.Core.WindowsAPI.VirtualKeyShort.ENTER);
-            // Wait.UntilInputIsProcessed();
             var popup = btnwindow.FindFirstDescendant(cf => cf.ByName("Button Clicked")).AsWindow();
             Assert.That(popup, Is.Not.Null);
             Button pBtn = btnwindow.FindFirstDescendant(cf => cf.ByName("OK")).AsButton();
@@ -81,7 +65,7 @@ namespace Win11ThemeTest
 
         //test if button clicked with space key
         [Test]
-        public void btn4_isClickableWithSpaceKey()
+        public void button4_isClickableWithSpaceKey()
         {
             button.Focus();
             Keyboard.Press(FlaUI.Core.WindowsAPI.VirtualKeyShort.SPACE);
@@ -95,7 +79,7 @@ namespace Win11ThemeTest
 
         //test no action on mouse right click on button
         [Test]
-        public void btn5_onMouseRightclick()
+        public void button5_onMouseRightclick()
         {
             button.RightClick();
             var popup = btnwindow.FindFirstDescendant(cf => cf.ByName("Button Clicked")).AsWindow();
@@ -104,7 +88,7 @@ namespace Win11ThemeTest
 
         //Test disabled button
         [Test]
-        public void btn6_isDisabled()
+        public void button6_isDisabled()
         {
             Assert.IsNotNull(disabledbutton);
             Assert.That(disabledbutton.IsEnabled, Is.False);
@@ -112,14 +96,22 @@ namespace Win11ThemeTest
 
         //Test disabled button
         [Test]
-        public void btn7_isDisabledClick()
+        public void button7_isDisabledClick()
         {
             Assert.That(disabledbutton.IsEnabled, Is.False);
             disabledbutton.Click();
             var popup = disabledbutton.FindFirstDescendant(cf => cf.ByName("Button Clicked")).AsWindow();
             Assert.That(popup, Is.Null);
+        }
+
+        //close windows
+        [Test]
+        public void button8_closeWindows()
+        {
             btnwindow.Close();
+            Assert.IsTrue(btnwindow.IsOffscreen);
             window.Close();
+            Assert.IsTrue(window.IsOffscreen);
         }
 
     }
