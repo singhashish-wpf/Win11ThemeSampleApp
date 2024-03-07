@@ -2,6 +2,8 @@
 using FlaUI.Core.AutomationElements;
 using FlaUI.Core.Input;
 using FlaUI.UIA3;
+using NUnit.Framework.Internal;
+using System.Configuration;
 
 namespace Win11ThemeTest
 {
@@ -16,17 +18,45 @@ namespace Win11ThemeTest
 
         public ButtonTest()
         {
-            app = Application.Launch(@"..\\..\\..\\..\\TestingApplication\\bin\\Debug\\net9.0-windows\\win-x64\\TestingApplication.exe");
 
-            using (var automation = new UIA3Automation())
+            try
             {
-                window = app.GetMainWindow(automation);
-                testButton = window.FindFirstDescendant(cf => cf.ByAutomationId("testbtn")).AsButton();
-                Mouse.Click(testButton.GetClickablePoint());
-                Wait.UntilInputIsProcessed(TimeSpan.FromMilliseconds(2000));
-                btnwindow = window.FindFirstDescendant(cf => cf.ByName("ButtonWindow")).AsWindow();
-                button = btnwindow.FindFirstDescendant(cf => cf.ByAutomationId("btn")).AsButton();
-                disabledbutton = btnwindow.FindFirstDescendant(cf => cf.ByAutomationId("disbtn")).AsButton();
+                var appPath = ConfigurationManager.AppSettings["Testpath"];
+                app = Application.Launch(appPath);
+                // app = Application.Launch(@"..\\..\\..\\..\\TestingApplication\\bin\\Debug\\net9.0-windows\\win-x64\\TestingApplication.exe");
+
+                using (var automation = new UIA3Automation())
+                {
+                    window = app.GetMainWindow(automation);
+                    testButton = window.FindFirstDescendant(cf => cf.ByAutomationId("testbtn")).AsButton();
+                    Mouse.Click(testButton.GetClickablePoint());
+                    Wait.UntilInputIsProcessed(TimeSpan.FromMilliseconds(2000));
+                    btnwindow = window.FindFirstDescendant(cf => cf.ByName("ButtonWindow")).AsWindow();
+                    button = btnwindow.FindFirstDescendant(cf => cf.ByAutomationId("btn")).AsButton();
+                    disabledbutton = btnwindow.FindFirstDescendant(cf => cf.ByAutomationId("disbtn")).AsButton();
+                }
+            }
+            catch (Exception ex)
+            {
+                var filepath = ConfigurationManager.AppSettings["logpath"];
+                if (!Directory.Exists(filepath))
+                {
+                    Directory.CreateDirectory(filepath);
+                }
+                filepath = filepath + "log_" + DateTime.Now.ToString("yyyyMMddHHmmss") + ".txt";   //Text File Name
+                if (!File.Exists(filepath))
+                {
+                    File.Create(filepath).Dispose();
+                }
+                using (StreamWriter sw = File.AppendText(filepath))
+                {
+                    string error = "Log Written Date:" + " " + DateTime.Now.ToString() + "\nError Message:" + " " + ex.Message.ToString();
+                    sw.WriteLine("-----------Exception Details on " + " " + DateTime.Now.ToString() + "-----------------");
+                    sw.WriteLine("-------------------------------------------------------------------------------------");
+                    sw.WriteLine(error);
+                    sw.Flush();
+                    sw.Close();
+                }
             }
         }
 
