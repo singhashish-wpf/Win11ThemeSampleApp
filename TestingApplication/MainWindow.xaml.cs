@@ -27,7 +27,7 @@ namespace TestingApplication
             MessageBox.Show("Button Clicked");
         }
 
-        private void Button_Click(object sender, RoutedEventArgs e)
+        private void checkboxButton_Click(object sender, RoutedEventArgs e)
         {
             CheckBoxViewModel viewModel=new CheckBoxViewModel();
             CheckboxWindow chkbxwindow = new CheckboxWindow(viewModel);
