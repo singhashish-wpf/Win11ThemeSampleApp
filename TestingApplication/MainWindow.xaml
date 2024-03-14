@@ -12,6 +12,7 @@
             <TextBlock Text="Loren Ipsum Dolor Sit" />
             <Slider  />
             <TextBox Text="TextBox Content..." />
+            <Button Name="testbtn" Content="Test Button" Click="Button_Click"/>
              <Button Name="testchkbtn" Content="Test Checkbox" Click="checkboxButton_Click"/>
         </StackPanel>
     </Grid>

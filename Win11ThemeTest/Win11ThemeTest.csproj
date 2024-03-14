@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>net8.0-windows</TargetFramework>
@@ -10,6 +10,16 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="testhost.dll.config" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="testhost.dll.config">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+
+  <ItemGroup>
 	  <PackageReference Include="CommunityToolkit.Mvvm" Version="8.2.2" />
 	  <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.7.1" />
 	  <PackageReference Include="NUnit" Version="3.13.3" />
@@ -18,6 +28,7 @@
 	  <PackageReference Include="coverlet.collector" Version="6.0.0" />
 	  <PackageReference Include="FlaUI.Core" Version="4.0.0" />
 	  <PackageReference Include="FlaUI.UIA3" Version="4.0.0" />
+	  <PackageReference Include="System.Configuration.ConfigurationManager" Version="8.0.0" />
   </ItemGroup>
 
 </Project>
