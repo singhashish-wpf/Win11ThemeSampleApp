@@ -75,7 +75,9 @@ namespace Win11ThemeTest
         public void z_Cleanup()
         {            
             textWindow.Close();
+            Assert.IsTrue(textWindow.IsOffscreen);
             mainWindow.Close();
+            Assert.IsTrue(mainWindow.IsOffscreen);
         }
 
         [Test]
