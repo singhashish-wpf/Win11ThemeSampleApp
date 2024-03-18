@@ -13,7 +13,7 @@
             <Slider  />
             <TextBox Text="TextBox Content..." />
             <Button Name="testbtn" Content="Test Button" Click="Button_Click"/>
-            <Button Name="txtBoxButton" Content="TextBox Button" Width="200" Click="textBoxButton_Click" />
+            <Button Name="txtBoxButton" Content="TextBox Button" Width="129" Click="textBoxButton_Click" />
         </StackPanel>
     </Grid>
 </Window>

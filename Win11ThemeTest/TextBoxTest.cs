@@ -15,6 +15,7 @@ using System.Linq;
 using NuGet.Frameworks;
 using static System.Runtime.InteropServices.JavaScript.JSType;
 using System.Runtime.ConstrainedExecution;
+using System.Configuration;
 
 namespace Win11ThemeTest
 {
@@ -22,8 +23,8 @@ namespace Win11ThemeTest
     public class textBoxTests
     {
         private Application app;
-        private Window MainWindow;
-        private Window TextWindow;
+        private Window mainWindow;
+        public Window textWindow;
         TextBox textBox;
         TextBox disabledTextBox;
         Button txtButton;
@@ -31,27 +32,56 @@ namespace Win11ThemeTest
         
         public textBoxTests()
         {
-            app = FlaUI.Core.Application.Launch(@"..\\..\\..\\..\\TestingApplication\\bin\\Debug\\net9.0-windows\\win-x64\\TestingApplication.exe");       
-            MainWindow = app.GetMainWindow(automation);
-            txtButton = MainWindow.FindFirstDescendant(cf => cf.ByAutomationId("txtBoxButton")).AsButton();
-            Mouse.Click(txtButton.GetClickablePoint());
-            Wait.UntilInputIsProcessed(TimeSpan.FromMilliseconds(500));
-            TextWindow = MainWindow.FindFirstDescendant(cf => cf.ByName("TextWindow")).AsWindow();
-            textBox = TextWindow.FindFirstDescendant(cf => cf.ByAutomationId("tbTxt")).AsTextBox();
-            disabledTextBox = TextWindow.FindFirstDescendant(cf => cf.ByAutomationId("tbTxt_disabled")).AsTextBox();          
+            try
+            {
+                var appPath = ConfigurationManager.AppSettings["Testpath"];
+                app = Application.Launch(appPath);
+
+                mainWindow = app.GetMainWindow(automation);
+                txtButton = mainWindow.FindFirstDescendant(cf => cf.ByAutomationId("txtBoxButton")).AsButton();
+                Mouse.Click(txtButton.GetClickablePoint());
+                Wait.UntilInputIsProcessed(TimeSpan.FromMilliseconds(500));
+                textWindow = mainWindow.FindFirstDescendant(cf => cf.ByName("TextWindow")).AsWindow();
+                textBox = textWindow.FindFirstDescendant(cf => cf.ByAutomationId("tbTxt")).AsTextBox();
+                disabledTextBox = textWindow.FindFirstDescendant(cf => cf.ByAutomationId("tbTxt_disabled")).AsTextBox();
+            }
+            catch (Exception ex)
+            {
+                var filepath = ConfigurationManager.AppSettings["logpath"];
+                if (!Directory.Exists(filepath))
+                {
+                    Directory.CreateDirectory(filepath);
+                }
+                filepath = filepath + "log_" + DateTime.Now.ToString("yyyyMMddHHmmss") + ".txt";   //Text File Name
+                if (!File.Exists(filepath))
+                {
+                    File.Create(filepath).Dispose();
+                }
+                using (StreamWriter sw = File.AppendText(filepath))
+                {
+                    string error = "Log Written Date:" + " " + DateTime.Now.ToString() + "\nError Message:" + " " + ex.Message.ToString();
+                    sw.WriteLine("-----------Exception Details on " + " " + DateTime.Now.ToString() + "-----------------");
+                    sw.WriteLine("-------------------------------------------------------------------------------------");
+                    sw.WriteLine(error);
+                    sw.Flush();
+                    sw.Close();
+                }
+            }
+           
+                  
         }
 
         [Test]
         public void z_Cleanup()
         {            
-            TextWindow.Close();
-            MainWindow.Close();
+            textWindow.Close();
+            mainWindow.Close();
         }
 
         [Test]
         public void tb_findTextBox()
         {
-            Assert.IsNotNull(TextWindow);           
+            Assert.IsNotNull(textWindow);           
             Assert.IsNotNull(textBox);
         }
 
@@ -203,7 +233,7 @@ namespace Win11ThemeTest
             textBox.RightClick();
             Wait.UntilInputIsProcessed(TimeSpan.FromMilliseconds(1000));
 
-            var cutText = TextWindow.FindFirstDescendant(cf => cf.ByName("Cut")).AsMenuItem();
+            var cutText = textWindow.FindFirstDescendant(cf => cf.ByName("Cut")).AsMenuItem();
             Wait.UntilInputIsProcessed(TimeSpan.FromMilliseconds(500));
             Assert.IsNotNull(cutText);
             
@@ -231,7 +261,7 @@ namespace Win11ThemeTest
             textBox.RightClick();
             Wait.UntilInputIsProcessed(TimeSpan.FromMilliseconds(1000));
 
-            var pasteText = TextWindow.FindFirstDescendant(cf => cf.ByName("Copy")).AsMenuItem();
+            var pasteText = textWindow.FindFirstDescendant(cf => cf.ByName("Copy")).AsMenuItem();
             Wait.UntilInputIsProcessed(TimeSpan.FromMilliseconds(1000));
             pasteText.GetClickablePoint();
             Assert.IsNotNull(pasteText);
@@ -249,7 +279,7 @@ namespace Win11ThemeTest
             textBox.RightClick();
             Wait.UntilInputIsProcessed(TimeSpan.FromMilliseconds(1000));
 
-            var pasteText = TextWindow.FindFirstDescendant(cf => cf.ByName("Paste")).AsMenuItem();
+            var pasteText = textWindow.FindFirstDescendant(cf => cf.ByName("Paste")).AsMenuItem();
             Wait.UntilInputIsProcessed(TimeSpan.FromMilliseconds(500));
             Assert.IsNotNull(pasteText);
             pasteText.Click();
@@ -278,7 +308,7 @@ namespace Win11ThemeTest
         [Test]
         public void tb8_disabledTextBoxAvailability()
         {
-            Assert.IsNotNull(TextWindow);
+            Assert.IsNotNull(textWindow);
             Assert.IsNotNull(disabledTextBox);
         }
 
@@ -286,7 +316,7 @@ namespace Win11ThemeTest
         [Test]
         public void tb8_disabledTextBox()
         {
-            Assert.IsNotNull(TextWindow);                
+            Assert.IsNotNull(textWindow);                
             Assert.That(disabledTextBox.Text, Is.EqualTo("TextBox Disabled"));
         }
 
@@ -294,7 +324,7 @@ namespace Win11ThemeTest
         [Test]
         public void tb1_disabledEditTextBox()
         {
-            Assert.IsNotNull(TextWindow);            
+            Assert.IsNotNull(textWindow);            
             Assert.That(disabledTextBox.IsEnabled, Is.False);           
         }
 
