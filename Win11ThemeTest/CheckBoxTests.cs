@@ -162,10 +162,7 @@ namespace Win11ThemeTest
         [Test]
         public void checkboxthreestate5_is3StateCheckboxToggleMouseClick()
         {
-            Mouse.MoveTo(threestatecheckBox.GetClickablePoint());
-            Wait.UntilInputIsProcessed();
             threestatecheckBox.Click();
-            Wait.UntilInputIsProcessed();
             Assert.That(threestatecheckBox.IsChecked, Is.True);
             threestatecheckBox.Toggle();
             threestatecheckBox.Toggle();
