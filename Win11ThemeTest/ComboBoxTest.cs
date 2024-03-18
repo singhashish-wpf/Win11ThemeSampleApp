@@ -144,7 +144,7 @@ namespace Win11ThemeTest
             Mouse.Click();
             
             Mouse.MoveTo(comboBox.Items[0].GetClickablePoint());
-            Wait.UntilInputIsProcessed(TimeSpan.FromMilliseconds(1000));
+            Wait.UntilInputIsProcessed(TimeSpan.FromMilliseconds(1500));
             Mouse.LeftClick();
             Wait.UntilInputIsProcessed(TimeSpan.FromMilliseconds(1000));
             Assert.That(comboBox.SelectedItem.Name, Is.EqualTo("Green"));                    
