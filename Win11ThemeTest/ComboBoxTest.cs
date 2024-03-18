@@ -7,35 +7,65 @@ using FlaUI.UIA3;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Configuration;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
 namespace Win11ThemeTest
 {
-    public class ComboBoxTest
+    public class comboBoxTests
     {
         Application app;
-        Window MainWindow;
+        Window mainWindow;
         Button cmbBoxButton;
         Window comboWindow;
         ComboBox comboBox;
         ComboBox comboBoxBind;
         ComboBox comboBoxBind2;
-        UIA3Automation automation = new UIA3Automation();
-        public ComboBoxTest()
+        //UIA3Automation automation = new UIA3Automation();
+        public comboBoxTests()
         {
-            app = FlaUI.Core.Application.Launch(@"..\\..\\..\\..\\TestingApplication\\bin\\Debug\\net9.0-windows\\win-x64\\TestingApplication.exe");
+            try
+            {
+                var appPath = ConfigurationManager.AppSettings["Testpath"];
+                app = Application.Launch(appPath);
 
-            MainWindow = app.GetMainWindow(automation);
-            cmbBoxButton = MainWindow.FindFirstDescendant(cf => cf.ByAutomationId("cmbBoxButton")).AsButton();
-            Mouse.Click(cmbBoxButton.GetClickablePoint());
-            Wait.UntilInputIsProcessed(TimeSpan.FromMilliseconds(500));
-            comboWindow = MainWindow.FindFirstDescendant(cf => cf.ByName("ComboBoxWindow")).AsWindow();
+                using (var automation = new UIA3Automation())
+                {
+                    mainWindow = app.GetMainWindow(automation);
+                    cmbBoxButton = mainWindow.FindFirstDescendant(cf => cf.ByAutomationId("cmbBoxButton")).AsButton();
+                    Mouse.Click(cmbBoxButton.GetClickablePoint());
+                    Wait.UntilInputIsProcessed(TimeSpan.FromMilliseconds(500));
+                    comboWindow = mainWindow.FindFirstDescendant(cf => cf.ByName("ComboBoxWindow")).AsWindow();
 
-            comboBox = comboWindow.FindFirstDescendant(cf => cf.ByAutomationId("comboBoxList")).AsComboBox();
-            comboBoxBind = comboWindow.FindFirstDescendant(cf => cf.ByAutomationId("comboBoxBind")).AsComboBox();
-            comboBoxBind2 = comboWindow.FindFirstDescendant(cf => cf.ByAutomationId("comboBoxBind2")).AsComboBox();
+                    comboBox = comboWindow.FindFirstDescendant(cf => cf.ByAutomationId("comboBoxList")).AsComboBox();
+                    comboBoxBind = comboWindow.FindFirstDescendant(cf => cf.ByAutomationId("comboBoxBind")).AsComboBox();
+                    comboBoxBind2 = comboWindow.FindFirstDescendant(cf => cf.ByAutomationId("comboBoxBind2")).AsComboBox();
+                }
+            }
+            catch (Exception ex)
+            {
+                var filepath = ConfigurationManager.AppSettings["logpath"];
+                if (!Directory.Exists(filepath))
+                {
+                    Directory.CreateDirectory(filepath);
+                }
+                filepath = filepath + "log_" + DateTime.Now.ToString("yyyyMMddHHmmss") + ".txt";   //Text File Name
+                if (!File.Exists(filepath))
+                {
+                    File.Create(filepath).Dispose();
+                }
+                using (StreamWriter sw = File.AppendText(filepath))
+                {
+                    string error = "Log Written Date:" + " " + DateTime.Now.ToString() + "\nError Message:" + " " + ex.Message.ToString();
+                    sw.WriteLine("-----------Exception Details on " + " " + DateTime.Now.ToString() + "-----------------");
+                    sw.WriteLine("-------------------------------------------------------------------------------------");
+                    sw.WriteLine(error);
+                    sw.Flush();
+                    sw.Close();
+                }
+            }
         }
 
         [Test]
@@ -114,7 +144,7 @@ namespace Win11ThemeTest
             Mouse.Click();
             
             Mouse.MoveTo(comboBox.Items[0].GetClickablePoint());
-            Wait.UntilInputIsProcessed(TimeSpan.FromMilliseconds(3000));
+            Wait.UntilInputIsProcessed(TimeSpan.FromMilliseconds(1000));
             Mouse.LeftClick();
             Wait.UntilInputIsProcessed(TimeSpan.FromMilliseconds(1000));
             Assert.That(comboBox.SelectedItem.Name, Is.EqualTo("Green"));                    
@@ -124,7 +154,9 @@ namespace Win11ThemeTest
         public void z_Cleanup()
         {
             comboWindow.Close();
-            MainWindow.Close();
+            Assert.IsTrue(comboWindow.IsOffscreen);
+            mainWindow.Close();
+            Assert.IsTrue(mainWindow.IsOffscreen);
         }
     }
 }
