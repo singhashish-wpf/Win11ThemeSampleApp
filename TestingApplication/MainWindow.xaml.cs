@@ -25,5 +25,12 @@ namespace TestingApplication
         {
             MessageBox.Show("Button Clicked");
         }
+
+        private void datepickerButton_Click(object sender, RoutedEventArgs e)
+        {
+           DatepickerWindow dtwindow = new DatepickerWindow();
+           dtwindow.Owner = this;
+           dtwindow.Show();
+        }
     }
 }
