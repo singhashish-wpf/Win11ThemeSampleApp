@@ -26,7 +26,7 @@ namespace TestingApplication
             MessageBox.Show("Button Clicked");
         }
 
-        private void Button_Click(object sender, RoutedEventArgs e)
+        private void listboxButton_Click(object sender, RoutedEventArgs e)
         {
             ListboxWindow lstbxwindow = new ListboxWindow();
             lstbxwindow.Owner = this;
