@@ -6,16 +6,10 @@
         xmlns:local="clr-namespace:TestingApplication"
         mc:Ignorable="d"
         Title="ButtonWindow" Height="450" Width="800">
-    <Grid Margin="93,40,186,0" RenderTransformOrigin="0.5,0.5">
-      
-        <Button Name="btn" Content="Click Me" RenderTransformOrigin="4.035,-1.289" Margin="323,185,0,0" VerticalAlignment="Top" Click="btn_Click" />
-        <Button Name="btnicon" Content="Click Me">
-            <Button.Icon>
-                <SymbolIcon Symbol="Home24"/>
-            </Button.Icon>
-           
-        </Button>
-        <Button Name="disbtn" Content="Disabled Button" RenderTransformOrigin="4.035,-1.289" Margin="296,236,0,0" VerticalAlignment="Top" Click="btn_Click" IsEnabled="False" />
+    <Grid>
        
+            <Button x:Name="btn" Content="Click Me" RenderTransformOrigin="4.035,-1.289" Click="btn_Click" HorizontalAlignment="Center" Margin="0,112,0,0" VerticalAlignment="Top" />
+            <Button x:Name="disbtn" Content="Disabled Button" RenderTransformOrigin="4.035,-1.289" Click="btn_Click" IsEnabled="False" HorizontalAlignment="Center" Margin="0,180,0,0" VerticalAlignment="Top" />
+        
     </Grid>
 </Window>

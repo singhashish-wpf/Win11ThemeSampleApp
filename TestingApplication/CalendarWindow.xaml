@@ -7,7 +7,6 @@
         mc:Ignorable="d"
         Title="CalendarWindow" Height="450" Width="800">
     <Grid >
-        <!--<Calendar Name="tstCal" Margin="304,146,0,0" ></Calendar>-->
         <Calendar Name="tstCal" Margin="186,35,354,89"></Calendar>
         <Calendar Name="tstCal_multiSelect" SelectionMode="MultipleRange" Margin="485,35,55,89"></Calendar>
     </Grid>

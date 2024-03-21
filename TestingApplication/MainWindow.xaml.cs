@@ -30,6 +30,8 @@ namespace TestingApplication
             //  this.NavigationService.Navigate(new Uri("Page3.xaml", UriKind.Relative));         
             ButtonWindow btnwindow = new ButtonWindow();
             btnwindow.Owner = this;
+            //Added for fixing blank window issue
+            Application.Current.MainWindow = btnwindow;
             btnwindow.Show();
         }
 
@@ -37,6 +39,8 @@ namespace TestingApplication
         {          
             CalendarWindow clndrwindow = new CalendarWindow();
             clndrwindow.Owner = this;
+            //Added for fixing blank window issue
+            Application.Current.MainWindow = clndrwindow;
             clndrwindow.Show();
         }
     }
