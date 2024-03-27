@@ -37,6 +37,8 @@ namespace TestingApplication
         {
             ListboxWindow lstbxwindow = new ListboxWindow();
             lstbxwindow.Owner = this;
+            //Added for fixing blank window issue
+            Application.Current.MainWindow = lstbxwindow;
             lstbxwindow.Show();
         }
     }
