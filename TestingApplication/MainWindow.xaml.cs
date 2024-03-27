@@ -32,5 +32,14 @@ namespace TestingApplication
             btnwindow.Owner = this;
             btnwindow.Show();
         }
+
+        private void listboxButton_Click(object sender, RoutedEventArgs e)
+        {
+            ListboxWindow lstbxwindow = new ListboxWindow();
+            lstbxwindow.Owner = this;
+            //Added for fixing blank window issue
+            Application.Current.MainWindow = lstbxwindow;
+            lstbxwindow.Show();
+        }
     }
 }
