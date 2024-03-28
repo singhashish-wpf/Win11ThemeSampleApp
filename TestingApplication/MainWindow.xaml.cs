@@ -32,5 +32,12 @@ namespace TestingApplication
             btnwindow.Owner = this;
             btnwindow.Show();
         }
+
+        private void datepickerButton_Click(object sender, RoutedEventArgs e)
+        {
+           DatepickerWindow dtwindow = new DatepickerWindow();
+           dtwindow.Owner = this;
+           dtwindow.Show();
+        }
     }
 }
