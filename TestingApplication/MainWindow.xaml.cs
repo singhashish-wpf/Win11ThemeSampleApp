@@ -32,5 +32,12 @@ namespace TestingApplication
             btnwindow.Owner = this;
             btnwindow.Show();
         }
+
+        private void textBoxButton_Click(object sender, RoutedEventArgs e)
+        {
+            TextWindow tw = new TextWindow();
+            tw.Owner = this;
+            tw.Show();
+        }
     }
 }
