@@ -3,11 +3,6 @@ using FlaUI.Core.AutomationElements;
 using FlaUI.Core.Input;
 using FlaUI.UIA3;
 using FlaUI.Core.Definitions;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Globalization;
 using Calendar = FlaUI.Core.AutomationElements.Calendar;
 using System.Configuration;
@@ -18,19 +13,18 @@ namespace Win11ThemeTest
     {
         private Application app;
         private Window window;
-        public Window calwindow;
+        public Window calWindow;
         Button testButton;
         Calendar calendar;
         Calendar multiSelectCalendar;
         AutomationElement headerBtn;
         AutomationElement prevBtn;
         AutomationElement nextBtn;
+
         public CalendarTest()
         {
             try
             {
-
-                //app = Application.Launch(@"..\\..\\..\\..\\TestingApplication\\bin\\Debug\\net9.0-windows\\win-x64\\TestingApplication.exe");
                 var appPath = ConfigurationManager.AppSettings["Testpath"];
                 app = Application.Launch(appPath);
                 using (var automation = new UIA3Automation())
@@ -39,24 +33,24 @@ namespace Win11ThemeTest
                     testButton = window.FindFirstDescendant(cf => cf.ByAutomationId("calendartestbtn")).AsButton();
                     Mouse.Click(testButton.GetClickablePoint());
                     Wait.UntilInputIsProcessed(TimeSpan.FromMilliseconds(2000));
-                    calwindow = window.FindFirstDescendant(cf => cf.ByName("CalendarWindow")).AsWindow();
-                    calendar = calwindow.FindFirstDescendant(cf => cf.ByAutomationId("tstCal")).AsCalendar();
-                    multiSelectCalendar = calwindow.FindFirstDescendant(cf => cf.ByAutomationId("tstCal_multiSelect")).AsCalendar();
+                    calWindow = window.FindFirstDescendant(cf => cf.ByName("CalendarWindow")).AsWindow();
+                    calendar = calWindow.FindFirstDescendant(cf => cf.ByAutomationId("tstCal")).AsCalendar();
+                    multiSelectCalendar = calWindow.FindFirstDescendant(cf => cf.ByAutomationId("tstCal_multiSelect")).AsCalendar();
                 }
             }
             catch (Exception ex)
             {
-                var filepath = ConfigurationManager.AppSettings["logpath"];
-                if (!Directory.Exists(filepath))
+                var filePath = ConfigurationManager.AppSettings["logpath"];
+                if (!Directory.Exists(filePath))
                 {
-                    Directory.CreateDirectory(filepath);
+                    Directory.CreateDirectory(filePath);
                 }
-                filepath = filepath + "log_" + DateTime.Now.ToString("yyyyMMddHHmmss") + ".txt";   //Text File Name
-                if (!File.Exists(filepath))
+                filePath = filePath + "log_" + DateTime.Now.ToString("yyyyMMddHHmmss") + ".txt";   //Text File Name
+                if (!File.Exists(filePath))
                 {
-                    File.Create(filepath).Dispose();
+                    File.Create(filePath).Dispose();
                 }
-                using (StreamWriter sw = File.AppendText(filepath))
+                using (StreamWriter sw = File.AppendText(filePath))
                 {
                     string error = "Log Written Date:" + " " + DateTime.Now.ToString() + "\nError Message:" + " " + ex.Message.ToString();
                     sw.WriteLine("-----------Exception Details on " + " " + DateTime.Now.ToString() + "-----------------");
@@ -72,7 +66,7 @@ namespace Win11ThemeTest
         [Test]
         public void calendar1_isCalendarAvailable()
         {
-            Assert.IsNotNull(calwindow);
+            Assert.IsNotNull(calWindow);
             Assert.IsNotNull(calendar);
         }
 
@@ -83,26 +77,26 @@ namespace Win11ThemeTest
             Assert.IsNotNull(calendar);
             DateTime thisDay = DateTime.Today;
             calendar.SelectDate(thisDay);
-            DateTime[] sdate = calendar.SelectedDates;
-            Assert.That(sdate.Length, Is.EqualTo(1));
-            Assert.That(sdate[0], Is.EqualTo(thisDay));
+            DateTime[] sDate = calendar.SelectedDates;
+            Assert.That(sDate.Length, Is.EqualTo(1));
+            Assert.That(sDate[0], Is.EqualTo(thisDay));
         }
 
         //test for click previous month button
         [Test]
-        public void calendar3_isCalendarClickprevMonth()
+        public void calendar3_isCalendarClickPrevMonth()
         {
             Assert.IsNotNull(calendar);
             headerBtn = calendar.FindFirstChild(cf => cf.ByAutomationId("PART_HeaderButton"));
-            string oldheaderName = headerBtn.Name;
+            string oldHeaderName = headerBtn.Name;
             prevBtn = calendar.FindFirstChild(cf => cf.ByControlType(ControlType.Button));
             prevBtn.Click();
             string headerName = headerBtn.Name;
-            string[] oldyearMonth = oldheaderName.Split(' ');
-            int currentMonth = DateTime.ParseExact(oldyearMonth[0], "MMMM", CultureInfo.CurrentCulture).Month;
-            DateTime currentdate = new DateTime(Convert.ToInt32(oldyearMonth[1]), currentMonth, 1).AddMonths(-1);
-            int year = currentdate.Year;
-            string Month = currentdate.ToString("MMMM");
+            string[] oldYearMonth = oldHeaderName.Split(' ');
+            int currentMonth = DateTime.ParseExact(oldYearMonth[0], "MMMM", CultureInfo.CurrentCulture).Month;
+            DateTime currentDate = new DateTime(Convert.ToInt32(oldYearMonth[1]), currentMonth, 1).AddMonths(-1);
+            int year = currentDate.Year;
+            string Month = currentDate.ToString("MMMM");
             string[] yearMonth = headerName.Split(' ');
             Assert.That(yearMonth[0], Is.EqualTo(Month));
             Assert.That(Convert.ToInt32(yearMonth[1]), Is.EqualTo(year));
@@ -114,21 +108,21 @@ namespace Win11ThemeTest
         {
             Assert.IsNotNull(calendar);
             headerBtn = calendar.FindFirstChild(cf => cf.ByAutomationId("PART_HeaderButton"));
-            string oldheaderName = headerBtn.Name;
+            string oldHeaderName = headerBtn.Name;
             nextBtn = calendar.FindFirstChild(cf => cf.ByAutomationId("PART_NextButton"));
             nextBtn.Click();
             string headerName = headerBtn.Name;
-            string[] oldyearMonth = oldheaderName.Split(' ');
-            int currentMonth = DateTime.ParseExact(oldyearMonth[0], "MMMM", CultureInfo.CurrentCulture).Month;
-            DateTime currentdate = new DateTime(Convert.ToInt32(oldyearMonth[1]), currentMonth, 1).AddMonths(1);
-            int year = currentdate.Year;
-            string Month = currentdate.ToString("MMMM");
+            string[] oldYearMonth = oldHeaderName.Split(' ');
+            int currentMonth = DateTime.ParseExact(oldYearMonth[0], "MMMM", CultureInfo.CurrentCulture).Month;
+            DateTime currentDate = new DateTime(Convert.ToInt32(oldYearMonth[1]), currentMonth, 1).AddMonths(1);
+            int year = currentDate.Year;
+            string Month = currentDate.ToString("MMMM");
             string[] yearMonth = headerName.Split(' ');
             Assert.That(yearMonth[0], Is.EqualTo(Month));
             Assert.That(Convert.ToInt32(yearMonth[1]), Is.EqualTo(year));
         }
 
-        //test for click Monthyear button
+        //test for click Month year button
         [Test]
         public void calendar5_isCalendarClickMonthYear()
         {
@@ -416,31 +410,31 @@ namespace Win11ThemeTest
 
         //   test click on other month dates loads that month
         [Test]
-        public void calendars2_OnClickofOtherMonthDate()
+        public void calendars2_OnClickOfOtherMonthDate()
         {
             AutomationElement[] dayButtons = calendar.FindAllChildren(cf => cf.ByControlType(ControlType.Button));
             AutomationElement dayBtn = dayButtons[3];
-            string dayBtnstring = dayButtons[3].Name;
-            string[] parts = dayBtnstring.Split(' ');
+            string dayBtnString = dayButtons[3].Name;
+            string[] parts = dayBtnString.Split(' ');
             headerBtn = calendar.FindFirstChild(cf => cf.ByAutomationId("PART_HeaderButton"));
             string headerName = headerBtn.Name;
-            string[] hparts = headerName.Split(' ');
-            if (parts[1] == hparts[0])
+            string[] hParts = headerName.Split(' ');
+            if (parts[1] == hParts[0])
             {
                 dayBtn = dayButtons[44];
-                dayBtnstring = dayButtons[44].Name;
-                parts = dayBtnstring.Split(' ');
+                dayBtnString = dayButtons[44].Name;
+                parts = dayBtnString.Split(' ');
             }
-            if (parts[1] != hparts[0])
+            if (parts[1] != hParts[0])
             {
                 if (dayBtn.Patterns.Invoke.TryGetPattern(out var invokePattern))
                 {
                     invokePattern.Invoke();
                 }
             }
-            dayBtnstring = dayBtnstring.Remove(0, 3);
+            dayBtnString = dayBtnString.Remove(0, 3);
             AutomationElement headerBtnNew = calendar.FindFirstChild(cf => cf.ByAutomationId("PART_HeaderButton"));
-            Assert.That(headerBtnNew.Name, Is.EqualTo(dayBtnstring));
+            Assert.That(headerBtnNew.Name, Is.EqualTo(dayBtnString));
         }
 
         //test multiselect of dates for calendar with selection mode - MultipleRange
@@ -451,7 +445,7 @@ namespace Win11ThemeTest
             multiSelectCalendar.SelectDate(date1);
             DateTime date2 = new DateTime(2024, 3, 15);
             DateTime date3 = new DateTime(2024, 3, 17);
-            DateTime[] dates = new DateTime[] { date2, date3 };
+            DateTime[] dates = [date2, date3];
             multiSelectCalendar.AddRangeToSelection(dates);
             DateTime[] selectedDates = multiSelectCalendar.SelectedDates;
             Assert.That(selectedDates, Has.Length.EqualTo(3));
@@ -463,13 +457,11 @@ namespace Win11ThemeTest
         [Test]
         public void calendars4_closeWindows()
         {
-            calwindow.Focus();
-            calwindow.Close();
-            Assert.IsTrue(calwindow.IsOffscreen);
+            calWindow.Focus();
+            calWindow.Close();
+            Assert.IsTrue(calWindow.IsOffscreen);
             window.Close();
             Assert.IsTrue(window.IsOffscreen);
         }
-
-
     }
 }
