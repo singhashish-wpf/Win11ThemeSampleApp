@@ -8,6 +8,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using TestingApplication.ViewModel;
 
 namespace TestingApplication
 {
@@ -31,6 +32,14 @@ namespace TestingApplication
             ButtonWindow btnwindow = new ButtonWindow();
             btnwindow.Owner = this;
             btnwindow.Show();
+        }
+
+        private void checkboxButton_Click(object sender, RoutedEventArgs e)
+        {
+            CheckBoxViewModel viewModel=new CheckBoxViewModel();
+            CheckboxWindow chkbxwindow = new CheckboxWindow(viewModel);
+            chkbxwindow.Owner = this;
+            chkbxwindow.Show();
         }
     }
 }
