@@ -11,15 +11,15 @@ namespace Win11ThemeTest
 {
     public class CalendarTest
     {
-        private Application app;
-        private Window window;
-        public Window calWindow;
-        Button testButton;
-        Calendar calendar;
-        Calendar multiSelectCalendar;
-        AutomationElement headerBtn;
-        AutomationElement prevBtn;
-        AutomationElement nextBtn;
+        private Application? app;
+        private Window? window;
+        public Window? calWindow;
+        Button? testButton;
+        Calendar? calendar;
+        Calendar? multiSelectCalendar;
+        AutomationElement? headerBtn;
+        AutomationElement? prevBtn;
+        AutomationElement? nextBtn;
 
         public CalendarTest()
         {
@@ -41,24 +41,31 @@ namespace Win11ThemeTest
             catch (Exception ex)
             {
                 var filePath = ConfigurationManager.AppSettings["logpath"];
-                if (!Directory.Exists(filePath))
+                if(filePath != null)
                 {
-                    Directory.CreateDirectory(filePath);
+                    if (!Directory.Exists(filePath))
+                    {
+                        Directory.CreateDirectory(filePath);
+                    }
+                    filePath = filePath + "log_" + DateTime.Now.ToString("yyyyMMddHHmmss") + ".txt";   //Text File Name
+                    if (!File.Exists(filePath))
+                    {
+                        File.Create(filePath).Dispose();
+                    }
+                    using (StreamWriter sw = File.AppendText(filePath))
+                    {
+                        string error = "Log Written Date:" + " " + DateTime.Now.ToString() + "\nError Message:" + " " + ex.Message.ToString();
+                        sw.WriteLine("-----------Exception Details on " + " " + DateTime.Now.ToString() + "-----------------");
+                        sw.WriteLine("-------------------------------------------------------------------------------------");
+                        sw.WriteLine(error);
+                        sw.Flush();
+                        sw.Close();
+                    }
                 }
-                filePath = filePath + "log_" + DateTime.Now.ToString("yyyyMMddHHmmss") + ".txt";   //Text File Name
-                if (!File.Exists(filePath))
+                else
                 {
-                    File.Create(filePath).Dispose();
-                }
-                using (StreamWriter sw = File.AppendText(filePath))
-                {
-                    string error = "Log Written Date:" + " " + DateTime.Now.ToString() + "\nError Message:" + " " + ex.Message.ToString();
-                    sw.WriteLine("-----------Exception Details on " + " " + DateTime.Now.ToString() + "-----------------");
-                    sw.WriteLine("-------------------------------------------------------------------------------------");
-                    sw.WriteLine(error);
-                    sw.Flush();
-                    sw.Close();
-                }
+                    throw new ArgumentNullException();
+                }          
             }
         }
 
@@ -88,8 +95,10 @@ namespace Win11ThemeTest
         {
             Assert.IsNotNull(calendar);
             headerBtn = calendar.FindFirstChild(cf => cf.ByAutomationId("PART_HeaderButton"));
+            Assert.IsNotNull(headerBtn);
             string oldHeaderName = headerBtn.Name;
             prevBtn = calendar.FindFirstChild(cf => cf.ByControlType(ControlType.Button));
+            Assert.IsNotNull(prevBtn);
             prevBtn.Click();
             string headerName = headerBtn.Name;
             string[] oldYearMonth = oldHeaderName.Split(' ');
@@ -108,8 +117,10 @@ namespace Win11ThemeTest
         {
             Assert.IsNotNull(calendar);
             headerBtn = calendar.FindFirstChild(cf => cf.ByAutomationId("PART_HeaderButton"));
+            Assert.IsNotNull(headerBtn);
             string oldHeaderName = headerBtn.Name;
             nextBtn = calendar.FindFirstChild(cf => cf.ByAutomationId("PART_NextButton"));
+            Assert.IsNotNull(nextBtn);
             nextBtn.Click();
             string headerName = headerBtn.Name;
             string[] oldYearMonth = oldHeaderName.Split(' ');
@@ -130,13 +141,14 @@ namespace Win11ThemeTest
             DateTime thisDay = DateTime.Today;
             calendar.SelectDate(thisDay);
             headerBtn = calendar.FindFirstChild(cf => cf.ByAutomationId("PART_HeaderButton"));
+            Assert.IsNotNull(headerBtn);
             headerBtn.Click();
             string headerName = headerBtn.Name;
             int year = calendar.SelectedDates[0].Year;
             Assert.That(Convert.ToInt32(headerName), Is.EqualTo(year));
             //reset calendar
             AutomationElement[] monthButtons = calendar.FindAllChildren(cf => cf.ByControlType(ControlType.Button));
-            AutomationElement monthBtn = null;
+            AutomationElement monthBtn;
             string[] monthName;
             for (int i = 3; i < monthButtons.Length; i++) // iterate through all the month buttons
             {
@@ -161,8 +173,10 @@ namespace Win11ThemeTest
             DateTime thisDay = DateTime.Today;
             calendar.SelectDate(thisDay);
             headerBtn = calendar.FindFirstChild(cf => cf.ByAutomationId("PART_HeaderButton"));
+            Assert.IsNotNull(headerBtn);
             headerBtn.Click();
             prevBtn = calendar.FindFirstChild(cf => cf.ByControlType(ControlType.Button));
+            Assert.IsNotNull(prevBtn);
             prevBtn.Click();
             string headerName = headerBtn.Name;
             DateTime prevYear = calendar.SelectedDates[0].AddYears(-1);
@@ -170,9 +184,10 @@ namespace Win11ThemeTest
             Assert.That(Convert.ToInt32(headerName), Is.EqualTo(year));
             //reset
             nextBtn = calendar.FindFirstChild(cf => cf.ByAutomationId("PART_NextButton"));
+            Assert.IsNotNull(nextBtn);
             nextBtn.Click();
             AutomationElement[] monthButtons = calendar.FindAllChildren(cf => cf.ByControlType(ControlType.Button));
-            AutomationElement monthBtn = null;
+            AutomationElement monthBtn;
             string[] monthName;
             for (int i = 3; i < monthButtons.Length; i++) // iterate through all the month buttons
             {
@@ -197,8 +212,10 @@ namespace Win11ThemeTest
             DateTime thisDay = DateTime.Today;
             calendar.SelectDate(thisDay);
             headerBtn = calendar.FindFirstChild(cf => cf.ByAutomationId("PART_HeaderButton"));
+            Assert.IsNotNull(headerBtn);
             headerBtn.Click();
             nextBtn = calendar.FindFirstChild(cf => cf.ByAutomationId("PART_NextButton"));
+            Assert.IsNotNull(nextBtn);
             nextBtn.Click();
             string headerName = headerBtn.Name;
             DateTime nextYear = calendar.SelectedDates[0].AddYears(1);
@@ -206,9 +223,10 @@ namespace Win11ThemeTest
             Assert.That(Convert.ToInt32(headerName), Is.EqualTo(year));
             //reset
             prevBtn = calendar.FindFirstChild(cf => cf.ByControlType(ControlType.Button));
+            Assert.IsNotNull(prevBtn);
             prevBtn.Click();
             AutomationElement[] monthButtons = calendar.FindAllChildren(cf => cf.ByControlType(ControlType.Button));
-            AutomationElement monthBtn = null;
+            AutomationElement monthBtn;
             string[] monthName;
             for (int i = 3; i < monthButtons.Length; i++) // iterate through all the month buttons
             {
@@ -233,6 +251,7 @@ namespace Win11ThemeTest
             DateTime thisDay = DateTime.Today;
             calendar.SelectDate(thisDay);
             headerBtn = calendar.FindFirstChild(cf => cf.ByAutomationId("PART_HeaderButton"));
+            Assert.IsNotNull(headerBtn);
             headerBtn.Click();
             headerBtn.Click();
             string headerName = headerBtn.Name;
@@ -245,7 +264,7 @@ namespace Win11ThemeTest
             Assert.That(year, Is.LessThan(yearHigh));
             //reset
             AutomationElement[] yearButtons = calendar.FindAllChildren(cf => cf.ByControlType(ControlType.Button));
-            AutomationElement yearBtn = null;
+            AutomationElement yearBtn;
             string[] yearName;
             for (int i = 3; i < yearButtons.Length; i++) // iterate through all the month buttons
             {
@@ -262,7 +281,7 @@ namespace Win11ThemeTest
             }
 
             AutomationElement[] monthButtons = calendar.FindAllChildren(cf => cf.ByControlType(ControlType.Button));
-            AutomationElement monthBtn = null;
+            AutomationElement monthBtn;
             string[] monthName;
             for (int i = 3; i < monthButtons.Length; i++) // iterate through all the month buttons
             {
@@ -287,10 +306,12 @@ namespace Win11ThemeTest
             DateTime thisDay = DateTime.Today;
             calendar.SelectDate(thisDay);
             headerBtn = calendar.FindFirstChild(cf => cf.ByAutomationId("PART_HeaderButton"));
+            Assert.IsNotNull(headerBtn);
             headerBtn.Click();
             headerBtn.Click();
             string headerName = headerBtn.Name;
             prevBtn = calendar.FindFirstChild(cf => cf.ByControlType(ControlType.Button));
+            Assert.IsNotNull(prevBtn);
             prevBtn.Click();
             string prevHeaderName = headerBtn.Name;
             DateTime currentMonth = calendar.SelectedDates[0];
@@ -307,9 +328,10 @@ namespace Win11ThemeTest
             Assert.That(highDiff, Is.EqualTo(10));
             //reset
             nextBtn = calendar.FindFirstChild(cf => cf.ByAutomationId("PART_NextButton"));
+            Assert.IsNotNull(nextBtn);
             nextBtn.Click();
             AutomationElement[] yearButtons = calendar.FindAllChildren(cf => cf.ByControlType(ControlType.Button));
-            AutomationElement yearBtn = null;
+            AutomationElement yearBtn;
             string[] yearName;
             for (int i = 3; i < yearButtons.Length; i++) // iterate through all the month buttons
             {
@@ -326,7 +348,7 @@ namespace Win11ThemeTest
             }
 
             AutomationElement[] monthButtons = calendar.FindAllChildren(cf => cf.ByControlType(ControlType.Button));
-            AutomationElement monthBtn = null;
+            AutomationElement monthBtn ;
             string[] monthName;
             for (int i = 3; i < monthButtons.Length; i++) // iterate through all the month buttons
             {
@@ -351,10 +373,12 @@ namespace Win11ThemeTest
             DateTime thisDay = DateTime.Today;
             calendar.SelectDate(thisDay);
             headerBtn = calendar.FindFirstChild(cf => cf.ByAutomationId("PART_HeaderButton"));
+            Assert.IsNotNull(headerBtn);
             headerBtn.Click();
             headerBtn.Click();
             string headerName = headerBtn.Name;
             nextBtn = calendar.FindFirstChild(cf => cf.ByAutomationId("PART_NextButton"));
+            Assert.IsNotNull(nextBtn);
             nextBtn.Click();
             string nextHeaderName = headerBtn.Name;
             DateTime currentMonth = calendar.SelectedDates[0];
@@ -371,11 +395,12 @@ namespace Win11ThemeTest
             Assert.That(highDiff, Is.EqualTo(10));
             //reset
             prevBtn = calendar.FindFirstChild(cf => cf.ByControlType(ControlType.Button));
+            Assert.IsNotNull(prevBtn);
             prevBtn.Click();
             AutomationElement[] yearButtons = calendar.FindAllChildren(cf => cf.ByControlType(ControlType.Button));
-            AutomationElement yearBtn = null;
+            AutomationElement yearBtn ;
             string[] yearName;
-            for (int i = 3; i < yearButtons.Length; i++) // iterate through all the month buttons
+            for (int i = 3; i < yearButtons.Length; i++) // iterate through all the year buttons
             {
                 yearName = yearButtons[i].Name.Split(' ');
                 if (Convert.ToInt32(yearName[0]) == calendar.SelectedDates[0].Year)
@@ -390,7 +415,7 @@ namespace Win11ThemeTest
             }
 
             AutomationElement[] monthButtons = calendar.FindAllChildren(cf => cf.ByControlType(ControlType.Button));
-            AutomationElement monthBtn = null;
+            AutomationElement monthBtn;
             string[] monthName;
             for (int i = 3; i < monthButtons.Length; i++) // iterate through all the month buttons
             {
@@ -412,11 +437,13 @@ namespace Win11ThemeTest
         [Test]
         public void calendars2_OnClickOfOtherMonthDate()
         {
+            Assert.IsNotNull(calendar);
             AutomationElement[] dayButtons = calendar.FindAllChildren(cf => cf.ByControlType(ControlType.Button));
             AutomationElement dayBtn = dayButtons[3];
             string dayBtnString = dayButtons[3].Name;
             string[] parts = dayBtnString.Split(' ');
             headerBtn = calendar.FindFirstChild(cf => cf.ByAutomationId("PART_HeaderButton"));
+            Assert.IsNotNull(headerBtn);
             string headerName = headerBtn.Name;
             string[] hParts = headerName.Split(' ');
             if (parts[1] == hParts[0])
@@ -441,6 +468,7 @@ namespace Win11ThemeTest
         [Test]
         public void calendars3_AddRangeToSelectionTest()
         {
+            Assert.IsNotNull(multiSelectCalendar);
             DateTime date1 = new DateTime(2024, 3, 10);
             multiSelectCalendar.SelectDate(date1);
             DateTime date2 = new DateTime(2024, 3, 15);
@@ -457,6 +485,9 @@ namespace Win11ThemeTest
         [Test]
         public void calendars4_closeWindows()
         {
+            Assert.IsNotNull(window);
+            Assert.IsNotNull(calWindow);
+            Assert.IsNotNull(multiSelectCalendar);
             calWindow.Focus();
             calWindow.Close();
             Assert.IsTrue(calWindow.IsOffscreen);
