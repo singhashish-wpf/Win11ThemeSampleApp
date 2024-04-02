@@ -32,7 +32,7 @@ namespace TestingApplication
             ButtonWindow btnwindow = new ButtonWindow();
             btnwindow.Owner = this;
             //Added for fixing blank window issue
-            Application.Current.MainWindow = btnwindow;
+            Application.Current.MainWindow = btnwindow;         
             btnwindow.Show();
         }
 
@@ -43,6 +43,14 @@ namespace TestingApplication
             //Added for fixing blank window issue
             Application.Current.MainWindow = clndrwindow;
             clndrwindow.Show();
+        }
+
+        private void textBoxButton_Click(object sender, RoutedEventArgs e)
+        {
+            TextWindow tw = new TextWindow();
+            tw.Owner = this;
+            Application.Current.MainWindow = tw;
+            tw.Show();
         }
 
         private void comboBoxButton_Click(object sender, RoutedEventArgs e)
