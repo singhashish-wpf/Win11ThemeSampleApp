@@ -5,8 +5,6 @@ using FlaUI.UIA3;
 using FlaUI.UIA3.Identifiers;
 using System.Drawing;
 using System.Configuration;
-using System.Globalization;
-using FlaUI.Core.Identifiers;
 
 namespace Win11ThemeTest
 {
@@ -28,7 +26,6 @@ namespace Win11ThemeTest
             {
                 var appPath = ConfigurationManager.AppSettings["Testpath"];
                 app = Application.Launch(appPath);
-
                 mainWindow = app.GetMainWindow(automation);
                 txtButton = mainWindow.FindFirstDescendant(cf => cf.ByAutomationId("txtBoxButton")).AsButton();
                 Mouse.Click(txtButton.GetClickablePoint());
@@ -70,49 +67,25 @@ namespace Win11ThemeTest
         }
 
         [Test]
-        public void z_Cleanup()
-        {
-            Assert.IsNotNull(textWindow);
-            textWindow.Close();
-            Assert.IsTrue(textWindow.IsOffscreen);
-            Assert.IsNotNull(mainWindow);
-            mainWindow.Close();
-            Assert.IsTrue(mainWindow.IsOffscreen);
-        }
-
-        [Test]
-        public void tb_findTextBox()
+        public void textbox_findTextBox()
         {
             Assert.IsNotNull(textWindow);           
             Assert.IsNotNull(textBox);
         }
 
         #region FunctionalTests
-
         [Test]
-        public void tb1_enterText()
+        public void textBox_enterText()
         {
             Assert.IsNotNull(textBox);
-            textBox.Enter("Hello World!");
-           
+            textBox.Enter("Hello World!");           
             Wait.UntilInputIsProcessed(TimeSpan.FromMilliseconds(500));
             Assert.That(textBox.Text, Is.EqualTo("Hello World!"));
-        }
-        [Test]
-        public void multiLineTextbox()
-        {
-            string testDescription = "A good example of a paragraph contains a topic sentence, details and a conclusion. 'There are many different kinds of animals that live in China. Tigers and leopards are animals that live in China's forests in the north. Text.\nLine1\nLine2\nLine3";
-            multiLineTextBox.Enter(testDescription);         
-            bool multiLine = false;
-            if (multiLineTextBox.Text.Contains("\n"))
-            {
-                multiLine = true;
-            }
-        }
+        }        
 
         //Verify that the text box accepts alphanumeric characters.
         [Test]
-        public void tb1_enterAlphaNumericText()
+        public void textBox_enterAlphaNumericText()
         {
             var expectedText = "/\\d.*[a-zA-Z]|[a-zA-Z].*\\d/";
             Assert.IsNotNull(textBox);
@@ -130,7 +103,7 @@ namespace Win11ThemeTest
 
         //Verify that the text box accepts special characters.
         [Test]
-        public void tb1_enterSpecialCharText()
+        public void textBox_enterSpecialCharText()
         {
             var expectedText = "@#$%^&*";
             Assert.IsNotNull(textBox);
@@ -148,7 +121,7 @@ namespace Win11ThemeTest
 
         //Check if the text box can handle empty input.
         [Test]
-        public void tb1_enterEmptyText()
+        public void textBox_enterEmptyText()
         {
             var emptyText = string.Empty;
             Assert.IsNotNull(textBox);           
@@ -166,7 +139,7 @@ namespace Win11ThemeTest
 
         //Test input validation for correct data formats (e.g., email validation).
         [Test]
-        public void tb1_enterEmailIdText()
+        public void textBox_enterEmailIdText()
         {
             var expectedText = "ram.shyam1234@yahoo.com";
             Assert.IsNotNull(textBox);
@@ -182,9 +155,21 @@ namespace Win11ThemeTest
             }
         }
 
+        [Test]
+        public void textBox_multiLineTextbox()
+        {
+            string testDescription = "Testing new line text.\n Line1\nLine2 \nLine3";
+            Assert.IsNotNull(multiLineTextBox);
+            multiLineTextBox.Enter(testDescription);
+            Wait.UntilInputIsProcessed(TimeSpan.FromMilliseconds(500));
+            string expectedText = "Testing new line text. Line1Line2 Line3";
+            // Get text from the textbox and verify
+            Assert.That(expectedText, Is.EqualTo(multiLineTextBox.Text));
+        }
+
         //Test the undo and redo functionality within the text box.
         [Test]
-        public void tb2_UndoText()
+        public void textBox1_UndoText()
         {
             var expectedText = "";
             Assert.IsNotNull(textBox);
@@ -202,29 +187,25 @@ namespace Win11ThemeTest
             {
                 Assert.Pass("Result : {0} and Expected {1} ", textBox.Text, expectedText);
             }
-
         }
 
         [Test]
-        public void tb3_RedoText()
+        public void textBox12_RedoText()
         {            
             var expectedText = "This is a textbox. Trying to perform Functionality test for Redo";
             Assert.IsNotNull(textBox); 
             textBox.Enter("This is a textbox. Trying to perform Functionality test for Redo");
             Wait.UntilInputIsProcessed(TimeSpan.FromMilliseconds(500));
-
             //Undo
             Keyboard.Press(FlaUI.Core.WindowsAPI.VirtualKeyShort.CONTROL);
             Keyboard.Press(FlaUI.Core.WindowsAPI.VirtualKeyShort.KEY_Z);
             Keyboard.Release(FlaUI.Core.WindowsAPI.VirtualKeyShort.KEY_Z);
             Keyboard.Release(FlaUI.Core.WindowsAPI.VirtualKeyShort.CONTROL);
-
             //Redo
             Keyboard.Press(FlaUI.Core.WindowsAPI.VirtualKeyShort.CONTROL);
             Keyboard.Press(FlaUI.Core.WindowsAPI.VirtualKeyShort.KEY_Y);
             Keyboard.Release(FlaUI.Core.WindowsAPI.VirtualKeyShort.KEY_Y);
             Keyboard.Release(FlaUI.Core.WindowsAPI.VirtualKeyShort.CONTROL);
-
             if (textBox.Text != expectedText)
             {
                 Assert.Fail("Result : {0} and Expected {1} ", textBox.Text, expectedText);
@@ -237,47 +218,39 @@ namespace Win11ThemeTest
 
         //Verify that users can copy and paste text from and to the text box.
         [Test]
-        public void tb4_rightClickTest_Cut()
+        public void textBox2_rightClickTestCut()
         {
             Assert.IsNotNull(textBox);
             textBox.Enter("Hello World!Hello World!Hello World!Hello World!Hello World!Hell World!Hello World!Hello World!Hello World!");
             Wait.UntilInputIsProcessed(TimeSpan.FromMilliseconds(500));
-
             Keyboard.Press(FlaUI.Core.WindowsAPI.VirtualKeyShort.CONTROL);
             Keyboard.Press(FlaUI.Core.WindowsAPI.VirtualKeyShort.KEY_A);
             Keyboard.Release(FlaUI.Core.WindowsAPI.VirtualKeyShort.KEY_A);
             Keyboard.Release(FlaUI.Core.WindowsAPI.VirtualKeyShort.CONTROL);
             Wait.UntilInputIsProcessed(TimeSpan.FromMilliseconds(500));
-
             textBox.RightClick();
             Wait.UntilInputIsProcessed(TimeSpan.FromMilliseconds(1000));
             Assert.IsNotNull(textWindow);
             var cutText = textWindow.FindFirstDescendant(cf => cf.ByName("Cut")).AsMenuItem();
             Wait.UntilInputIsProcessed(TimeSpan.FromMilliseconds(500));
-            Assert.IsNotNull(cutText);
-            
+            Assert.IsNotNull(cutText);            
             Assert.IsTrue(cutText.IsEnabled);
             Wait.UntilInputIsProcessed(TimeSpan.FromMilliseconds(500));
-
             cutText.Click();
-            Wait.UntilInputIsProcessed();      
-
+            Wait.UntilInputIsProcessed();    
         }
 
         [Test]
-        public void tb5_rightClickTest_Copy()
+        public void textBox21_rightClickTestCopy()
         {
             Assert.IsNotNull(textBox);
             textBox.Enter("Hello World!Hello World!Hello World!Hello World!Hello World!Hell World!Hello World!Hello World!Hello World!");
             Wait.UntilInputIsProcessed(TimeSpan.FromMilliseconds(500));
-
             Keyboard.Press(FlaUI.Core.WindowsAPI.VirtualKeyShort.CONTROL);
-            Keyboard.Press(FlaUI.Core.WindowsAPI.VirtualKeyShort.KEY_A);
-           
+            Keyboard.Press(FlaUI.Core.WindowsAPI.VirtualKeyShort.KEY_A);       
             Wait.UntilInputIsProcessed(TimeSpan.FromMilliseconds(1000));
             Keyboard.Release(FlaUI.Core.WindowsAPI.VirtualKeyShort.KEY_A);
-            Keyboard.Release(FlaUI.Core.WindowsAPI.VirtualKeyShort.CONTROL);
-         
+            Keyboard.Release(FlaUI.Core.WindowsAPI.VirtualKeyShort.CONTROL);       
             textBox.RightClick();
             Wait.UntilInputIsProcessed(TimeSpan.FromMilliseconds(1000));
             Assert.IsNotNull(textWindow);
@@ -286,17 +259,15 @@ namespace Win11ThemeTest
             pasteText.GetClickablePoint();
             Assert.IsNotNull(pasteText);
             pasteText.Click();
-            Wait.UntilInputIsProcessed();
-           
+            Wait.UntilInputIsProcessed();           
         }
 
         [Test]
-        public void tb6_rightClickTest_Paste()
+        public void textBox212_rightClickTest_Paste()
         {
             Assert.IsNotNull(textBox);
             textBox.Enter("Hello World!Hello World!Hello World!Hello World!Hello World!Hell World!Hello World!Hello World!Hello World!");
             Wait.UntilInputIsProcessed(TimeSpan.FromMilliseconds(500));
-
             textBox.RightClick();
             Wait.UntilInputIsProcessed(TimeSpan.FromMilliseconds(1000));
             Assert.IsNotNull(textWindow);
@@ -309,13 +280,10 @@ namespace Win11ThemeTest
         #endregion
 
         #region NegativeTests
-        /* Negative Test Scenarios
-       *        
-       */
-
+        /* Negative Test Scenarios */
         //Attempt to enter code snippets or HTML code into the input box to see if the same is rejected.
         [Test]
-        public void tb7_htmlTextBox()
+        public void textBox3_htmlTextBox()
         {
             Assert.IsNotNull(textBox);
             textBox.Text = string.Empty;
@@ -326,9 +294,8 @@ namespace Win11ThemeTest
 
         /* Test Cases For Disabled TextBox
          */
-
         [Test]
-        public void tb8_disabledTextBoxAvailability()
+        public void textBox3_disabledTextBoxAvailability()
         {
             Assert.IsNotNull(textWindow);
             Assert.IsNotNull(disabledTextBox);
@@ -336,7 +303,7 @@ namespace Win11ThemeTest
 
         //Check if any pre-populated value should be displayed as per requirement.
         [Test]
-        public void tb8_disabledTextBox()
+        public void textBox3_disabledTextBox()
         {
             Assert.IsNotNull(textWindow);
             Assert.IsNotNull(disabledTextBox);
@@ -345,22 +312,17 @@ namespace Win11ThemeTest
 
         //Check if you cannot edit disabled TextBox.
         [Test]
-        public void tb1_disabledEditTextBox()
+        public void textBox_disabledEditTextBox()
         {
             Assert.IsNotNull(textWindow);
             Assert.IsNotNull(disabledTextBox);
             Assert.That(disabledTextBox.IsEnabled, Is.False);           
         }
-
-        /* Test Cases for Multi-line Text Box
-         */    
-
         #endregion
 
         #region UITests
-
         [Test]
-        public void tbb1_clickOnTextbox()
+        public void textBox_clickOnTextbox()
         {
             Assert.IsNotNull(textBox);
             Mouse.Click(textBox.GetClickablePoint());
@@ -368,7 +330,7 @@ namespace Win11ThemeTest
         }       
 
         [Test]
-        public void tbb3_fontFamily()
+        public void textBox_fontFamily()
         {
             string expected_FontFamily = "Segoe UI";
             Assert.IsNotNull(textBox);
@@ -376,21 +338,18 @@ namespace Win11ThemeTest
             var colorRange = textBox.Patterns.Text.Pattern;
             var textFont = (string)colorRange.DocumentRange.GetAttributeValue(automation.TextAttributeLibrary.FontName);
             Assert.That(textFont, Is.EqualTo(expected_FontFamily));
-
-
         }
         
         [Test]
-        public void tbb5_textForegroundColor()
+        public void textBox_textForegroundColor()
         {
             // var automation = new UIA3Automation();
             Assert.IsNotNull(textBox); 
             textBox.Enter("Hello World!");
             Wait.UntilInputIsProcessed(TimeSpan.FromMilliseconds(500));
-            var expectedColor = System.Drawing.ColorTranslator.FromHtml("#E4000000");
+            var expectedColor = ColorTranslator.FromHtml("#E4000000");
             var pattern = textBox.Patterns.Text.Pattern;
             var foreColorInt = (int)pattern.DocumentRange.GetAttributeValue(TextAttributes.ForegroundColor);
-
             var actualColor = Color.FromArgb(foreColorInt);
             Console.WriteLine("actualColor........{0}", actualColor);
             AssertColorEquality(actualColor, Color.FromArgb(0, expectedColor));
@@ -412,5 +371,16 @@ namespace Win11ThemeTest
             }
         }
         #endregion
+
+        [Test]
+        public void textBox4_Cleanup()
+        {
+            Assert.IsNotNull(textWindow);
+            textWindow.Close();
+            Assert.IsTrue(textWindow.IsOffscreen);
+            Assert.IsNotNull(mainWindow);
+            mainWindow.Close();
+            Assert.IsTrue(mainWindow.IsOffscreen);
+        }
     }
 }
