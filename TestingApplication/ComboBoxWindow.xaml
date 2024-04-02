@@ -19,14 +19,14 @@
 
         <ComboBox
          MinWidth="200"
-         Name ="comboBoxBind2"
+         Name ="comboBoxBind"
          HorizontalAlignment="Left"         
          ItemsSource="{Binding ViewModel.ComboBoxFontFamilies, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=local:ComboBoxWindow}, Mode=OneWay}"
          SelectedIndex="0" Margin="105,116,329,0" VerticalAlignment="Top" />
         
         <ComboBox
                 MinWidth="200"
-                Name ="comboBoxBind"
+                Name ="comboBoxEditable"
                 HorizontalAlignment="Left"
                 IsEditable="True"
                 ItemsSource="{Binding ViewModel.ComboBoxFontSizes, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=local:ComboBoxWindow}, Mode=OneWay}"
