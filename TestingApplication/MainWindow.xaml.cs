@@ -30,6 +30,7 @@ namespace TestingApplication
             //  this.NavigationService.Navigate(new Uri("Page3.xaml", UriKind.Relative));         
             ButtonWindow btnwindow = new ButtonWindow();
             btnwindow.Owner = this;
+            Application.Current.MainWindow = btnwindow;
             btnwindow.Show();
         }
 
@@ -37,6 +38,7 @@ namespace TestingApplication
         {
             TextWindow tw = new TextWindow();
             tw.Owner = this;
+            Application.Current.MainWindow = tw;
             tw.Show();
         }
     }

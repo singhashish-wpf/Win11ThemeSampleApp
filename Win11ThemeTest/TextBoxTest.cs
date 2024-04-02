@@ -27,6 +27,7 @@ namespace Win11ThemeTest
         public Window textWindow;
         TextBox textBox;
         TextBox disabledTextBox;
+        TextBox multilineTextBox;
         Button txtButton;
         UIA3Automation automation = new UIA3Automation();
         
@@ -44,6 +45,7 @@ namespace Win11ThemeTest
                 textWindow = mainWindow.FindFirstDescendant(cf => cf.ByName("TextWindow")).AsWindow();
                 textBox = textWindow.FindFirstDescendant(cf => cf.ByAutomationId("tbTxt")).AsTextBox();
                 disabledTextBox = textWindow.FindFirstDescendant(cf => cf.ByAutomationId("tbTxt_disabled")).AsTextBox();
+                multilineTextBox = textWindow.FindFirstDescendant(cf => cf.ByAutomationId("tbTxt_multiline")).AsTextBox();
             }
             catch (Exception ex)
             {
@@ -354,8 +356,8 @@ namespace Win11ThemeTest
             Assert.That(textFont, Is.EqualTo(expected_FontFamily));
 
 
-        }       
-
+        }
+        
         [Test]
         public void tbb5_textForegroundColor()
         {
