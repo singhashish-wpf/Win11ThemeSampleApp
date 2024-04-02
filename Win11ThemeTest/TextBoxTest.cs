@@ -2,33 +2,24 @@
 using FlaUI.Core.AutomationElements;
 using FlaUI.Core.Input;
 using FlaUI.UIA3;
-using FlaUI.Core;
-using FlaUI.Core.AutomationElements;
-using FlaUI.Core.Conditions;
-using FlaUI.Core.Definitions;
-using FlaUI.Core.Input;
-using FlaUI.UIA3;
 using FlaUI.UIA3.Identifiers;
-using FlaUI.UIA3.Patterns;
 using System.Drawing;
-using System.Linq;
-using NuGet.Frameworks;
-using static System.Runtime.InteropServices.JavaScript.JSType;
-using System.Runtime.ConstrainedExecution;
 using System.Configuration;
+using System.Globalization;
+using FlaUI.Core.Identifiers;
 
 namespace Win11ThemeTest
 {
     [TestFixture]
     public class textBoxTests
     {
-        private Application app;
-        private Window mainWindow;
-        public Window textWindow;
-        TextBox textBox;
-        TextBox disabledTextBox;
-        TextBox multilineTextBox;
-        Button txtButton;
+        private Application? app;
+        private Window? mainWindow;
+        public Window? textWindow;
+        TextBox? textBox;
+        TextBox? disabledTextBox;
+        TextBox? multiLineTextBox;
+        Button? txtButton;
         UIA3Automation automation = new UIA3Automation();
         
         public textBoxTests()
@@ -45,39 +36,46 @@ namespace Win11ThemeTest
                 textWindow = mainWindow.FindFirstDescendant(cf => cf.ByName("TextWindow")).AsWindow();
                 textBox = textWindow.FindFirstDescendant(cf => cf.ByAutomationId("tbTxt")).AsTextBox();
                 disabledTextBox = textWindow.FindFirstDescendant(cf => cf.ByAutomationId("tbTxt_disabled")).AsTextBox();
-                multilineTextBox = textWindow.FindFirstDescendant(cf => cf.ByAutomationId("tbTxt_multiline")).AsTextBox();
+                multiLineTextBox = textWindow.FindFirstDescendant(cf => cf.ByAutomationId("tbTxt_multiline")).AsTextBox();
             }
             catch (Exception ex)
             {
-                var filepath = ConfigurationManager.AppSettings["logpath"];
-                if (!Directory.Exists(filepath))
+                var filePath = ConfigurationManager.AppSettings["logpath"];
+                if (filePath != null)
                 {
-                    Directory.CreateDirectory(filepath);
+                    if (!Directory.Exists(filePath))
+                    {
+                        Directory.CreateDirectory(filePath);
+                    }
+                    filePath = filePath + "log_" + DateTime.Now.ToString("yyyyMMddHHmmss") + ".txt";   //Text File Name
+                    if (!File.Exists(filePath))
+                    {
+                        File.Create(filePath).Dispose();
+                    }
+                    using (StreamWriter sw = File.AppendText(filePath))
+                    {
+                        string error = "Log Written Date:" + " " + DateTime.Now.ToString() + "\nError Message:" + " " + ex.Message.ToString();
+                        sw.WriteLine("-----------Exception Details on " + " " + DateTime.Now.ToString() + "-----------------");
+                        sw.WriteLine("-------------------------------------------------------------------------------------");
+                        sw.WriteLine(error);
+                        sw.Flush();
+                        sw.Close();
+                    }
                 }
-                filepath = filepath + "log_" + DateTime.Now.ToString("yyyyMMddHHmmss") + ".txt";   //Text File Name
-                if (!File.Exists(filepath))
+                else
                 {
-                    File.Create(filepath).Dispose();
+                    throw new ArgumentNullException();
                 }
-                using (StreamWriter sw = File.AppendText(filepath))
-                {
-                    string error = "Log Written Date:" + " " + DateTime.Now.ToString() + "\nError Message:" + " " + ex.Message.ToString();
-                    sw.WriteLine("-----------Exception Details on " + " " + DateTime.Now.ToString() + "-----------------");
-                    sw.WriteLine("-------------------------------------------------------------------------------------");
-                    sw.WriteLine(error);
-                    sw.Flush();
-                    sw.Close();
-                }
-            }
-           
-                  
+            }                           
         }
 
         [Test]
         public void z_Cleanup()
-        {            
+        {
+            Assert.IsNotNull(textWindow);
             textWindow.Close();
             Assert.IsTrue(textWindow.IsOffscreen);
+            Assert.IsNotNull(mainWindow);
             mainWindow.Close();
             Assert.IsTrue(mainWindow.IsOffscreen);
         }
@@ -94,17 +92,30 @@ namespace Win11ThemeTest
         [Test]
         public void tb1_enterText()
         {
+            Assert.IsNotNull(textBox);
             textBox.Enter("Hello World!");
+           
             Wait.UntilInputIsProcessed(TimeSpan.FromMilliseconds(500));
             Assert.That(textBox.Text, Is.EqualTo("Hello World!"));
+        }
+        [Test]
+        public void multiLineTextbox()
+        {
+            string testDescription = "A good example of a paragraph contains a topic sentence, details and a conclusion. 'There are many different kinds of animals that live in China. Tigers and leopards are animals that live in China's forests in the north. Text.\nLine1\nLine2\nLine3";
+            multiLineTextBox.Enter(testDescription);         
+            bool multiLine = false;
+            if (multiLineTextBox.Text.Contains("\n"))
+            {
+                multiLine = true;
+            }
         }
 
         //Verify that the text box accepts alphanumeric characters.
         [Test]
-        public void tb1_enterAplhaNumericText()
+        public void tb1_enterAlphaNumericText()
         {
             var expectedText = "/\\d.*[a-zA-Z]|[a-zA-Z].*\\d/";
-
+            Assert.IsNotNull(textBox);
             textBox.Enter("/\\d.*[a-zA-Z]|[a-zA-Z].*\\d/");
             Wait.UntilInputIsProcessed(TimeSpan.FromMilliseconds(500));            
             if (textBox.Text != expectedText)
@@ -122,7 +133,7 @@ namespace Win11ThemeTest
         public void tb1_enterSpecialCharText()
         {
             var expectedText = "@#$%^&*";
-
+            Assert.IsNotNull(textBox);
             textBox.Enter("@#$%^&*");
             Wait.UntilInputIsProcessed(TimeSpan.FromMilliseconds(500));            
             if (textBox.Text != "@#$%^&*")
@@ -140,7 +151,7 @@ namespace Win11ThemeTest
         public void tb1_enterEmptyText()
         {
             var emptyText = string.Empty;
-
+            Assert.IsNotNull(textBox);           
             textBox.Enter(emptyText);
             Wait.UntilInputIsProcessed(TimeSpan.FromMilliseconds(500));            
             if (textBox.Text != string.Empty)
@@ -158,6 +169,7 @@ namespace Win11ThemeTest
         public void tb1_enterEmailIdText()
         {
             var expectedText = "ram.shyam1234@yahoo.com";
+            Assert.IsNotNull(textBox);
             textBox.Enter("ram.shyam1234@yahoo.com");
             Wait.UntilInputIsProcessed(TimeSpan.FromMilliseconds(500));            
             if (textBox.Text != expectedText)
@@ -175,6 +187,7 @@ namespace Win11ThemeTest
         public void tb2_UndoText()
         {
             var expectedText = "";
+            Assert.IsNotNull(textBox);
             textBox.Enter("This is a textbox. Trying to perform Functionality test for Undo");
             Wait.UntilInputIsProcessed(TimeSpan.FromMilliseconds(500));
             Keyboard.Press(FlaUI.Core.WindowsAPI.VirtualKeyShort.CONTROL);
@@ -196,6 +209,7 @@ namespace Win11ThemeTest
         public void tb3_RedoText()
         {            
             var expectedText = "This is a textbox. Trying to perform Functionality test for Redo";
+            Assert.IsNotNull(textBox); 
             textBox.Enter("This is a textbox. Trying to perform Functionality test for Redo");
             Wait.UntilInputIsProcessed(TimeSpan.FromMilliseconds(500));
 
@@ -224,7 +238,8 @@ namespace Win11ThemeTest
         //Verify that users can copy and paste text from and to the text box.
         [Test]
         public void tb4_rightClickTest_Cut()
-        {         
+        {
+            Assert.IsNotNull(textBox);
             textBox.Enter("Hello World!Hello World!Hello World!Hello World!Hello World!Hell World!Hello World!Hello World!Hello World!");
             Wait.UntilInputIsProcessed(TimeSpan.FromMilliseconds(500));
 
@@ -236,7 +251,7 @@ namespace Win11ThemeTest
 
             textBox.RightClick();
             Wait.UntilInputIsProcessed(TimeSpan.FromMilliseconds(1000));
-
+            Assert.IsNotNull(textWindow);
             var cutText = textWindow.FindFirstDescendant(cf => cf.ByName("Cut")).AsMenuItem();
             Wait.UntilInputIsProcessed(TimeSpan.FromMilliseconds(500));
             Assert.IsNotNull(cutText);
@@ -251,7 +266,8 @@ namespace Win11ThemeTest
 
         [Test]
         public void tb5_rightClickTest_Copy()
-        {           
+        {
+            Assert.IsNotNull(textBox);
             textBox.Enter("Hello World!Hello World!Hello World!Hello World!Hello World!Hell World!Hello World!Hello World!Hello World!");
             Wait.UntilInputIsProcessed(TimeSpan.FromMilliseconds(500));
 
@@ -264,7 +280,7 @@ namespace Win11ThemeTest
          
             textBox.RightClick();
             Wait.UntilInputIsProcessed(TimeSpan.FromMilliseconds(1000));
-
+            Assert.IsNotNull(textWindow);
             var pasteText = textWindow.FindFirstDescendant(cf => cf.ByName("Copy")).AsMenuItem();
             Wait.UntilInputIsProcessed(TimeSpan.FromMilliseconds(1000));
             pasteText.GetClickablePoint();
@@ -276,13 +292,14 @@ namespace Win11ThemeTest
 
         [Test]
         public void tb6_rightClickTest_Paste()
-        {          
+        {
+            Assert.IsNotNull(textBox);
             textBox.Enter("Hello World!Hello World!Hello World!Hello World!Hello World!Hell World!Hello World!Hello World!Hello World!");
             Wait.UntilInputIsProcessed(TimeSpan.FromMilliseconds(500));
 
             textBox.RightClick();
             Wait.UntilInputIsProcessed(TimeSpan.FromMilliseconds(1000));
-
+            Assert.IsNotNull(textWindow);
             var pasteText = textWindow.FindFirstDescendant(cf => cf.ByName("Paste")).AsMenuItem();
             Wait.UntilInputIsProcessed(TimeSpan.FromMilliseconds(500));
             Assert.IsNotNull(pasteText);
@@ -299,7 +316,8 @@ namespace Win11ThemeTest
         //Attempt to enter code snippets or HTML code into the input box to see if the same is rejected.
         [Test]
         public void tb7_htmlTextBox()
-        {            
+        {
+            Assert.IsNotNull(textBox);
             textBox.Text = string.Empty;
             textBox.Enter("<script>alert(\"123\")</script>");
             Wait.UntilInputIsProcessed(TimeSpan.FromMilliseconds(500));
@@ -320,7 +338,8 @@ namespace Win11ThemeTest
         [Test]
         public void tb8_disabledTextBox()
         {
-            Assert.IsNotNull(textWindow);                
+            Assert.IsNotNull(textWindow);
+            Assert.IsNotNull(disabledTextBox);
             Assert.That(disabledTextBox.Text, Is.EqualTo("TextBox Disabled"));
         }
 
@@ -328,7 +347,8 @@ namespace Win11ThemeTest
         [Test]
         public void tb1_disabledEditTextBox()
         {
-            Assert.IsNotNull(textWindow);            
+            Assert.IsNotNull(textWindow);
+            Assert.IsNotNull(disabledTextBox);
             Assert.That(disabledTextBox.IsEnabled, Is.False);           
         }
 
@@ -342,6 +362,7 @@ namespace Win11ThemeTest
         [Test]
         public void tbb1_clickOnTextbox()
         {
+            Assert.IsNotNull(textBox);
             Mouse.Click(textBox.GetClickablePoint());
             Assert.That(textBox.IsEnabled, Is.True);
         }       
@@ -350,6 +371,7 @@ namespace Win11ThemeTest
         public void tbb3_fontFamily()
         {
             string expected_FontFamily = "Segoe UI";
+            Assert.IsNotNull(textBox);
             textBox.Enter("Hello World!");
             var colorRange = textBox.Patterns.Text.Pattern;
             var textFont = (string)colorRange.DocumentRange.GetAttributeValue(automation.TextAttributeLibrary.FontName);
@@ -361,7 +383,8 @@ namespace Win11ThemeTest
         [Test]
         public void tbb5_textForegroundColor()
         {
-           // var automation = new UIA3Automation();
+            // var automation = new UIA3Automation();
+            Assert.IsNotNull(textBox); 
             textBox.Enter("Hello World!");
             Wait.UntilInputIsProcessed(TimeSpan.FromMilliseconds(500));
             var expectedColor = System.Drawing.ColorTranslator.FromHtml("#E4000000");
