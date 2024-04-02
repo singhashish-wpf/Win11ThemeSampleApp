@@ -1,43 +1,36 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Configuration;
-using System.Drawing;
 using System.Globalization;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using FlaUI.Core;
 using FlaUI.Core.AutomationElements;
 using FlaUI.Core.Definitions;
 using FlaUI.Core.Input;
 using FlaUI.UIA3;
-using static System.Windows.Forms.VisualStyles.VisualStyleElement.ExplorerBar;
 
 
 namespace Win11ThemeTest
 {
     public class DatepickerTest
     {
-        private Application app;
-        private Window window;
-        public Window dtPickerWindow;
-        Button testButton;
-        DateTimePicker datepicker;
-        AutomationElement calBtn;
-        AutomationElement calWidget;
-        AutomationElement headerBtn;
-        AutomationElement prevBtn;
-        AutomationElement nextBtn;
-        TextBox dtTextBox;
-        MenuItem dtmenuCopy;
-        MenuItem dtmenuCut;
-        MenuItem dtmenuPaste;
+        private Application? app;
+        private Window? window;
+        public Window? dtPickerWindow;
+        Button? testButton;
+        DateTimePicker? datepicker;
+        AutomationElement? calBtn;
+        AutomationElement? calWidget;
+        AutomationElement? headerBtn;
+        AutomationElement? prevBtn;
+        AutomationElement? nextBtn;
+        TextBox? dtTextBox;
+        MenuItem? dtMenuCopy;
+        MenuItem? dtMenuCut;
+        MenuItem? dtMenuPaste;
 
         public DatepickerTest()
         {
             try
             {
-                // app = Application.Launch(@"..\\..\\..\\..\\TestingApplication\\bin\\Debug\\net9.0-windows\\win-x64\\TestingApplication.exe");
                 var appPath = ConfigurationManager.AppSettings["Testpath"];
                 app = Application.Launch(appPath);
                 using (var automation = new UIA3Automation())
@@ -49,39 +42,46 @@ namespace Win11ThemeTest
                     dtPickerWindow = window.FindFirstDescendant(cf => cf.ByName("DatepickerWindow")).AsWindow();
                     datepicker = dtPickerWindow.FindFirstDescendant(cf => cf.ByAutomationId("tstDatepicker")).AsDateTimePicker();
                     dtTextBox = datepicker.FindFirstChild(cf => cf.ByAutomationId("PART_TextBox")).AsTextBox();
-                    // dtPickerWindow.FindFirstDescendant(cf => cf.ByAutomationId("tstDatepicker")).
                     calBtn = datepicker.FindFirstChild(cf => cf.ByControlType(ControlType.Button));
 
                 }
             }
             catch (Exception ex)
             {
-                var filepath = ConfigurationManager.AppSettings["logpath"];
-                if (!Directory.Exists(filepath))
+                var filePath = ConfigurationManager.AppSettings["logpath"];
+                if (filePath != null)
                 {
-                    Directory.CreateDirectory(filepath);
+                    if (!Directory.Exists(filePath))
+                    {
+                        Directory.CreateDirectory(filePath);
+                    }
+                    filePath = filePath + "log_" + DateTime.Now.ToString("yyyyMMddHHmmss") + ".txt";   //Text File Name
+                    if (!File.Exists(filePath))
+                    {
+                        File.Create(filePath).Dispose();
+                    }
+                    using (StreamWriter sw = File.AppendText(filePath))
+                    {
+                        string error = "Log Written Date:" + " " + DateTime.Now.ToString() + "\nError Message:" + " " + ex.Message.ToString();
+                        sw.WriteLine("-----------Exception Details on " + " " + DateTime.Now.ToString() + "-----------------");
+                        sw.WriteLine("-------------------------------------------------------------------------------------");
+                        sw.WriteLine(error);
+                        sw.Flush();
+                        sw.Close();
+                    }
                 }
-                filepath = filepath + "log_" + DateTime.Now.ToString("yyyyMMddHHmmss") + ".txt";   //Text File Name
-                if (!File.Exists(filepath))
+                else
                 {
-                    File.Create(filepath).Dispose();
+                    throw new ArgumentNullException();
                 }
-                using (StreamWriter sw = File.AppendText(filepath))
-                {
-                    string error = "Log Written Date:" + " " + DateTime.Now.ToString() + "\nError Message:" + " " + ex.Message.ToString();
-                    sw.WriteLine("-----------Exception Details on " + " " + DateTime.Now.ToString() + "-----------------");
-                    sw.WriteLine("-------------------------------------------------------------------------------------");
-                    sw.WriteLine(error);
-                    sw.Flush();
-                    sw.Close();
-                }
+
             }
 
         }
 
         //test if datepicker is available in window
         [Test]
-        public void datepicker1_isAvailable()
+        public void datePicker1_isAvailable()
         {
             Assert.IsNotNull(dtPickerWindow);
             Assert.IsNotNull(datepicker);
@@ -89,20 +89,24 @@ namespace Win11ThemeTest
 
         //test if date input is the selected date and the date format is dd MMMM yyyy
         [Test]
-        public void datepicker2_Selectdate()
+        public void datePicker2_SelectDate()
         {
+            Assert.IsNotNull(datepicker);
             DateTime thisDay = DateTime.Today;
             datepicker.SelectedDate = thisDay;
             DateTime dt_selectedDate = DateTime.Parse(datepicker.Patterns.Value.Pattern.Value);
             Assert.That(dt_selectedDate, Is.EqualTo(thisDay));
+            Assert.IsNotNull(dtTextBox);
             Assert.That(dtTextBox.Text, Is.EqualTo(thisDay.ToString("dd MMMM yyyy")));
 
         }
 
         //test if calendar widget appears on click of calendar icon
         [Test]
-        public void datepicker3_isCalendarClickable()
+        public void datePicker3_isCalendarClickable()
         {
+            Assert.IsNotNull(calBtn);
+            Assert.IsNotNull(datepicker);
             calBtn.Click();
             calWidget = datepicker.FindFirstChild(cf => cf.ByControlType(ControlType.Calendar));
             Assert.IsNotNull(calWidget);
@@ -112,8 +116,10 @@ namespace Win11ThemeTest
         #region calendarScenarios
         //test if calendar widget has current month
         [Test]
-        public void datepicker4_calendarMonth()
+        public void datePicker4_calendarMonth()
         {
+            Assert.IsNotNull(calBtn);
+            Assert.IsNotNull(datepicker);
             calBtn.Click();
             calWidget = datepicker.FindFirstChild(cf => cf.ByControlType(ControlType.Calendar));
             if (calWidget == null)
@@ -133,8 +139,10 @@ namespace Win11ThemeTest
 
         //test for click previous month button
         [Test]
-        public void datepicker5_CalendarClickprevMonth()
+        public void datePicker5_CalendarClickPrevMonth()
         {
+            Assert.IsNotNull(calBtn);
+            Assert.IsNotNull(datepicker);
             calBtn.Click();
             calWidget = datepicker.FindFirstChild(cf => cf.ByControlType(ControlType.Calendar));
             if (calWidget == null)
@@ -144,29 +152,27 @@ namespace Win11ThemeTest
             }
             Assert.IsNotNull(calWidget);
             headerBtn = calWidget.FindFirstChild(cf => cf.ByAutomationId("PART_HeaderButton"));
-            string oldheaderName = headerBtn.Name;
+            string oldHeaderName = headerBtn.Name;
             prevBtn = calWidget.FindFirstChild(cf => cf.ByControlType(ControlType.Button));
             prevBtn.Click();
             string headerName = headerBtn.Name;
-            string[] oldyearMonth = oldheaderName.Split(' ');
-            int currentMonth = DateTime.ParseExact(oldyearMonth[0], "MMMM", CultureInfo.CurrentCulture).Month;
-            DateTime currentdate = new DateTime(Convert.ToInt32(oldyearMonth[1]), currentMonth, 1).AddMonths(-1);
-            int year = currentdate.Year;
-            string Month = currentdate.ToString("MMMM");
+            string[] oldYyearMonth = oldHeaderName.Split(' ');
+            int currentMonth = DateTime.ParseExact(oldYyearMonth[0], "MMMM", CultureInfo.CurrentCulture).Month;
+            DateTime currentDate = new DateTime(Convert.ToInt32(oldYyearMonth[1]), currentMonth, 1).AddMonths(-1);
+            int year = currentDate.Year;
+            string Month = currentDate.ToString("MMMM");
             string[] yearMonth = headerName.Split(' ');
             Assert.That(yearMonth[0], Is.EqualTo(Month));
             Assert.That(Convert.ToInt32(yearMonth[1]), Is.EqualTo(year));
-
-            //reset to current month
-            //nextBtn = calWidget.FindFirstChild(cf => cf.ByAutomationId("PART_NextButton"));
-            //nextBtn.Click();
             calBtn.Click();
         }
 
         [Test]
         //test for click next month button
-        public void datepicker6_CalendarClickNextMonth()
+        public void datePicker6_CalendarClickNextMonth()
         {
+            Assert.IsNotNull(calBtn);
+            Assert.IsNotNull(datepicker);
             calBtn.Click();
             calWidget = datepicker.FindFirstChild(cf => cf.ByControlType(ControlType.Calendar));
             if (calWidget == null)
@@ -176,15 +182,15 @@ namespace Win11ThemeTest
             }
             Assert.IsNotNull(calWidget);
             headerBtn = calWidget.FindFirstChild(cf => cf.ByAutomationId("PART_HeaderButton"));
-            string oldheaderName = headerBtn.Name;
+            string oldHeaderName = headerBtn.Name;
             nextBtn = calWidget.FindFirstChild(cf => cf.ByAutomationId("PART_NextButton"));
             nextBtn.Click();
             string headerName = headerBtn.Name;
-            string[] oldyearMonth = oldheaderName.Split(' ');
-            int currentMonth = DateTime.ParseExact(oldyearMonth[0], "MMMM", CultureInfo.CurrentCulture).Month;
-            DateTime currentdate = new DateTime(Convert.ToInt32(oldyearMonth[1]), currentMonth, 1).AddMonths(1);
-            int year = currentdate.Year;
-            string Month = currentdate.ToString("MMMM");
+            string[] oldYearMonth = oldHeaderName.Split(' ');
+            int currentMonth = DateTime.ParseExact(oldYearMonth[0], "MMMM", CultureInfo.CurrentCulture).Month;
+            DateTime currentDate = new DateTime(Convert.ToInt32(oldYearMonth[1]), currentMonth, 1).AddMonths(1);
+            int year = currentDate.Year;
+            string Month = currentDate.ToString("MMMM");
             string[] yearMonth = headerName.Split(' ');
             Assert.That(yearMonth[0], Is.EqualTo(Month));
             Assert.That(Convert.ToInt32(yearMonth[1]), Is.EqualTo(year));
@@ -197,8 +203,10 @@ namespace Win11ThemeTest
 
         //test for click Monthyear button
         [Test]
-        public void datepicker7_CalendarClickMonthYear()
+        public void datePicker7_CalendarClickMonthYear()
         {
+            Assert.IsNotNull(calBtn);
+            Assert.IsNotNull(datepicker);
             calBtn.Click();
             calWidget = datepicker.FindFirstChild(cf => cf.ByControlType(ControlType.Calendar));
             if (calWidget == null)
@@ -218,8 +226,10 @@ namespace Win11ThemeTest
 
         //test for click prev year button
         [Test]
-        public void datepicker8_CalendarClickPrevYear()
+        public void datePicker8_CalendarClickPrevYear()
         {
+            Assert.IsNotNull(calBtn);
+            Assert.IsNotNull(datepicker);
             calBtn.Click();
             calWidget = datepicker.FindFirstChild(cf => cf.ByControlType(ControlType.Calendar));
             if (calWidget == null)
@@ -244,8 +254,10 @@ namespace Win11ThemeTest
 
         //test for click next year button
         [Test]
-        public void datepicker9_isCalendarClickNextYear()
+        public void datePicker9_isCalendarClickNextYear()
         {
+            Assert.IsNotNull(calBtn);
+            Assert.IsNotNull(datepicker);
             calBtn.Click();
             calWidget = datepicker.FindFirstChild(cf => cf.ByControlType(ControlType.Calendar));
             if (calWidget == null)
@@ -270,8 +282,10 @@ namespace Win11ThemeTest
 
         //test for click year button
         [Test]
-        public void datepickers1_CalendarClickYear()
+        public void datePickers1_CalendarClickYear()
         {
+            Assert.IsNotNull(calBtn);
+            Assert.IsNotNull(datepicker);
             calBtn.Click();
             calWidget = datepicker.FindFirstChild(cf => cf.ByControlType(ControlType.Calendar));
             if (calWidget == null)
@@ -296,8 +310,10 @@ namespace Win11ThemeTest
 
         //test for click previous year range button
         [Test]
-        public void datepickers2_CalendarClickPrevYearRange()
+        public void datePickers2_CalendarClickPrevYearRange()
         {
+            Assert.IsNotNull(calBtn);
+            Assert.IsNotNull(datepicker);
             calBtn.Click();
             calWidget = datepicker.FindFirstChild(cf => cf.ByControlType(ControlType.Calendar));
             if (calWidget == null)
@@ -330,8 +346,10 @@ namespace Win11ThemeTest
 
         //test for click next year range button
         [Test]
-        public void datepickers3_CalendarClickNextYearRange()
+        public void datePickers3_CalendarClickNextYearRange()
         {
+            Assert.IsNotNull(calBtn);
+            Assert.IsNotNull(datepicker);
             calBtn.Click();
             calWidget = datepicker.FindFirstChild(cf => cf.ByControlType(ControlType.Calendar));
             if (calWidget == null)
@@ -364,8 +382,10 @@ namespace Win11ThemeTest
 
         //test click on other month dates loads that month
         [Test]
-        public void datepickers4_OnClickofOtherMonthDate()
+        public void datePickers4_OnClickOfOtherMonthDate()
         {
+            Assert.IsNotNull(calBtn);
+            Assert.IsNotNull(datepicker);
             DateTime thisDay = DateTime.Today;
             datepicker.SelectedDate = thisDay;
             Wait.UntilInputIsProcessed();
@@ -379,47 +399,50 @@ namespace Win11ThemeTest
             Wait.UntilInputIsProcessed();
             AutomationElement[] dayButtons = calWidget.FindAllChildren(cf => cf.ByControlType(ControlType.Button));
             AutomationElement dayBtn = dayButtons[3];
-            string dayBtnstring = dayButtons[3].Name;
-            string[] parts = dayBtnstring.Split(' ');
+            string dayBtnString = dayButtons[3].Name;
+            string[] parts = dayBtnString.Split(' ');
             headerBtn = calWidget.FindFirstChild(cf => cf.ByAutomationId("PART_HeaderButton"));
             string headerName = headerBtn.Name;
-            string[] hparts = headerName.Split(' ');
-            if (parts[1] == hparts[0])
+            string[] hParts = headerName.Split(' ');
+            if (parts[1] == hParts[0])
             {
                 dayBtn = dayButtons[44];
-                dayBtnstring = dayButtons[44].Name;
-                parts = dayBtnstring.Split(' ');
+                dayBtnString = dayButtons[44].Name;
+                parts = dayBtnString.Split(' ');
             }
-            if (parts[1] != hparts[0])
+            if (parts[1] != hParts[0])
             {
                 dayBtn.Click();
                 calBtn.Click();
                 Wait.UntilInputIsProcessed();
             }
-            dayBtnstring = dayBtnstring.Remove(0, 3);
+            dayBtnString = dayBtnString.Remove(0, 3);
             AutomationElement headerBtnNew = calWidget.FindFirstChild(cf => cf.ByAutomationId("PART_HeaderButton"));
-            Assert.That(headerBtnNew.Name, Is.EqualTo(dayBtnstring));
+            Assert.That(headerBtnNew.Name, Is.EqualTo(dayBtnString));
             calBtn.Click();
         }
         #endregion
 
         //test keyboard input for date- valid date
         [Test]
-        public void datepickers5_datepickerValidKeyboardInput()
+        public void datePickers5_ValidKeyboardInput()
         {
+            Assert.IsNotNull(datepicker);
             datepicker.Focus();
             DateTime sdate = new DateTime(2024, 09, 21);
             Keyboard.Type("2024/09/21");
             Keyboard.Press(FlaUI.Core.WindowsAPI.VirtualKeyShort.ENTER);
             Keyboard.Release(FlaUI.Core.WindowsAPI.VirtualKeyShort.ENTER);
             Wait.UntilInputIsProcessed(TimeSpan.FromMilliseconds(1000));
+            Assert.IsNotNull(dtTextBox);
             Assert.That(dtTextBox.Text, Is.EqualTo(sdate.ToString("dd MMMM yyyy")));
         }
 
         //test keyboard input for date- invalid date
         [Test]
-        public void datepickers6_datepickerInvalidKeyboardInput()
+        public void datePickers6_InvalidKeyboardInput()
         {
+            Assert.IsNotNull(datepicker);
             string beforeDate = datepicker.Patterns.Value.Pattern.Value;
             datepicker.Focus();
             Wait.UntilInputIsProcessed();
@@ -427,31 +450,36 @@ namespace Win11ThemeTest
             Keyboard.Press(FlaUI.Core.WindowsAPI.VirtualKeyShort.ENTER);
             Keyboard.Release(FlaUI.Core.WindowsAPI.VirtualKeyShort.ENTER);
             Wait.UntilInputIsProcessed();
-            string afterdate = datepicker.Patterns.Value.Pattern.Value;
-            Assert.That(beforeDate, Is.EqualTo(afterdate));
+            string afterDate = datepicker.Patterns.Value.Pattern.Value;
+            Assert.That(beforeDate, Is.EqualTo(afterDate));
         }
 
         //right click on datepicker textbox-menu items copy, cut and paste
         [Test]
-        public void datepickers7_datepickerRightClick()
+        public void datePickers7_RightClick()
         {
+            Assert.IsNotNull(dtTextBox);
+            Assert.IsNotNull(dtPickerWindow);
             dtTextBox.Focus();
             dtTextBox.RightClick();
-            dtmenuCopy = dtPickerWindow.FindFirstDescendant(cf => cf.ByName("Copy")).AsMenuItem();
-            dtmenuPaste = dtPickerWindow.FindFirstDescendant(cf => cf.ByName("Paste")).AsMenuItem();
-            dtmenuCut = dtPickerWindow.FindFirstDescendant(cf => cf.ByName("Cut")).AsMenuItem();
-            Assert.IsNotNull(dtmenuCopy);
-            Assert.IsNotNull(dtmenuPaste);
-            Assert.IsNotNull(dtmenuCut);
+            dtMenuCopy = dtPickerWindow.FindFirstDescendant(cf => cf.ByName("Copy")).AsMenuItem();
+            dtMenuPaste = dtPickerWindow.FindFirstDescendant(cf => cf.ByName("Paste")).AsMenuItem();
+            dtMenuCut = dtPickerWindow.FindFirstDescendant(cf => cf.ByName("Cut")).AsMenuItem();
+            Assert.IsNotNull(dtMenuCopy);
+            Assert.IsNotNull(dtMenuPaste);
+            Assert.IsNotNull(dtMenuCut);
             Mouse.Click();
         }
 
         //test for copy and paste menu action items
         [Test]
-        public void datepickers8_datepickerCopyPaste()
+        public void datePickers8_datepickerCopyPaste()
         {
+            Assert.IsNotNull(datepicker);
+            Assert.IsNotNull(dtPickerWindow);
             DateTime thisDay = DateTime.Today;
             datepicker.SelectedDate = thisDay;
+            Assert.IsNotNull(dtTextBox);
             string beforeCopy = dtTextBox.Text;
             Console.WriteLine(beforeCopy);
 
@@ -476,13 +504,16 @@ namespace Win11ThemeTest
             Assert.IsNotNull(pasteText);
             pasteText.Click();
             Wait.UntilInputIsProcessed();
+            Assert.IsNotNull(dtTextBox.Text);
             string afterCopy = dtTextBox.Text;
             Assert.That(beforeCopy, Is.EqualTo(afterCopy));
         }
 
         [Test]
-        public void datepickers9_closeWindows()
+        public void datePickers9_closeWindows()
         {
+            Assert.IsNotNull(dtPickerWindow);
+            Assert.IsNotNull(window);
             dtPickerWindow.Focus();
             dtPickerWindow.Close();
             Assert.IsTrue(dtPickerWindow.IsOffscreen);

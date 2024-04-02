@@ -46,9 +46,11 @@ namespace TestingApplication
 
         private void datepickerButton_Click(object sender, RoutedEventArgs e)
         {
-           DatepickerWindow dtwindow = new DatepickerWindow();
-           dtwindow.Owner = this;
-           dtwindow.Show();
+           DatepickerWindow dtWindow = new DatepickerWindow();
+            dtWindow.Owner = this;
+            //Added for fixing blank window issue
+            Application.Current.MainWindow = dtWindow;
+            dtWindow.Show();
         }
     }
 }
