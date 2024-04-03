@@ -1,16 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Configuration;
-using System.Globalization;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Configuration;
 using FlaUI.Core;
 using FlaUI.Core.AutomationElements;
 using FlaUI.Core.Definitions;
 using FlaUI.Core.Input;
 using FlaUI.UIA3;
-using FlaUI.UIA3.Identifiers;
 
 
 namespace Win11ThemeTest
@@ -22,7 +15,7 @@ namespace Win11ThemeTest
         public Window listBoxWindow;
         Button testButton;
         ListBox listBox;
-        ListBox listBoxlength;
+        ListBox listBoxLength;
         public ListBoxTest()
         {
             try
@@ -38,22 +31,22 @@ namespace Win11ThemeTest
                     Wait.UntilInputIsProcessed();
                     listBoxWindow = window.FindFirstDescendant(cf => cf.ByName("ListboxWindow")).AsWindow();
                     listBox = listBoxWindow.FindFirstDescendant(cf => cf.ByAutomationId("tstLstbox")).AsListBox();
-                    listBoxlength = listBoxWindow.FindFirstDescendant(cf => cf.ByAutomationId("tstlengthLstbox")).AsListBox();
+                    listBoxLength = listBoxWindow.FindFirstDescendant(cf => cf.ByAutomationId("tstlengthLstbox")).AsListBox();
                 }
             }
             catch (Exception ex)
             {
-                var filepath = ConfigurationManager.AppSettings["logpath"];
-                if (!Directory.Exists(filepath))
+                var filePath = ConfigurationManager.AppSettings["logpath"];
+                if (!Directory.Exists(filePath))
                 {
-                    Directory.CreateDirectory(filepath);
+                    Directory.CreateDirectory(filePath);
                 }
-                filepath = filepath + "log_" + DateTime.Now.ToString("yyyyMMddHHmmss") + ".txt";   //Text File Name
-                if (!File.Exists(filepath))
+                filePath = filePath + "log_" + DateTime.Now.ToString("yyyyMMddHHmmss") + ".txt";   //Text File Name
+                if (!File.Exists(filePath))
                 {
-                    File.Create(filepath).Dispose();
+                    File.Create(filePath).Dispose();
                 }
-                using (StreamWriter sw = File.AppendText(filepath))
+                using (StreamWriter sw = File.AppendText(filePath))
                 {
                     string error = "Log Written Date:" + " " + DateTime.Now.ToString() + "\nError Message:" + " " + ex.Message.ToString();
                     sw.WriteLine("-----------Exception Details on " + " " + DateTime.Now.ToString() + "-----------------");
@@ -67,7 +60,7 @@ namespace Win11ThemeTest
 
         //test if listbox is available in window
         [Test]
-        public void listBox1_isListboxAvailable()
+        public void listBox1_isListBoxAvailable()
         {
             Assert.IsNotNull(listBoxWindow);
             Assert.IsNotNull(listBox);
@@ -125,7 +118,7 @@ namespace Win11ThemeTest
         public void listBox7_verticalScrollBarforFixedlength()
         {
             Assert.That(listBox.Patterns.Scroll.Pattern.VerticallyScrollable.Value, Is.False);
-            Assert.That(listBoxlength.Patterns.Scroll.Pattern.VerticallyScrollable.Value, Is.True);
+            Assert.That(listBoxLength.Patterns.Scroll.Pattern.VerticallyScrollable.Value, Is.True);
         }
 
         //test keyboard navigate with down arrow
@@ -156,9 +149,9 @@ namespace Win11ThemeTest
         public void listBoxs1_verticalScroll()
         {
             double defaultScroll = 0;
-            Assert.That(listBoxlength.Patterns.Scroll.Pattern.VerticalScrollPercent, Is.EqualTo(defaultScroll));
-            listBoxlength.Patterns.Scroll.Pattern.Scroll(ScrollAmount.NoAmount, ScrollAmount.SmallIncrement);
-            Assert.That(listBoxlength.Patterns.Scroll.Pattern.VerticalScrollPercent, Is.Not.EqualTo(defaultScroll));
+            Assert.That(listBoxLength.Patterns.Scroll.Pattern.VerticalScrollPercent, Is.EqualTo(defaultScroll));
+            listBoxLength.Patterns.Scroll.Pattern.Scroll(ScrollAmount.NoAmount, ScrollAmount.SmallIncrement);
+            Assert.That(listBoxLength.Patterns.Scroll.Pattern.VerticalScrollPercent, Is.Not.EqualTo(defaultScroll));
         }
 
         [Test]
