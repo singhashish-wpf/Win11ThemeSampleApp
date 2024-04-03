@@ -30,7 +30,26 @@ namespace TestingApplication
             //  this.NavigationService.Navigate(new Uri("Page3.xaml", UriKind.Relative));         
             ButtonWindow btnwindow = new ButtonWindow();
             btnwindow.Owner = this;
+            //Added for fixing blank window issue
+            Application.Current.MainWindow = btnwindow;         
             btnwindow.Show();
+        }
+
+        private void calendarButton_Click(object sender, RoutedEventArgs e)
+        {          
+            CalendarWindow clndrwindow = new CalendarWindow();
+            clndrwindow.Owner = this;
+            //Added for fixing blank window issue
+            Application.Current.MainWindow = clndrwindow;
+            clndrwindow.Show();
+        }
+
+        private void textBoxButton_Click(object sender, RoutedEventArgs e)
+        {
+            TextWindow tw = new TextWindow();
+            tw.Owner = this;
+            Application.Current.MainWindow = tw;
+            tw.Show();
         }
 
         private void listboxButton_Click(object sender, RoutedEventArgs e)

@@ -13,6 +13,8 @@
             <Slider  />
             <TextBox Text="TextBox Content..." />
             <Button Name="testbtn" Content="Test Button" Click="Button_Click"/>
+            <Button Name="calendartestbtn" Content="Test Calendar" Click="calendarButton_Click"/>
+            <Button Name="txtBoxButton" Content="TextBox Button" Width="129" Click="textBoxButton_Click" />
             <Button Name="listBoxtestbtn" Content="Test Listbox" RenderTransformOrigin="1.562,1.132" Width="104" Click="listboxButton_Click"/>
         </StackPanel>
     </Grid>
