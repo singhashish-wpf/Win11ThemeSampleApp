@@ -10,7 +10,7 @@
 	<PlatformTarget>x64</PlatformTarget>
   </PropertyGroup>
 	<PropertyGroup>
-		<WpfRepoRoot>D:\repos\Dec2023\ashish\wpf</WpfRepoRoot>
+		<WpfRepoRoot>D:\Win11Theme\wpf</WpfRepoRoot>
 	</PropertyGroup>
 	<Import Project="$(WpfRepoRoot)\eng\wpf-debug.targets" />
 	<ItemGroup>

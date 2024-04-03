@@ -1,0 +1,16 @@
+﻿<Window x:Class="TestingApplication.TextWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:TestingApplication"
+        mc:Ignorable="d"
+        Title="TextWindow" Height="450" Width="800">
+    <Grid>
+        <TextBox Name="tbTxt" Text="TextBoxValue" Margin="11,14,365,336" />
+        <TextBox Name="tbTxt_disabled" Text="TextBox Disabled" Margin="11,116,368,246" IsEnabled="False" />
+        <TextBox Name="tbTxt_multiline" TextWrapping="Wrap" Margin="16,229,372,114"/>
+        <!--Commenting the placeholder as its currently not supported in Win11 theme-->
+        <!--<TextBox Name="tbTxt_multiline" PlaceholderText="Type something..." TextWrapping="Wrap" Margin="16,229,372,114"/>-->
+    </Grid>
+</Window>
