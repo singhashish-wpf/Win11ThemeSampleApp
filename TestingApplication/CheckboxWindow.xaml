@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:TestingApplication"
         mc:Ignorable="d"
-        Title="CheckboxWindow" Height="450" Width="800" Left="0" Top="0" WindowStartupLocation="CenterScreen">
+        Title="CheckboxWindow" Height="450" Width="800" >
     <Grid>
         <CheckBox Content="Simple Checkbox" Name="tstCheckbox" Margin="60,0,0,0"/>
         <CheckBox Content="Three state Checkbox" Name="threestateCheckbox" IsThreeState="True" Margin="60,260,0,0" VerticalAlignment="Top"/>

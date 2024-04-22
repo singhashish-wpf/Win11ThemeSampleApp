@@ -48,9 +48,11 @@ namespace TestingApplication
         private void checkboxButton_Click(object sender, RoutedEventArgs e)
         {
             CheckBoxViewModel viewModel=new CheckBoxViewModel();
-            CheckboxWindow chkbxwindow = new CheckboxWindow(viewModel);
-            chkbxwindow.Owner = this;
-            chkbxwindow.Show();
+            CheckboxWindow checkboxWindow = new CheckboxWindow(viewModel);
+            //Added for fixing blank window issue
+            Application.Current.MainWindow = checkboxWindow;
+            checkboxWindow.Owner = this;
+            checkboxWindow.Show();
         }
     }
 }
