@@ -1,33 +1,25 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Configuration;
-using System.Globalization;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Configuration;
 using FlaUI.Core;
 using FlaUI.Core.AutomationElements;
 using FlaUI.Core.Definitions;
 using FlaUI.Core.Input;
 using FlaUI.UIA3;
-using FlaUI.UIA3.Identifiers;
 
 
 namespace Win11ThemeTest
 {
     public class ListBoxTest
     {
-        private Application app;
-        private Window window;
-        public Window listBoxWindow;
-        Button testButton;
-        ListBox listBox;
-        ListBox listBoxlength;
+        private Application? app;
+        private Window? window;
+        public Window? listBoxWindow;
+        Button? testButton;
+        ListBox? listBox;
+        ListBox? listBoxLength;
         public ListBoxTest()
         {
             try
             {
-                //app = Application.Launch(@"..\\..\\..\\..\\TestingApplication\\bin\\Debug\\net9.0-windows\\win-x64\\TestingApplication.exe");
                 var appPath = ConfigurationManager.AppSettings["Testpath"];
                 app = Application.Launch(appPath);
                 using (var automation = new UIA3Automation())
@@ -38,63 +30,72 @@ namespace Win11ThemeTest
                     Wait.UntilInputIsProcessed();
                     listBoxWindow = window.FindFirstDescendant(cf => cf.ByName("ListboxWindow")).AsWindow();
                     listBox = listBoxWindow.FindFirstDescendant(cf => cf.ByAutomationId("tstLstbox")).AsListBox();
-                    listBoxlength = listBoxWindow.FindFirstDescendant(cf => cf.ByAutomationId("tstlengthLstbox")).AsListBox();
+                    listBoxLength = listBoxWindow.FindFirstDescendant(cf => cf.ByAutomationId("tstlengthLstbox")).AsListBox();
                 }
             }
             catch (Exception ex)
             {
-                var filepath = ConfigurationManager.AppSettings["logpath"];
-                if (!Directory.Exists(filepath))
+                var filePath = ConfigurationManager.AppSettings["logpath"];
+                if (filePath != null)
                 {
-                    Directory.CreateDirectory(filepath);
+                    if (!Directory.Exists(filePath))
+                    {
+                        Directory.CreateDirectory(filePath);
+                    }
+                    filePath = filePath + "log_" + DateTime.Now.ToString("yyyyMMddHHmmss") + ".txt";   //Text File Name
+                    if (!File.Exists(filePath))
+                    {
+                        File.Create(filePath).Dispose();
+                    }
+                    using (StreamWriter sw = File.AppendText(filePath))
+                    {
+                        string error = "Log Written Date:" + " " + DateTime.Now.ToString() + "\nError Message:" + " " + ex.Message.ToString();
+                        sw.WriteLine("-----------Exception Details on " + " " + DateTime.Now.ToString() + "-----------------");
+                        sw.WriteLine("-------------------------------------------------------------------------------------");
+                        sw.WriteLine(error);
+                        sw.Flush();
+                        sw.Close();
+                    }
                 }
-                filepath = filepath + "log_" + DateTime.Now.ToString("yyyyMMddHHmmss") + ".txt";   //Text File Name
-                if (!File.Exists(filepath))
+                else
                 {
-                    File.Create(filepath).Dispose();
-                }
-                using (StreamWriter sw = File.AppendText(filepath))
-                {
-                    string error = "Log Written Date:" + " " + DateTime.Now.ToString() + "\nError Message:" + " " + ex.Message.ToString();
-                    sw.WriteLine("-----------Exception Details on " + " " + DateTime.Now.ToString() + "-----------------");
-                    sw.WriteLine("-------------------------------------------------------------------------------------");
-                    sw.WriteLine(error);
-                    sw.Flush();
-                    sw.Close();
+                    throw new ArgumentNullException();
                 }
             }
         }
 
-        //test if listbox is available in window
+        //test if listBox is available in window
         [Test]
-        public void listBox1_isListboxAvailable()
+        public void listBox1_isListBoxAvailable()
         {
             Assert.IsNotNull(listBoxWindow);
             Assert.IsNotNull(listBox);
         }
 
-        //test if listbox is empty or populated with default values
+        //test if listBox is empty or populated with default values
         [Test]
         public void listBox2_isListBoxEmpty()
         {
+            Assert.IsNotNull(listBox);
             var selectListItems = listBox.Items;
             Assert.That(selectListItems.Length, Is.GreaterThan(0));
         }
 
-        //test if listbox return default selected item
+        //test if listBox return default selected item
         [Test]
         public void listBox3_defaultSelectedItem()
         {
+            Assert.IsNotNull(listBox);
             var selectList = listBox.SelectedItem;
             var selectIndex = listBox.Items.ElementAt(0);
             Assert.That(selectList, Is.EqualTo(selectIndex));
         }
 
-        //test selecting listbox item on mouse click
+        //test selecting listBox item on mouse click
         [Test]
-
         public void listBox4_selectItemMouseClick()
         {
+            Assert.IsNotNull(listBox);
             var selectList = listBox.SelectedItem;
             listBox.Items.ElementAt(3).Click();
             Wait.UntilInputIsProcessed();
@@ -102,10 +103,11 @@ namespace Win11ThemeTest
             Assert.That(selectList, Is.Not.EqualTo(newSelectList));
         }
 
-        //test if listbox return selected item
+        //test if listBox return selected item
         [Test]
         public void listBox5_isSelectedItemByIndex()
         {
+            Assert.IsNotNull(listBox);
             var selectList = listBox.Select(2);
             var textOfIndex = listBox.Items.ElementAt(2);
             Assert.That(selectList.Text, Is.EqualTo(textOfIndex.Text));
@@ -115,23 +117,27 @@ namespace Win11ThemeTest
         [Test]
         public void listBox6_isSelectedByItemText()
         {
+            Assert.IsNotNull(listBox);
             var selectList = listBox.Select("Red");
             var selectedItem = listBox.SelectedItem;
             Assert.That(selectList, Is.EqualTo(selectedItem));
         }
 
-        //test scrollbar for fixed length of listbox
+        //test scrollbar for fixed length of listBox
         [Test]
-        public void listBox7_verticalScrollBarforFixedlength()
+        public void listBox7_verticalScrollBarForFixedLength()
         {
+            Assert.IsNotNull(listBox);
+            Assert.IsNotNull(listBoxLength);
             Assert.That(listBox.Patterns.Scroll.Pattern.VerticallyScrollable.Value, Is.False);
-            Assert.That(listBoxlength.Patterns.Scroll.Pattern.VerticallyScrollable.Value, Is.True);
+            Assert.That(listBoxLength.Patterns.Scroll.Pattern.VerticallyScrollable.Value, Is.True);
         }
 
         //test keyboard navigate with down arrow
         [Test]
-        public void listBox8_keyBoarNavigateDown()
+        public void listBox8_keyBoardNavigateDown()
         {
+            Assert.IsNotNull(listBox);
             var selectList = listBox.SelectedItem;
             listBox.SelectedItem.Focus();
             Keyboard.Press(FlaUI.Core.WindowsAPI.VirtualKeyShort.DOWN);
@@ -141,8 +147,9 @@ namespace Win11ThemeTest
 
         //test keyboard navigate with up arrow
         [Test]
-        public void listBox9_keyBoarNavigateUp()
+        public void listBox9_keyBoardNavigateUp()
         {
+            Assert.IsNotNull(listBox);
             listBox.Select(2);
             var selectList = listBox.SelectedItem;
             listBox.SelectedItem.Focus();
@@ -151,19 +158,22 @@ namespace Win11ThemeTest
             Assert.That(selectList, Is.Not.EqualTo(newSelectList));
         }
 
-        //Test vertical scrolling for listbox with fixed length
+        //Test vertical scrolling for listBox with fixed length
         [Test]
         public void listBoxs1_verticalScroll()
         {
+            Assert.IsNotNull(listBoxLength);
             double defaultScroll = 0;
-            Assert.That(listBoxlength.Patterns.Scroll.Pattern.VerticalScrollPercent, Is.EqualTo(defaultScroll));
-            listBoxlength.Patterns.Scroll.Pattern.Scroll(ScrollAmount.NoAmount, ScrollAmount.SmallIncrement);
-            Assert.That(listBoxlength.Patterns.Scroll.Pattern.VerticalScrollPercent, Is.Not.EqualTo(defaultScroll));
+            Assert.That(listBoxLength.Patterns.Scroll.Pattern.VerticalScrollPercent, Is.EqualTo(defaultScroll));
+            listBoxLength.Patterns.Scroll.Pattern.Scroll(ScrollAmount.NoAmount, ScrollAmount.SmallIncrement);
+            Assert.That(listBoxLength.Patterns.Scroll.Pattern.VerticalScrollPercent, Is.Not.EqualTo(defaultScroll));
         }
 
         [Test]
         public void listBoxs2_closeWindows()
         {
+            Assert.IsNotNull(listBoxWindow);
+            Assert.IsNotNull(window);
             listBoxWindow.Close();
             Assert.IsTrue(listBoxWindow.IsOffscreen);
             window.Close();

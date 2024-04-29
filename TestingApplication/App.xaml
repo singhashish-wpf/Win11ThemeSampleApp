@@ -5,13 +5,9 @@
              StartupUri="MainWindow.xaml">
     <Application.Resources>
         <ResourceDictionary>
-
             <ResourceDictionary.MergedDictionaries>
-                <ThemesDictionary  Theme="Light"/>
-                <ControlsDictionary />
-
+                <ResourceDictionary Source="pack://application:,,,/PresentationFramework.FluentWindows;component/Resources/FluentWindows.xaml" />
             </ResourceDictionary.MergedDictionaries>
-
         </ResourceDictionary>
 
     </Application.Resources>
