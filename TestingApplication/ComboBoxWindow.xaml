@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:TestingApplication"
         mc:Ignorable="d"
-        Title="ComboBoxWindow" Height="450" Width="800">
+        Title="ComboBoxWindow" Height="450" Width="800" WindowStartupLocation="CenterOwner">
     <Grid>
         <ComboBox Name="comboBoxList" Margin="105,30,0,0"
                 MinWidth="200"

@@ -143,11 +143,9 @@ namespace Win11ThemeTest
             Assert.IsNotNull(comboBox);
             Mouse.MoveTo(comboBox.GetClickablePoint());
             Mouse.Click();            
-            Mouse.MoveTo(comboBox.Items[0].GetClickablePoint());
-            Wait.UntilInputIsProcessed();
-            Mouse.LeftClick();
-            Wait.UntilInputIsProcessed(TimeSpan.FromMilliseconds(1000));
-            Assert.That(comboBox.SelectedItem.Name, Is.EqualTo("Green"));                    
+            Wait.UntilInputIsProcessed(TimeSpan.FromMilliseconds(500));           
+            comboBox.Items[3].Click();
+            Assert.That(comboBox.SelectedItem.Name, Is.EqualTo("Yellow"));                    
         }
 
         [Test]
