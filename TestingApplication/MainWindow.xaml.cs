@@ -10,6 +10,7 @@ using System.Windows.Navigation;
 using System.Windows.Shapes;
 using TestingApplication.ViewModel;
 
+
 namespace TestingApplication
 {
     /// <summary>
@@ -51,6 +52,14 @@ namespace TestingApplication
             tw.Owner = this;
             Application.Current.MainWindow = tw;
             tw.Show();
+        }
+
+        private void comboBoxButton_Click(object sender, RoutedEventArgs e)
+        {
+            ComboBoxViewModel vm = new ComboBoxViewModel();
+            ComboBoxWindow cbw = new ComboBoxWindow(vm);
+            cbw.Owner = this;
+            cbw.Show();
         }
 
         private void checkboxButton_Click(object sender, RoutedEventArgs e)

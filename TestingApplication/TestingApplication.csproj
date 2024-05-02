@@ -14,5 +14,6 @@
 	<Import Project="$(WpfRepoRoot)\eng\wpf-debug.targets" />
 	<ItemGroup>
 	  <PackageReference Include="CommunityToolkit.Mvvm" Version="8.2.2" />
+	  <!--<PackageReference Include="Prism.Wpf" Version="8.1.97" />-->
 	</ItemGroup>
 </Project>
