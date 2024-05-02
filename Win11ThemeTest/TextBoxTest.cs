@@ -158,11 +158,11 @@ namespace Win11ThemeTest
         [Test]
         public void textBox_multiLineTextbox()
         {
-            string testDescription = "Testing new line text.\n Line1\nLine2 \nLine3";
+            string testDescription = "New line text.\n Line1\nLine2 \nLine3";
             Assert.IsNotNull(multiLineTextBox);
             multiLineTextBox.Enter(testDescription);
-            Wait.UntilInputIsProcessed(TimeSpan.FromMilliseconds(500));
-            string expectedText = "Testing new line text. Line1Line2 Line3";
+            Wait.UntilInputIsProcessed(TimeSpan.FromMilliseconds(800));
+            string expectedText = "New line text. Line1Line2 Line3";
             // Get text from the textbox and verify
             Assert.That(expectedText, Is.EqualTo(multiLineTextBox.Text));
         }
@@ -177,6 +177,7 @@ namespace Win11ThemeTest
             Wait.UntilInputIsProcessed(TimeSpan.FromMilliseconds(500));
             Keyboard.Press(FlaUI.Core.WindowsAPI.VirtualKeyShort.CONTROL);
             Keyboard.Press(FlaUI.Core.WindowsAPI.VirtualKeyShort.KEY_Z);
+            Wait.UntilInputIsProcessed(TimeSpan.FromMilliseconds(500));
             Keyboard.Release(FlaUI.Core.WindowsAPI.VirtualKeyShort.KEY_Z);
             Keyboard.Release(FlaUI.Core.WindowsAPI.VirtualKeyShort.CONTROL);
             if (textBox.Text != expectedText)
@@ -192,18 +193,20 @@ namespace Win11ThemeTest
         [Test]
         public void textBox12_RedoText()
         {            
-            var expectedText = "This is a textbox. Trying to perform Functionality test for Redo";
+            var expectedText = "This is a textbox. Trying to perform Redo";
             Assert.IsNotNull(textBox); 
-            textBox.Enter("This is a textbox. Trying to perform Functionality test for Redo");
+            textBox.Enter("This is a textbox. Trying to perform Redo");
             Wait.UntilInputIsProcessed(TimeSpan.FromMilliseconds(500));
             //Undo
             Keyboard.Press(FlaUI.Core.WindowsAPI.VirtualKeyShort.CONTROL);
             Keyboard.Press(FlaUI.Core.WindowsAPI.VirtualKeyShort.KEY_Z);
+            Wait.UntilInputIsProcessed(TimeSpan.FromMilliseconds(500));
             Keyboard.Release(FlaUI.Core.WindowsAPI.VirtualKeyShort.KEY_Z);
             Keyboard.Release(FlaUI.Core.WindowsAPI.VirtualKeyShort.CONTROL);
             //Redo
             Keyboard.Press(FlaUI.Core.WindowsAPI.VirtualKeyShort.CONTROL);
             Keyboard.Press(FlaUI.Core.WindowsAPI.VirtualKeyShort.KEY_Y);
+            Wait.UntilInputIsProcessed(TimeSpan.FromMilliseconds(500));
             Keyboard.Release(FlaUI.Core.WindowsAPI.VirtualKeyShort.KEY_Y);
             Keyboard.Release(FlaUI.Core.WindowsAPI.VirtualKeyShort.CONTROL);
             if (textBox.Text != expectedText)
@@ -288,7 +291,7 @@ namespace Win11ThemeTest
             Assert.IsNotNull(textBox);
             textBox.Text = string.Empty;
             textBox.Enter("<script>alert(\"123\")</script>");
-            Wait.UntilInputIsProcessed(TimeSpan.FromMilliseconds(500));
+            Wait.UntilInputIsProcessed(TimeSpan.FromMilliseconds(800));
             Assert.That(textBox.Text, Is.EqualTo("<script>alert(\"123\")</script>"));
         }       
 
