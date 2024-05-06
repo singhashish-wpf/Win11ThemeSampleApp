@@ -153,6 +153,7 @@ namespace Win11ThemeTest
         {
             Assert.IsNotNull(comboWindow);
             comboWindow.Close();
+            Wait.UntilInputIsProcessed();
             Assert.IsTrue(comboWindow.IsOffscreen);
             Assert.IsNotNull(mainWindow);
             mainWindow.Close();

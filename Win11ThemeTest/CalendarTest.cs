@@ -487,6 +487,7 @@ namespace Win11ThemeTest
         {
             Assert.IsNotNull(window);
             Assert.IsNotNull(calWindow);
+            Wait.UntilInputIsProcessed();
             Assert.IsNotNull(multiSelectCalendar);
             calWindow.Focus();
             calWindow.Close();
