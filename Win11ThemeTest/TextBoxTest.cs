@@ -380,6 +380,7 @@ namespace Win11ThemeTest
         {
             Assert.IsNotNull(textWindow);
             textWindow.Close();
+            Wait.UntilInputIsProcessed();
             Assert.IsTrue(textWindow.IsOffscreen);
             Assert.IsNotNull(mainWindow);
             mainWindow.Close();

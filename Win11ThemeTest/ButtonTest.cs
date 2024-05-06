@@ -155,6 +155,7 @@ namespace Win11ThemeTest
             Assert.IsNotNull(btnWindow);
             Assert.IsNotNull(window);
             btnWindow.Close();
+            Wait.UntilInputIsProcessed();
             Assert.IsTrue(btnWindow.IsOffscreen);
             window.Close();
             Assert.IsTrue(window.IsOffscreen);

@@ -256,6 +256,7 @@ namespace Win11ThemeTest
             Assert.IsNotNull(checkboxWindow);
             Assert.IsNotNull(window);
             checkboxWindow.Close();
+            Wait.UntilInputIsProcessed();
             Assert.IsTrue(checkboxWindow.IsOffscreen);
             window.Close();
             Assert.IsTrue(window.IsOffscreen);
