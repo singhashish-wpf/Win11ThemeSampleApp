@@ -1,0 +1,38 @@
+﻿<Window x:Class="TestingApplication.CheckboxWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:TestingApplication"
+        mc:Ignorable="d"
+        Title="CheckboxWindow" Height="450" Width="800" >
+    <Grid>
+        <CheckBox Content="Simple Checkbox" Name="tstCheckbox" Margin="60,0,0,0"/>
+        <CheckBox Content="Three state Checkbox" Name="threestateCheckbox" IsThreeState="True" Margin="60,260,0,0" VerticalAlignment="Top"/>
+        <CheckBox  Command="{Binding ViewModel.SelectAllCheckedCommand, Mode=OneWay}"
+                    CommandParameter="{Binding RelativeSource={RelativeSource Self}, Mode=OneWay}"
+                    Content="Select all"
+                    IsChecked="{Binding ViewModel.SelectAllCheckBoxChecked, Mode=TwoWay}"
+                    IsThreeState="True" Margin="346,132,0,0" VerticalAlignment="Top"  />
+        <CheckBox
+                    Margin="366,164,0,0"
+                    Command="{Binding ViewModel.SingleCheckedCommand, Mode=OneWay}"
+                    CommandParameter="1"
+                    Content="Option 1"
+                    IsChecked="{Binding ViewModel.OptionOneCheckBoxChecked, Mode=TwoWay}" VerticalAlignment="Top" />
+        <CheckBox
+                    Margin="366,195,0,0"
+                    Command="{Binding ViewModel.SingleCheckedCommand, Mode=OneWay}"
+                    CommandParameter="2"
+                    Content="Option 2"
+                    IsChecked="{Binding ViewModel.OptionTwoCheckBoxChecked, Mode=TwoWay}" VerticalAlignment="Top" />
+        <CheckBox
+                    Margin="366,227,0,0"
+                    Command="{Binding ViewModel.SingleCheckedCommand, Mode=OneWay}"
+                    CommandParameter="3"
+                    Content="Option 3"
+                    IsChecked="{Binding ViewModel.OptionThreeCheckBoxChecked, Mode=TwoWay}"  RenderTransformOrigin="0.857,-0.806" VerticalAlignment="Top" />
+
+     
+    </Grid>
+</Window>

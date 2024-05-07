@@ -10,6 +10,7 @@ using System.Windows.Navigation;
 using System.Windows.Shapes;
 using TestingApplication.ViewModel;
 
+
 namespace TestingApplication
 {
     /// <summary>
@@ -59,6 +60,16 @@ namespace TestingApplication
             ComboBoxWindow cbw = new ComboBoxWindow(vm);
             cbw.Owner = this;
             cbw.Show();
+        }
+
+        private void checkboxButton_Click(object sender, RoutedEventArgs e)
+        {
+            CheckBoxViewModel viewModel=new CheckBoxViewModel();
+            CheckboxWindow checkboxWindow = new CheckboxWindow(viewModel);
+            //Added for fixing blank window issue
+            Application.Current.MainWindow = checkboxWindow;
+            checkboxWindow.Owner = this;
+            checkboxWindow.Show();
         }
 
         private void listboxButton_Click(object sender, RoutedEventArgs e)
