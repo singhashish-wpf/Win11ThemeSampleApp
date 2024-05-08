@@ -9,12 +9,12 @@ namespace Win11ThemeTest
 {
     public class CheckBoxTests
     {
-        private Application? app;
-        private Window? window;
+        private readonly Application? app;
+        private readonly Window? window;
         public Window? checkboxWindow;
-        Button? testButton;
-        CheckBox? checkBox;
-        CheckBox? threeStateCheckBox;
+        readonly Button? testButton;
+        readonly CheckBox? checkBox;
+        readonly CheckBox? threeStateCheckBox;
         CheckBox? selectCheckBox;
         CheckBox? option1;
         CheckBox? option2;
@@ -26,17 +26,15 @@ namespace Win11ThemeTest
             {
                 var appPath = ConfigurationManager.AppSettings["Testpath"];
                 app = Application.Launch(appPath);
-                using (var automation = new UIA3Automation())
-                {
-                    window = app.GetMainWindow(automation);
-                    testButton = window.FindFirstDescendant(cf => cf.ByAutomationId("testchkbtn")).AsButton();
-                    Mouse.Click(testButton.GetClickablePoint());
-                    Wait.UntilInputIsProcessed(TimeSpan.FromMilliseconds(2000));
-                    checkboxWindow = window.FindFirstDescendant(cf => cf.ByName("CheckboxWindow")).AsWindow();
-                    checkBox = checkboxWindow.FindFirstDescendant(cf => cf.ByAutomationId("tstCheckbox")).AsCheckBox();
-                    threeStateCheckBox = checkboxWindow.FindFirstDescendant(cf => cf.ByAutomationId("threestateCheckbox")).AsCheckBox();
-                    selectCheckBox = checkboxWindow.FindFirstDescendant(cf => cf.ByName("Select all")).AsCheckBox();
-                }
+                using var automation = new UIA3Automation();
+                window = app.GetMainWindow(automation);
+                testButton = window.FindFirstDescendant(cf => cf.ByAutomationId("testchkbtn")).AsButton();
+                Mouse.Click(testButton.GetClickablePoint());
+                Wait.UntilInputIsProcessed(TimeSpan.FromMilliseconds(2000));
+                checkboxWindow = window.FindFirstDescendant(cf => cf.ByName("CheckboxWindow")).AsWindow();
+                checkBox = checkboxWindow.FindFirstDescendant(cf => cf.ByAutomationId("tstCheckbox")).AsCheckBox();
+                threeStateCheckBox = checkboxWindow.FindFirstDescendant(cf => cf.ByAutomationId("threestateCheckbox")).AsCheckBox();
+                selectCheckBox = checkboxWindow.FindFirstDescendant(cf => cf.ByName("Select all")).AsCheckBox();
             }
             catch (Exception ex)
             {
@@ -52,57 +50,56 @@ namespace Win11ThemeTest
                     {
                         File.Create(filePath).Dispose();
                     }
-                    using (StreamWriter sw = File.AppendText(filePath))
-                    {
-                        string error = "Log Written Date:" + " " + DateTime.Now.ToString() + "\nError Message:" + " " + ex.Message.ToString();
-                        sw.WriteLine("-----------Exception Details on " + " " + DateTime.Now.ToString() + "-----------------");
-                        sw.WriteLine("-------------------------------------------------------------------------------------");
-                        sw.WriteLine(error);
-                        sw.Flush();
-                        sw.Close();
-                    }
+                    using StreamWriter sw = File.AppendText(filePath);
+                    string error = "Log Written Date:" + " " + DateTime.Now.ToString() + "\nError Message:" + " " + ex.Message.ToString();
+                    sw.WriteLine("-----------Exception Details on " + " " + DateTime.Now.ToString() + "-----------------");
+                    sw.WriteLine("-------------------------------------------------------------------------------------");
+                    sw.WriteLine(error);
+                    sw.Flush();
+                    sw.Close();
                 }
                 else
                 {
                     throw new ArgumentNullException();
                 }
-
             }
-
         }
         #region simplecheckbox
         //test if checkbox is available in window
         [Test]
-        public void checkbox1_isCheckboxAvailable()
+        public void Checkbox1_isCheckboxAvailable()
         {
-            Assert.IsNotNull(checkboxWindow);
-            Assert.IsNotNull(checkBox);
+            Assert.Multiple(() =>
+            {
+                Assert.That(checkboxWindow, Is.Not.Null);
+                Assert.That(checkBox, Is.Not.Null);
+            });
         }
 
         //test if checkbox is not checked by default
         [Test]
-        public void checkbox2_isNotChecked()
+        public void Checkbox2_isNotChecked()
         {
-            Assert.IsNotNull(checkBox);
+            Assert.That(checkBox, Is.Not.Null);
             Assert.That(checkBox.IsChecked, Is.False);
         }
 
         //test if checkbox is  checked on toggle
         [Test]
-        public void checkbox3_isChecked()
+        public void Checkbox3_isChecked()
         {
-            Assert.IsNotNull(checkBox);
+            Assert.That(checkBox, Is.Not.Null);
             Assert.That(checkBox.IsChecked, Is.False);
-            checkBox.Toggle(); ;
+            checkBox.Toggle();
             Assert.That(checkBox.IsChecked, Is.True);
             checkBox.Toggle();
         }
 
         //test if checkbox is  checked with space key
         [Test]
-        public void checkbox4_isCheckedWithSpaceKey()
+        public void Checkbox4_isCheckedWithSpaceKey()
         {
-            Assert.IsNotNull(checkBox);
+            Assert.That(checkBox, Is.Not.Null);
             checkBox.Focus();
             Keyboard.Press(FlaUI.Core.WindowsAPI.VirtualKeyShort.SPACE);
             Keyboard.Release(FlaUI.Core.WindowsAPI.VirtualKeyShort.SPACE);
@@ -112,9 +109,9 @@ namespace Win11ThemeTest
 
         //test if checkbox is  checked with mouseclick
         [Test]
-        public void checkbox5_isCheckedOnMouseClick()
+        public void Checkbox5_isCheckedOnMouseClick()
         {
-            Assert.IsNotNull(checkBox);
+            Assert.That(checkBox, Is.Not.Null);
             Mouse.MoveTo(checkBox.GetClickablePoint());
             Mouse.MoveBy(0, 10);
             Mouse.Down(MouseButton.Left);
@@ -129,17 +126,20 @@ namespace Win11ThemeTest
 
         //test if three state checkbox is available in window
         [Test]
-        public void checkboxThreeState1_is3StateCheckboxAvailable()
+        public void CheckboxThreeState1_is3StateCheckboxAvailable()
         {
-            Assert.IsNotNull(checkboxWindow);
-            Assert.IsNotNull(threeStateCheckBox);
+            Assert.Multiple(() =>
+            {
+                Assert.That(checkboxWindow, Is.Not.Null);
+                Assert.That(threeStateCheckBox, Is.Not.Null);
+            });
         }
 
         //test if the state is ON with single togle
         [Test]
-        public void checkboxThreeState2_is3StateCheckboxToggleOn()
+        public void CheckboxThreeState2_is3StateCheckboxToggleOn()
         {
-            Assert.IsNotNull(threeStateCheckBox);
+            Assert.That(threeStateCheckBox, Is.Not.Null);
             threeStateCheckBox.Toggle();
             Assert.That(threeStateCheckBox.ToggleState, Is.EqualTo(ToggleState.On));
             threeStateCheckBox.Toggle();
@@ -148,9 +148,9 @@ namespace Win11ThemeTest
 
         //test for intermediate toggle state
         [Test]
-        public void checkboxThreeState3_is3StateCheckboxToggleIntermediate()
+        public void CheckboxThreeState3_is3StateCheckboxToggleIntermediate()
         {
-            Assert.IsNotNull(threeStateCheckBox);
+            Assert.That(threeStateCheckBox, Is.Not.Null);
             threeStateCheckBox.Toggle();
             threeStateCheckBox.Toggle();
             Assert.That(threeStateCheckBox.ToggleState, Is.EqualTo(ToggleState.Indeterminate));
@@ -159,9 +159,9 @@ namespace Win11ThemeTest
 
         //test for OFF state
         [Test]
-        public void checkboxThreeState4_is3StateCheckboxToggleOff()
+        public void CheckboxThreeState4_is3StateCheckboxToggleOff()
         {
-            Assert.IsNotNull(threeStateCheckBox);
+            Assert.That(threeStateCheckBox, Is.Not.Null);
             threeStateCheckBox.Toggle();
             threeStateCheckBox.Toggle();
             threeStateCheckBox.Toggle();
@@ -170,9 +170,9 @@ namespace Win11ThemeTest
 
         //test for toggle on mouse click
         [Test]
-        public void checkboxThreeState5_is3StateCheckboxToggleMouseClick()
+        public void CheckboxThreeState5_is3StateCheckboxToggleMouseClick()
         {
-            Assert.IsNotNull(threeStateCheckBox);
+            Assert.That(threeStateCheckBox, Is.Not.Null);
             threeStateCheckBox.Click();
             Assert.That(threeStateCheckBox.IsChecked, Is.True);
             threeStateCheckBox.Toggle();
@@ -181,9 +181,9 @@ namespace Win11ThemeTest
 
         //test for toggle on Space key
         [Test]
-        public void checkboxThreeState6_is3StateCheckboxToggleSpaceKey()
+        public void CheckboxThreeState6_is3StateCheckboxToggleSpaceKey()
         {
-            Assert.IsNotNull(threeStateCheckBox);
+            Assert.That(threeStateCheckBox, Is.Not.Null);
             threeStateCheckBox.Focus();
             Keyboard.Press(FlaUI.Core.WindowsAPI.VirtualKeyShort.SPACE);
             Keyboard.Release(FlaUI.Core.WindowsAPI.VirtualKeyShort.SPACE);
@@ -194,9 +194,9 @@ namespace Win11ThemeTest
 
         //test select all checkbox in 3 state scenario
         [Test]
-        public void checkboxThreeState7_is3stateCheckboxSelectAll()
+        public void CheckboxThreeState7_is3stateCheckboxSelectAll()
         {
-            Assert.IsNotNull(checkboxWindow);
+            Assert.That(checkboxWindow, Is.Not.Null);
             selectCheckBox = checkboxWindow.FindFirstDescendant(cf => cf.ByName("Select all")).AsCheckBox();
             Mouse.MoveTo(selectCheckBox.GetClickablePoint());
             Wait.UntilInputIsProcessed();
@@ -205,36 +205,42 @@ namespace Win11ThemeTest
             option1 = checkboxWindow.FindFirstDescendant(cf => cf.ByName("Option 1")).AsCheckBox();
             option2 = checkboxWindow.FindFirstDescendant(cf => cf.ByName("Option 2")).AsCheckBox();
             option3 = checkboxWindow.FindFirstDescendant(cf => cf.ByName("Option 3")).AsCheckBox();
-            Assert.That(option1.ToggleState, Is.EqualTo(ToggleState.On));
-            Assert.That(option2.ToggleState, Is.EqualTo(ToggleState.On));
-            Assert.That(option3.ToggleState, Is.EqualTo(ToggleState.On));
+            Assert.Multiple(() =>
+            {
+                Assert.That(option1.ToggleState, Is.EqualTo(ToggleState.On));
+                Assert.That(option2.ToggleState, Is.EqualTo(ToggleState.On));
+                Assert.That(option3.ToggleState, Is.EqualTo(ToggleState.On));
+            });
             Mouse.LeftClick(selectCheckBox.GetClickablePoint());
         }
 
         //test deselect all checkbox in 3 state scenario
         [Test]
-        public void checkboxThreeState8_is3stateCheckboxDeselectAll()
+        public void CheckboxThreeState8_is3stateCheckboxDeselectAll()
         {
-            Assert.IsNotNull(selectCheckBox);
-            Assert.IsNotNull(checkboxWindow);
+            Assert.That(selectCheckBox, Is.Not.Null);
             selectCheckBox.Focus();
             Wait.UntilInputIsProcessed();
             Mouse.LeftClick(selectCheckBox.GetClickablePoint());
             Wait.UntilInputIsProcessed();
             Mouse.LeftClick(selectCheckBox.GetClickablePoint());
+            Assert.That(checkboxWindow, Is.Not.Null);
             option1 = checkboxWindow.FindFirstDescendant(cf => cf.ByName("Option 1")).AsCheckBox();
             option2 = checkboxWindow.FindFirstDescendant(cf => cf.ByName("Option 2")).AsCheckBox();
             option3 = checkboxWindow.FindFirstDescendant(cf => cf.ByName("Option 3")).AsCheckBox();
-            Assert.That(option1.ToggleState, Is.EqualTo(ToggleState.Off));
-            Assert.That(option2.ToggleState, Is.EqualTo(ToggleState.Off));
-            Assert.That(option3.ToggleState, Is.EqualTo(ToggleState.Off));
+            Assert.Multiple(() =>
+            {
+                Assert.That(option1.ToggleState, Is.EqualTo(ToggleState.Off));
+                Assert.That(option2.ToggleState, Is.EqualTo(ToggleState.Off));
+                Assert.That(option3.ToggleState, Is.EqualTo(ToggleState.Off));
+            });
         }
 
         //test intermediate state checkbox in 3 state scenario
         [Test]
-        public void checkboxThreeState9_is3stateCheckboxSelectOneOption()
+        public void CheckboxThreeState9_is3stateCheckboxSelectOneOption()
         {
-            Assert.IsNotNull(checkboxWindow);
+            Assert.That(checkboxWindow, Is.Not.Null);
             option1 = checkboxWindow.FindFirstDescendant(cf => cf.ByName("Option 1")).AsCheckBox();
             option1.Focus();
             Wait.UntilInputIsProcessed();
@@ -243,23 +249,27 @@ namespace Win11ThemeTest
             selectCheckBox = checkboxWindow.FindFirstDescendant(cf => cf.ByName("Select all")).AsCheckBox();
             option2 = checkboxWindow.FindFirstDescendant(cf => cf.ByName("Option 2")).AsCheckBox();
             option3 = checkboxWindow.FindFirstDescendant(cf => cf.ByName("Option 3")).AsCheckBox();
-            Assert.That(option1.ToggleState, Is.EqualTo(ToggleState.On));
-            Assert.That(option2.ToggleState, Is.EqualTo(ToggleState.Off));
-            Assert.That(option3.ToggleState, Is.EqualTo(ToggleState.Off));
-            Assert.That(selectCheckBox.ToggleState, Is.EqualTo(ToggleState.Indeterminate));
+            Assert.Multiple(() =>
+            {
+                Assert.That(option1.ToggleState, Is.EqualTo(ToggleState.On));
+                Assert.That(option2.ToggleState, Is.EqualTo(ToggleState.Off));
+                Assert.That(option3.ToggleState, Is.EqualTo(ToggleState.Off));
+                Assert.That(selectCheckBox.ToggleState, Is.EqualTo(ToggleState.Indeterminate));
+            });
             Mouse.LeftClick(option1.GetClickablePoint());
         }
 
         [Test]
-        public void closeWindows()
+        public void CloseWindows()
         {
-            Assert.IsNotNull(checkboxWindow);
-            Assert.IsNotNull(window);
+            Assert.That(checkboxWindow, Is.Not.Null);
             checkboxWindow.Close();
             Wait.UntilInputIsProcessed();
-            Assert.IsTrue(checkboxWindow.IsOffscreen);
+            Assert.That(checkboxWindow.IsOffscreen, Is.True);
+            Wait.UntilInputIsProcessed();
+            Assert.That(window, Is.Not.Null);
             window.Close();
-            Assert.IsTrue(window.IsOffscreen);
+            Assert.That(window.IsOffscreen, Is.True);
         }
         #endregion
     }

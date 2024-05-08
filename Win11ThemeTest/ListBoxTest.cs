@@ -10,28 +10,26 @@ namespace Win11ThemeTest
 {
     public class ListBoxTest
     {
-        private Application? app;
-        private Window? window;
+        private readonly Application? app;
+        private readonly Window? window;
         public Window? listBoxWindow;
-        Button? testButton;
-        ListBox? listBox;
-        ListBox? listBoxLength;
+        readonly Button? testButton;
+        readonly ListBox? listBox;
+        readonly ListBox? listBoxLength;
         public ListBoxTest()
         {
             try
             {
                 var appPath = ConfigurationManager.AppSettings["Testpath"];
                 app = Application.Launch(appPath);
-                using (var automation = new UIA3Automation())
-                {
-                    window = app.GetMainWindow(automation);
-                    testButton = window.FindFirstDescendant(cf => cf.ByAutomationId("listBoxtestbtn")).AsButton();
-                    Mouse.Click(testButton.GetClickablePoint());
-                    Wait.UntilInputIsProcessed();
-                    listBoxWindow = window.FindFirstDescendant(cf => cf.ByName("ListboxWindow")).AsWindow();
-                    listBox = listBoxWindow.FindFirstDescendant(cf => cf.ByAutomationId("tstLstbox")).AsListBox();
-                    listBoxLength = listBoxWindow.FindFirstDescendant(cf => cf.ByAutomationId("tstlengthLstbox")).AsListBox();
-                }
+                using var automation = new UIA3Automation();
+                window = app.GetMainWindow(automation);
+                testButton = window.FindFirstDescendant(cf => cf.ByAutomationId("listBoxtestbtn")).AsButton();
+                Mouse.Click(testButton.GetClickablePoint());
+                Wait.UntilInputIsProcessed();
+                listBoxWindow = window.FindFirstDescendant(cf => cf.ByName("ListboxWindow")).AsWindow();
+                listBox = listBoxWindow.FindFirstDescendant(cf => cf.ByAutomationId("tstLstbox")).AsListBox();
+                listBoxLength = listBoxWindow.FindFirstDescendant(cf => cf.ByAutomationId("tstlengthLstbox")).AsListBox();
             }
             catch (Exception ex)
             {
@@ -47,15 +45,13 @@ namespace Win11ThemeTest
                     {
                         File.Create(filePath).Dispose();
                     }
-                    using (StreamWriter sw = File.AppendText(filePath))
-                    {
-                        string error = "Log Written Date:" + " " + DateTime.Now.ToString() + "\nError Message:" + " " + ex.Message.ToString();
-                        sw.WriteLine("-----------Exception Details on " + " " + DateTime.Now.ToString() + "-----------------");
-                        sw.WriteLine("-------------------------------------------------------------------------------------");
-                        sw.WriteLine(error);
-                        sw.Flush();
-                        sw.Close();
-                    }
+                    using StreamWriter sw = File.AppendText(filePath);
+                    string error = "Log Written Date:" + " " + DateTime.Now.ToString() + "\nError Message:" + " " + ex.Message.ToString();
+                    sw.WriteLine("-----------Exception Details on " + " " + DateTime.Now.ToString() + "-----------------");
+                    sw.WriteLine("-------------------------------------------------------------------------------------");
+                    sw.WriteLine(error);
+                    sw.Flush();
+                    sw.Close();
                 }
                 else
                 {
@@ -66,26 +62,29 @@ namespace Win11ThemeTest
 
         //test if listBox is available in window
         [Test]
-        public void listBox1_isListBoxAvailable()
+        public void ListBox1_isListBoxAvailable()
         {
-            Assert.IsNotNull(listBoxWindow);
-            Assert.IsNotNull(listBox);
+            Assert.Multiple(() =>
+            {
+                Assert.That(listBoxWindow, Is.Not.Null);
+                Assert.That(listBox, Is.Not.Null);
+            });
         }
 
         //test if listBox is empty or populated with default values
         [Test]
-        public void listBox2_isListBoxEmpty()
+        public void ListBox2_isListBoxEmpty()
         {
-            Assert.IsNotNull(listBox);
+            Assert.That(listBox, Is.Not.Null);
             var selectListItems = listBox.Items;
             Assert.That(selectListItems.Length, Is.GreaterThan(0));
         }
 
         //test if listBox return default selected item
         [Test]
-        public void listBox3_defaultSelectedItem()
+        public void ListBox3_defaultSelectedItem()
         {
-            Assert.IsNotNull(listBox);
+            Assert.That(listBox, Is.Not.Null);
             var selectList = listBox.SelectedItem;
             var selectIndex = listBox.Items.ElementAt(0);
             Assert.That(selectList, Is.EqualTo(selectIndex));
@@ -93,9 +92,9 @@ namespace Win11ThemeTest
 
         //test selecting listBox item on mouse click
         [Test]
-        public void listBox4_selectItemMouseClick()
+        public void ListBox4_selectItemMouseClick()
         {
-            Assert.IsNotNull(listBox);
+            Assert.That(listBox, Is.Not.Null);
             var selectList = listBox.SelectedItem;
             listBox.Items.ElementAt(3).Click();
             Wait.UntilInputIsProcessed();
@@ -105,9 +104,9 @@ namespace Win11ThemeTest
 
         //test if listBox return selected item
         [Test]
-        public void listBox5_isSelectedItemByIndex()
+        public void ListBox5_isSelectedItemByIndex()
         {
-            Assert.IsNotNull(listBox);
+            Assert.That(listBox, Is.Not.Null);
             var selectList = listBox.Select(2);
             var textOfIndex = listBox.Items.ElementAt(2);
             Assert.That(selectList.Text, Is.EqualTo(textOfIndex.Text));
@@ -115,9 +114,9 @@ namespace Win11ThemeTest
 
         //test list item by text
         [Test]
-        public void listBox6_isSelectedByItemText()
+        public void ListBox6_isSelectedByItemText()
         {
-            Assert.IsNotNull(listBox);
+            Assert.That(listBox, Is.Not.Null);
             var selectList = listBox.Select("Red");
             var selectedItem = listBox.SelectedItem;
             Assert.That(selectList, Is.EqualTo(selectedItem));
@@ -125,19 +124,19 @@ namespace Win11ThemeTest
 
         //test scrollbar for fixed length of listBox
         [Test]
-        public void listBox7_verticalScrollBarForFixedLength()
+        public void ListBox7_verticalScrollBarForFixedLength()
         {
-            Assert.IsNotNull(listBox);
-            Assert.IsNotNull(listBoxLength);
+            Assert.That(listBox, Is.Not.Null);           
             Assert.That(listBox.Patterns.Scroll.Pattern.VerticallyScrollable.Value, Is.False);
+            Assert.That(listBoxLength, Is.Not.Null);
             Assert.That(listBoxLength.Patterns.Scroll.Pattern.VerticallyScrollable.Value, Is.True);
         }
 
         //test keyboard navigate with down arrow
         [Test]
-        public void listBox8_keyBoardNavigateDown()
+        public void ListBox8_keyBoardNavigateDown()
         {
-            Assert.IsNotNull(listBox);
+            Assert.That(listBox, Is.Not.Null);
             var selectList = listBox.SelectedItem;
             listBox.SelectedItem.Focus();
             Keyboard.Press(FlaUI.Core.WindowsAPI.VirtualKeyShort.DOWN);
@@ -147,9 +146,9 @@ namespace Win11ThemeTest
 
         //test keyboard navigate with up arrow
         [Test]
-        public void listBox9_keyBoardNavigateUp()
+        public void ListBox9_keyBoardNavigateUp()
         {
-            Assert.IsNotNull(listBox);
+            Assert.That(listBox, Is.Not.Null);
             listBox.Select(2);
             var selectList = listBox.SelectedItem;
             listBox.SelectedItem.Focus();
@@ -160,9 +159,9 @@ namespace Win11ThemeTest
 
         //Test vertical scrolling for listBox with fixed length
         [Test]
-        public void listBoxs1_verticalScroll()
+        public void ListBoxs1_verticalScroll()
         {
-            Assert.IsNotNull(listBoxLength);
+            Assert.That(listBoxLength, Is.Not.Null);
             double defaultScroll = 0;
             Assert.That(listBoxLength.Patterns.Scroll.Pattern.VerticalScrollPercent, Is.EqualTo(defaultScroll));
             listBoxLength.Patterns.Scroll.Pattern.Scroll(ScrollAmount.NoAmount, ScrollAmount.SmallIncrement);
@@ -170,14 +169,16 @@ namespace Win11ThemeTest
         }
 
         [Test]
-        public void listBoxs2_closeWindows()
+        public void ListBoxs2_closeWindows()
         {
-            Assert.IsNotNull(listBoxWindow);
-            Assert.IsNotNull(window);
+            Assert.That(listBoxWindow, Is.Not.Null);          
             listBoxWindow.Close();
-            Assert.IsTrue(listBoxWindow.IsOffscreen);
+            Wait.UntilInputIsProcessed();
+            Assert.That(window, Is.Not.Null);
+            Wait.UntilInputIsProcessed();
+            Assert.That(listBoxWindow.IsOffscreen, Is.True);
             window.Close();
-            Assert.IsTrue(window.IsOffscreen);
+            Assert.That(window.IsOffscreen, Is.True);
         }
 
     }
