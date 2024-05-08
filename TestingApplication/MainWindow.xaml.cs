@@ -71,5 +71,14 @@ namespace TestingApplication
             checkboxWindow.Owner = this;
             checkboxWindow.Show();
         }
+
+        private void listboxButton_Click(object sender, RoutedEventArgs e)
+        {
+            ListboxWindow lstbxwindow = new ListboxWindow();
+            lstbxwindow.Owner = this;
+            //Added for fixing blank window issue
+            Application.Current.MainWindow = lstbxwindow;
+            lstbxwindow.Show();
+        }
     }
 }

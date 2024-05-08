@@ -9,12 +9,12 @@ namespace Win11ThemeTest
 {
     public class ButtonTest
     {
-        private Application? app;
-        private Window? window;
+        private readonly Application? app;
+        private readonly Window? window;
         public Window? btnWindow;
-        Button? testButton;
-        Button? button;
-        Button? disabledButton;
+        readonly Button? testButton;
+        readonly Button? button;
+        readonly Button? disabledButton;
 
         public ButtonTest()
         {
@@ -22,16 +22,14 @@ namespace Win11ThemeTest
             {
                 var appPath = ConfigurationManager.AppSettings["Testpath"];
                 app = Application.Launch(appPath);
-                using (var automation = new UIA3Automation())
-                {
-                    window = app.GetMainWindow(automation);
-                    testButton = window.FindFirstDescendant(cf => cf.ByAutomationId("testbtn")).AsButton();
-                    Mouse.Click(testButton.GetClickablePoint());
-                    Wait.UntilInputIsProcessed(TimeSpan.FromMilliseconds(2000));
-                    btnWindow = window.FindFirstDescendant(cf => cf.ByName("ButtonWindow")).AsWindow();
-                    button = btnWindow.FindFirstDescendant(cf => cf.ByAutomationId("btn")).AsButton();
-                    disabledButton = btnWindow.FindFirstDescendant(cf => cf.ByAutomationId("disbtn")).AsButton();
-                }
+                using var automation = new UIA3Automation();
+                window = app.GetMainWindow(automation);
+                testButton = window.FindFirstDescendant(cf => cf.ByAutomationId("testbtn")).AsButton();
+                Mouse.Click(testButton.GetClickablePoint());
+                Wait.UntilInputIsProcessed(TimeSpan.FromMilliseconds(2000));
+                btnWindow = window.FindFirstDescendant(cf => cf.ByName("ButtonWindow")).AsWindow();
+                button = btnWindow.FindFirstDescendant(cf => cf.ByAutomationId("btn")).AsButton();
+                disabledButton = btnWindow.FindFirstDescendant(cf => cf.ByAutomationId("disbtn")).AsButton();
             }
             catch (Exception ex)
             {
@@ -47,15 +45,13 @@ namespace Win11ThemeTest
                     {
                         File.Create(filePath).Dispose();
                     }
-                    using (StreamWriter sw = File.AppendText(filePath))
-                    {
-                        string error = "Log Written Date:" + " " + DateTime.Now.ToString() + "\nError Message:" + " " + ex.Message.ToString();
-                        sw.WriteLine("-----------Exception Details on " + " " + DateTime.Now.ToString() + "-----------------");
-                        sw.WriteLine("-------------------------------------------------------------------------------------");
-                        sw.WriteLine(error);
-                        sw.Flush();
-                        sw.Close();
-                    }
+                    using StreamWriter sw = File.AppendText(filePath);
+                    string error = "Log Written Date:" + " " + DateTime.Now.ToString() + "\nError Message:" + " " + ex.Message.ToString();
+                    sw.WriteLine("-----------Exception Details on " + " " + DateTime.Now.ToString() + "-----------------");
+                    sw.WriteLine("-------------------------------------------------------------------------------------");
+                    sw.WriteLine(error);
+                    sw.Flush();
+                    sw.Close();
                 }
                 else
                 {
@@ -67,20 +63,24 @@ namespace Win11ThemeTest
 
         //test if button is available in window
         [Test]
-        public void button1_isButtonAvailable()
+        public void Button1_isButtonAvailable()
         {
-            Assert.IsNotNull(btnWindow);
-            Assert.IsNotNull(button);
+            Assert.Multiple(() =>
+            {
+                Assert.That(btnWindow, Is.Not.Null);
+
+                Assert.That(button, Is.Not.Null);
+            });
         }
 
         //test if button is clicked
         [Test]
-        public void button2_isClicked()
+        public void Button2_isClicked()
         {
-            Assert.IsNotNull(btnWindow);
-            Assert.IsNotNull(button);
+            Assert.That(button, Is.Not.Null);
             button.Click();
             Wait.UntilInputIsProcessed();
+            Assert.That(btnWindow, Is.Not.Null);
             var popup = btnWindow.FindFirstDescendant(cf => cf.ByName("Button Clicked")).AsWindow();
             Assert.That(popup, Is.Not.Null);
             Button pBtn = btnWindow.FindFirstDescendant(cf => cf.ByName("OK")).AsButton();
@@ -89,13 +89,13 @@ namespace Win11ThemeTest
 
         //test if button clicked with enter key
         [Test]
-        public void button3_isClickableWithEnterKey()
+        public void Button3_isClickableWithEnterKey()
         {
-            Assert.IsNotNull(btnWindow);
-            Assert.IsNotNull(button);
+            Assert.That(button, Is.Not.Null);
             button.Focus();
             Keyboard.Press(FlaUI.Core.WindowsAPI.VirtualKeyShort.ENTER);
             Keyboard.Release(FlaUI.Core.WindowsAPI.VirtualKeyShort.ENTER);
+            Assert.That(btnWindow, Is.Not.Null);
             var popup = btnWindow.FindFirstDescendant(cf => cf.ByName("Button Clicked")).AsWindow();
             Assert.That(popup, Is.Not.Null);
             Button pBtn = btnWindow.FindFirstDescendant(cf => cf.ByName("OK")).AsButton();
@@ -104,14 +104,14 @@ namespace Win11ThemeTest
 
         //test if button clicked with space key
         [Test]
-        public void button4_isClickableWithSpaceKey()
+        public void Button4_isClickableWithSpaceKey()
         {
-            Assert.IsNotNull(btnWindow);
-            Assert.IsNotNull(button);
+            Assert.That(button, Is.Not.Null);
             button.Focus();
             Keyboard.Press(FlaUI.Core.WindowsAPI.VirtualKeyShort.SPACE);
             Keyboard.Release(FlaUI.Core.WindowsAPI.VirtualKeyShort.SPACE);
             Wait.UntilInputIsProcessed();
+            Assert.That(btnWindow, Is.Not.Null);
             var popup = btnWindow.FindFirstDescendant(cf => cf.ByName("Button Clicked")).AsWindow();
             Assert.That(popup, Is.Not.Null);
             Button pBtn = btnWindow.FindFirstDescendant(cf => cf.ByName("OK")).AsButton();
@@ -120,28 +120,28 @@ namespace Win11ThemeTest
 
         //test no action on mouse right click on button
         [Test]
-        public void button5_onMouseRightClick()
+        public void Button5_onMouseRightClick()
         {
-            Assert.IsNotNull(btnWindow);
-            Assert.IsNotNull(button);
+            Assert.That(button, Is.Not.Null);
             button.RightClick();
+            Assert.That(btnWindow, Is.Not.Null);
             var popup = btnWindow.FindFirstDescendant(cf => cf.ByName("Button Clicked")).AsWindow();
             Assert.That(popup, Is.Null);
         }
 
         //Test disabled button
         [Test]
-        public void button6_isDisabled()
+        public void Button6_isDisabled()
         {
-            Assert.IsNotNull(disabledButton);
+            Assert.That(disabledButton, Is.Not.Null);
             Assert.That(disabledButton.IsEnabled, Is.False);
         }
 
         //Test disabled button
         [Test]
-        public void button7_isDisabledClick()
+        public void Button7_isDisabledClick()
         {
-            Assert.IsNotNull(disabledButton);
+            Assert.That(disabledButton, Is.Not.Null);
             Assert.That(disabledButton.IsEnabled, Is.False);
             disabledButton.Click();
             var popup = disabledButton.FindFirstDescendant(cf => cf.ByName("Button Clicked")).AsWindow();
@@ -150,15 +150,16 @@ namespace Win11ThemeTest
 
         //close windows
         [Test]
-        public void button8_closeWindows()
+        public void Button8_closeWindows()
         {
-            Assert.IsNotNull(btnWindow);
-            Assert.IsNotNull(window);
+            Assert.That(btnWindow, Is.Not.Null);
             btnWindow.Close();
             Wait.UntilInputIsProcessed();
-            Assert.IsTrue(btnWindow.IsOffscreen);
+            Assert.That(btnWindow.IsOffscreen);
+            Wait.UntilInputIsProcessed();
+            Assert.That(window, Is.Not.Null);
             window.Close();
-            Assert.IsTrue(window.IsOffscreen);
+            Assert.That(window.IsOffscreen);
         }
 
     }

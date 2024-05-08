@@ -17,6 +17,7 @@
             <Button Name="txtBoxButton" Content="TextBox Button" Width="129" Click="textBoxButton_Click" />
             <Button Name="cmbBoxButton" Content="Combo Button" Width="200" Click="comboBoxButton_Click" />
              <Button Name="testchkbtn" Content="Test Checkbox" Click="checkboxButton_Click"/>
+            <Button Name="listBoxtestbtn" Content="Test Listbox" RenderTransformOrigin="1.562,1.132" Width="104" Click="listboxButton_Click"/>
         </StackPanel>
     </Grid>
 </Window>
