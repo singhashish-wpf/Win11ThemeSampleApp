@@ -8,6 +8,8 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using TestingApplication.ViewModel;
+
 
 namespace TestingApplication
 {
@@ -50,6 +52,33 @@ namespace TestingApplication
             tw.Owner = this;
             Application.Current.MainWindow = tw;
             tw.Show();
+        }
+
+        private void comboBoxButton_Click(object sender, RoutedEventArgs e)
+        {
+            ComboBoxViewModel vm = new ComboBoxViewModel();
+            ComboBoxWindow cbw = new ComboBoxWindow(vm);
+            cbw.Owner = this;
+            cbw.Show();
+        }
+
+        private void checkboxButton_Click(object sender, RoutedEventArgs e)
+        {
+            CheckBoxViewModel viewModel=new CheckBoxViewModel();
+            CheckboxWindow checkboxWindow = new CheckboxWindow(viewModel);
+            //Added for fixing blank window issue
+            Application.Current.MainWindow = checkboxWindow;
+            checkboxWindow.Owner = this;
+            checkboxWindow.Show();
+        }
+
+        private void listboxButton_Click(object sender, RoutedEventArgs e)
+        {
+            ListboxWindow lstbxwindow = new ListboxWindow();
+            lstbxwindow.Owner = this;
+            //Added for fixing blank window issue
+            Application.Current.MainWindow = lstbxwindow;
+            lstbxwindow.Show();
         }
 
         private void datepickerButton_Click(object sender, RoutedEventArgs e)
