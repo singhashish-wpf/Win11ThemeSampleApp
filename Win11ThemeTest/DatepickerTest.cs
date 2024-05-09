@@ -490,11 +490,9 @@ namespace Win11ThemeTest
             Assert.IsNotNull(copyText);
             var pattern = dtTextBox.Patterns.Text.Pattern.DocumentRange;
             pattern.Select();
-            //  Mouse.MoveBy(-3, 0);
-            Wait.UntilInputIsProcessed();
-            //copyText.GetClickablePoint();
+            Mouse.MoveTo(copyText.GetClickablePoint());
             copyText.Click();
-            Mouse.DoubleClick();
+            copyText.Click();
             Wait.UntilInputIsProcessed();
             Wait.UntilInputIsProcessed(TimeSpan.FromMilliseconds(1000));
             dtTextBox.Text = null;
