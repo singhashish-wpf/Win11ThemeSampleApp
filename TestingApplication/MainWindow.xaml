@@ -16,6 +16,7 @@
             <Button Name="calendartestbtn" Content="Test Calendar" Click="calendarButton_Click"/>
             <Button Name="txtBoxButton" Content="TextBox Button" Width="129" Click="textBoxButton_Click" />
             <Button Name="cmbBoxButton" Content="Combo Button" Width="200" Click="comboBoxButton_Click" />
+            <Button Name="sliderButton" Content="Slider Button" Width="120" Click="sliderButton_Click"/>
         </StackPanel>
     </Grid>
 </Window>

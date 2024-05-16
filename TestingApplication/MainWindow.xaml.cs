@@ -60,5 +60,12 @@ namespace TestingApplication
             cbw.Owner = this;
             cbw.Show();
         }
+        private void sliderButton_Click(object sender, RoutedEventArgs e)
+        {
+            SliderWindow sliderWindow = new SliderWindow();
+            sliderWindow.Owner = this;
+            Application.Current.MainWindow = sliderWindow;
+            sliderWindow.Show();
+        }
     }
 }
