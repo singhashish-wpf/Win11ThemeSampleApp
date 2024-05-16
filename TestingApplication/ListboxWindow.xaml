@@ -1,0 +1,25 @@
+﻿<Window x:Class="TestingApplication.ListboxWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:TestingApplication"
+        mc:Ignorable="d"
+        Title="ListboxWindow" Height="450" Width="800">
+    <Grid Margin="10,10,0,0">
+        <ListBox Margin="68,45,463,177" Name="tstLstbox" SelectedIndex="0">
+        <ListBoxItem>Blue</ListBoxItem>
+        <ListBoxItem>Green</ListBoxItem>
+        <ListBoxItem>Red</ListBoxItem>
+        <ListBoxItem>Yellow</ListBoxItem>
+        </ListBox>
+        <ListBox Margin="395,98,83,162" Height="164" Name="tstlengthLstbox" SelectedIndex="2">
+            <ListBoxItem Content="Arial"/>
+            <ListBoxItem Content="Comic Sans MS"/>
+            <ListBoxItem Content="Courier New"/>
+            <ListBoxItem Content="Segoe UI"/>
+            <ListBoxItem Content="Times New Roman"/>
+        </ListBox>
+
+    </Grid>
+</Window>
