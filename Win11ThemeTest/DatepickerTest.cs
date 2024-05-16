@@ -97,7 +97,8 @@ namespace Win11ThemeTest
             DateTime dt_selectedDate = DateTime.Parse(datePicker.Patterns.Value.Pattern.Value);
             Assert.That(dt_selectedDate, Is.EqualTo(thisDay));
             Assert.IsNotNull(dtTextBox);
-            Assert.That(dtTextBox.Text, Is.EqualTo(thisDay.ToString("dd MMMM yyyy")));
+            DateTime txtDate= DateTime.Parse(dtTextBox.Text);
+            Assert.That(txtDate.ToString("dd MMMM yyyy"), Is.EqualTo(thisDay.ToString("dd MMMM yyyy")));
 
         }
 
@@ -416,7 +417,8 @@ namespace Win11ThemeTest
                 calBtn.Click();
                 Wait.UntilInputIsProcessed();
             }
-            dayBtnString = dayBtnString.Remove(0, 3);
+            DateTime dateTime = DateTime.Parse(dayBtnString);
+            dayBtnString = dateTime.ToString("MMMM yyyy");
             AutomationElement headerBtnNew = calWidget.FindFirstChild(cf => cf.ByAutomationId("PART_HeaderButton"));
             Assert.That(headerBtnNew.Name, Is.EqualTo(dayBtnString));
             calBtn.Click();
@@ -435,7 +437,8 @@ namespace Win11ThemeTest
             Keyboard.Release(FlaUI.Core.WindowsAPI.VirtualKeyShort.ENTER);
             Wait.UntilInputIsProcessed(TimeSpan.FromMilliseconds(1000));
             Assert.IsNotNull(dtTextBox);
-            Assert.That(dtTextBox.Text, Is.EqualTo(sDate.ToString("dd MMMM yyyy")));
+            DateTime txtDate = DateTime.Parse(dtTextBox.Text);
+            Assert.That(txtDate.ToString("dd MMMM yyyy"), Is.EqualTo(sDate.ToString("dd MMMM yyyy")));
         }
 
         //test keyboard input for date- invalid date

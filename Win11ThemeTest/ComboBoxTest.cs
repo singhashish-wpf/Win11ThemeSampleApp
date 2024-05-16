@@ -9,30 +9,28 @@ namespace Win11ThemeTest
 {
     public class comboBoxTests
     {
-        private Application? app;
-        private Window? mainWindow;        
+        private readonly Application? app;
+        private readonly Window? mainWindow;
         public Window? comboWindow;
-        Button? comboBoxButton;
-        ComboBox? comboBox;
-        ComboBox? comboBoxEditable;
-        ComboBox? comboBoxBind;        
+        readonly Button? comboBoxButton;
+        readonly ComboBox? comboBox;
+        readonly ComboBox? comboBoxEditable;
+        readonly ComboBox? comboBoxBind;
         public comboBoxTests()
         {
             try
             {
                 var appPath = ConfigurationManager.AppSettings["Testpath"];
                 app = Application.Launch(appPath);
-                using (var automation = new UIA3Automation())
-                {
-                    mainWindow = app.GetMainWindow(automation);
-                    comboBoxButton = mainWindow.FindFirstDescendant(cf => cf.ByAutomationId("cmbBoxButton")).AsButton();
-                    Mouse.Click(comboBoxButton.GetClickablePoint());
-                    Wait.UntilInputIsProcessed(TimeSpan.FromMilliseconds(500));
-                    comboWindow = mainWindow.FindFirstDescendant(cf => cf.ByName("ComboBoxWindow")).AsWindow();
-                    comboBox = comboWindow.FindFirstDescendant(cf => cf.ByAutomationId("comboBoxList")).AsComboBox();
-                    comboBoxEditable = comboWindow.FindFirstDescendant(cf => cf.ByAutomationId("comboBoxEditable")).AsComboBox();
-                    comboBoxBind = comboWindow.FindFirstDescendant(cf => cf.ByAutomationId("comboBoxBind")).AsComboBox();
-                }
+                using var automation = new UIA3Automation();
+                mainWindow = app.GetMainWindow(automation);
+                comboBoxButton = mainWindow.FindFirstDescendant(cf => cf.ByAutomationId("cmbBoxButton")).AsButton();
+                Mouse.Click(comboBoxButton.GetClickablePoint());
+                Wait.UntilInputIsProcessed(TimeSpan.FromMilliseconds(500));
+                comboWindow = mainWindow.FindFirstDescendant(cf => cf.ByName("ComboBoxWindow")).AsWindow();
+                comboBox = comboWindow.FindFirstDescendant(cf => cf.ByAutomationId("comboBoxList")).AsComboBox();
+                comboBoxEditable = comboWindow.FindFirstDescendant(cf => cf.ByAutomationId("comboBoxEditable")).AsComboBox();
+                comboBoxBind = comboWindow.FindFirstDescendant(cf => cf.ByAutomationId("comboBoxBind")).AsComboBox();
             }
             catch (Exception ex)
             {
@@ -48,15 +46,13 @@ namespace Win11ThemeTest
                     {
                         File.Create(filePath).Dispose();
                     }
-                    using (StreamWriter sw = File.AppendText(filePath))
-                    {
-                        string error = "Log Written Date:" + " " + DateTime.Now.ToString() + "\nError Message:" + " " + ex.Message.ToString();
-                        sw.WriteLine("-----------Exception Details on " + " " + DateTime.Now.ToString() + "-----------------");
-                        sw.WriteLine("-------------------------------------------------------------------------------------");
-                        sw.WriteLine(error);
-                        sw.Flush();
-                        sw.Close();
-                    }
+                    using StreamWriter sw = File.AppendText(filePath);
+                    string error = "Log Written Date:" + " " + DateTime.Now.ToString() + "\nError Message:" + " " + ex.Message.ToString();
+                    sw.WriteLine("-----------Exception Details on " + " " + DateTime.Now.ToString() + "-----------------");
+                    sw.WriteLine("-------------------------------------------------------------------------------------");
+                    sw.WriteLine(error);
+                    sw.Flush();
+                    sw.Close();
                 }
                 else
                 {
@@ -66,59 +62,66 @@ namespace Win11ThemeTest
         }
 
         [Test]
-        public void comboBox_isAvailable()
+        public void ComboBox_isAvailable()
         {
-            Assert.IsNotNull(comboWindow);            
-            Assert.IsNotNull(comboBox);
-            Assert.IsNotNull(comboBoxEditable);
-            Assert.IsNotNull(comboBoxBind);
+            Assert.Multiple(() =>
+            {
+                Assert.That(comboWindow, Is.Not.Null);
+                Assert.That(comboBox, Is.Not.Null);
+                Assert.That(comboBoxEditable, Is.Not.Null);
+                Assert.That(comboBoxBind, Is.Not.Null);
+            });
         }
 
         [Test]
-        public void comboBox_selectedDefaultItem()
+        public void ComboBox_selectedDefaultItem()
         {
-            Assert.IsNotNull(comboBox);
-            Assert.That(comboBox.SelectedItem, Is.Not.Null);           
+            Assert.That(comboBox, Is.Not.Null);
+            Assert.That(comboBox.SelectedItem, Is.Not.Null);
         }
 
         [Test]
-        public void comboBox_isNull()
+        public void ComboBox_isNull()
         {
-            Assert.That(comboBox, Is.Not.Null);           
+            Assert.That(comboBox, Is.Not.Null);
         }
 
         [Test]
-        public void comboBox_isReadableEditable()
+        public void ComboBox_isReadableEditable()
         {
-            Assert.IsNotNull(comboBox);
-            Assert.That(comboBox.IsReadOnly, Is.False);
-            Assert.That(comboBox.IsEditable, Is.False);
-            Assert.IsNotNull(comboBoxEditable);
+            Assert.That(comboBox, Is.Not.Null);
+            Assert.Multiple(() =>
+            {
+                Assert.That(comboBox.IsReadOnly, Is.False);
+                Assert.That(comboBox.IsEditable, Is.False);
+                
+            });
+            Assert.That(comboBoxEditable, Is.Not.Null);
             Assert.That(comboBoxEditable.IsEditable, Is.True);
         }
-       
+
         [Test]
-        public void comboBox1_selectItem()
+        public void ComboBox1_selectItem()
         {
-            Assert.IsNotNull(comboBox);
+            Assert.That(comboBox, Is.Not.Null);
             comboBox.Select("Red");
-            Assert.That(comboBox.SelectedItem.Name, Is.EqualTo("Red"));            
+            Assert.That(comboBox.SelectedItem.Name, Is.EqualTo("Red"));
         }
 
         //Check if the drop-down is open by clicking on both the drop-down & the drop-down Arrow.
-        [Test]       
-        public void comboBox1_expandCollapse()
+        [Test]
+        public void ComboBox1_expandCollapse()
         {
-            Assert.IsNotNull(comboBox);
+            Assert.That(comboBox, Is.Not.Null);
             comboBox.Expand();
             Assert.That(comboBox.ExpandCollapseState, Is.EqualTo(ExpandCollapseState.Expanded));
             comboBox.Collapse();
-            Assert.That(comboBox.ExpandCollapseState, Is.EqualTo(ExpandCollapseState.Collapsed));            
-        }      
+            Assert.That(comboBox.ExpandCollapseState, Is.EqualTo(ExpandCollapseState.Collapsed));
+        }
 
         [Test]
-        public void comboBox2_editableText()
-        {          
+        public void ComboBox2_editableText()
+        {
             Assert.That(comboBoxEditable, Is.Not.Null);
             Assert.That(comboBoxEditable.IsEditable, Is.True);
             comboBoxEditable.EditableText = "10";
@@ -128,9 +131,9 @@ namespace Win11ThemeTest
 
         //Check whether the dropdown is clickable or not.
         [Test]
-        public void comboBox3_mouseClick()
+        public void ComboBox3_mouseClick()
         {
-            Assert.IsNotNull(comboBox);
+            Assert.That(comboBox, Is.Not.Null);
             Mouse.MoveTo(comboBox.GetClickablePoint());
             Mouse.Click();
             Assert.That(comboBox.ExpandCollapseState, Is.EqualTo(ExpandCollapseState.Expanded));
@@ -138,26 +141,27 @@ namespace Win11ThemeTest
         }
 
         [Test]
-        public void comboBox4_mouseSelectClick()
+        public void ComboBox4_mouseSelectClick()
         {
-            Assert.IsNotNull(comboBox);
+            Assert.That(comboBox, Is.Not.Null);
             Mouse.MoveTo(comboBox.GetClickablePoint());
-            Mouse.Click();            
-            Wait.UntilInputIsProcessed(TimeSpan.FromMilliseconds(500));           
+            Mouse.Click();
+            Wait.UntilInputIsProcessed(TimeSpan.FromMilliseconds(500));
             comboBox.Items[3].Click();
-            Assert.That(comboBox.SelectedItem.Name, Is.EqualTo("Yellow"));                    
+            Assert.That(comboBox.SelectedItem.Name, Is.EqualTo("Yellow"));
         }
 
         [Test]
-        public void comboBox5_cleanUp()
+        public void ComboBox5_cleanUp()
         {
-            Assert.IsNotNull(comboWindow);
+            Assert.That(comboWindow, Is.Not.Null);
             comboWindow.Close();
             Wait.UntilInputIsProcessed();
-            Assert.IsTrue(comboWindow.IsOffscreen);
-            Assert.IsNotNull(mainWindow);
+            Assert.That(comboWindow.IsOffscreen, Is.True);
+            Wait.UntilInputIsProcessed();
+            Assert.That(mainWindow, Is.Not.Null);
             mainWindow.Close();
-            Assert.IsTrue(mainWindow.IsOffscreen);
+            Assert.That(mainWindow.IsOffscreen, Is.True);
         }
     }
 }
