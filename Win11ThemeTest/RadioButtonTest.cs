@@ -7,6 +7,7 @@ using System.Windows;
 using System.Windows.Input;
 using System.Xml.Linq;
 using System.Text;
+using System.Configuration;
 
 namespace Win11ThemeTest
 {
@@ -15,6 +16,8 @@ namespace Win11ThemeTest
     {
         private Application app;
         private Window window;
+        readonly Button? testButton;
+        public Window? radioBtnWindow;
         RadioButton radioButton1;
         RadioButton radioButton2;
         RadioButton radioButton3;
@@ -24,41 +27,78 @@ namespace Win11ThemeTest
 
         public rbTests()
         {
-            app = Application.Launch(@"..\\..\\..\\..\\Win11ThemeSampleApp\\bin\\x64\\Debug\\net9.0-windows\\win-x64\\Win11ThemeSampleApp.exe");
-
-            using (var automation = new UIA3Automation())
+          
+            try
             {
+                var appPath = ConfigurationManager.AppSettings["Testpath"];
+                app = Application.Launch(appPath);
+                using var automation = new UIA3Automation();
                 window = app.GetMainWindow(automation);
+                testButton = window.FindFirstDescendant(cf => cf.ByAutomationId("radioButton")).AsButton();
+                Mouse.Click(testButton.GetClickablePoint());
+                Wait.UntilInputIsProcessed(TimeSpan.FromMilliseconds(2000));
+                radioBtnWindow = window.FindFirstDescendant(cf => cf.ByName("RadiobuttonWindow")).AsWindow();
+                radioButton1 = radioBtnWindow.FindFirstDescendant(cf => cf.ByName("RadioButton1")).AsRadioButton();
+                radioButton2 = radioBtnWindow.FindFirstDescendant(cf => cf.ByName("RadioButton2")).AsRadioButton();
+                radioButton3 = radioBtnWindow.FindFirstDescendant(cf => cf.ByName("RadioButton3")).AsRadioButton();
+                radioButton4 = radioBtnWindow.FindFirstDescendant(cf => cf.ByName("RadioButton4")).AsRadioButton();
+                radioButton5 = radioBtnWindow.FindFirstDescendant(cf => cf.ByName("RadioButton5")).AsRadioButton();
+                radioButton6 = radioBtnWindow.FindFirstDescendant(cf => cf.ByName("RadioButton6")).AsRadioButton();
             }
+            catch (Exception ex)
+            {
+                var filePath = ConfigurationManager.AppSettings["logpath"];
+                if (filePath != null)
+                {
+                    if (!Directory.Exists(filePath))
+                    {
+                        Directory.CreateDirectory(filePath);
+                    }
+                    filePath = filePath + "log_" + DateTime.Now.ToString("yyyyMMddHHmmss") + ".txt";   //Text File Name
+                    if (!File.Exists(filePath))
+                    {
+                        File.Create(filePath).Dispose();
+                    }
+                    using StreamWriter sw = File.AppendText(filePath);
+                    string error = "Log Written Date:" + " " + DateTime.Now.ToString() + "\nError Message:" + " " + ex.Message.ToString();
+                    sw.WriteLine("-----------Exception Details on " + " " + DateTime.Now.ToString() + "-----------------");
+                    sw.WriteLine("-------------------------------------------------------------------------------------");
+                    sw.WriteLine(error);
+                    sw.Flush();
+                    sw.Close();
+                }
+                else
+                {
+                    throw new ArgumentNullException();
+                }
 
-            radioButton1 = window.FindFirstDescendant(cf => cf.ByName("RadioButton1")).AsRadioButton();
-            radioButton2 = window.FindFirstDescendant(cf => cf.ByName("RadioButton2")).AsRadioButton();
-            radioButton3 = window.FindFirstDescendant(cf => cf.ByName("RadioButton3")).AsRadioButton();
-            radioButton4 = window.FindFirstDescendant(cf => cf.ByName("RadioButton4")).AsRadioButton();
-            radioButton5 = window.FindFirstDescendant(cf => cf.ByName("RadioButton5")).AsRadioButton();
-            radioButton6 = window.FindFirstDescendant(cf => cf.ByName("RadioButton6")).AsRadioButton();
+            }
         }
 
         [Test]
         public void RadioButtonTest_1()
         {
-            // Checking if a radio button in both the groups are clickable
-            Assert.That(radioButton1.IsChecked, Is.False);
-            Assert.That(radioButton2.IsChecked, Is.False);
-            Assert.That(radioButton3.IsChecked, Is.False);
-            Assert.That(radioButton4.IsChecked, Is.False);
-            Assert.That(radioButton5.IsChecked, Is.False);
-            Assert.That(radioButton6.IsChecked, Is.False);
-
+            Assert.Multiple(() =>
+            {
+                // Checking if a radio button in both the groups are clickable
+                Assert.That(radioButton1.IsChecked, Is.False);
+                Assert.That(radioButton2.IsChecked, Is.False);
+                Assert.That(radioButton3.IsChecked, Is.False);
+                Assert.That(radioButton4.IsChecked, Is.False);
+                Assert.That(radioButton5.IsChecked, Is.False);
+                Assert.That(radioButton6.IsChecked, Is.False);
+            });
             Mouse.Click(radioButton1.GetClickablePoint());
             Mouse.Click(radioButton5.GetClickablePoint());
-
-            Assert.That(radioButton1.IsChecked, Is.True);
-            Assert.That(radioButton2.IsChecked, Is.False);
-            Assert.That(radioButton3.IsChecked, Is.False);
-            Assert.That(radioButton4.IsChecked, Is.False);
-            Assert.That(radioButton5.IsChecked, Is.True);
-            Assert.That(radioButton6.IsChecked, Is.False);
+            Assert.Multiple(() =>
+            {
+                Assert.That(radioButton1.IsChecked, Is.True);
+                Assert.That(radioButton2.IsChecked, Is.False);
+                Assert.That(radioButton3.IsChecked, Is.False);
+                Assert.That(radioButton4.IsChecked, Is.False);
+                Assert.That(radioButton5.IsChecked, Is.True);
+                Assert.That(radioButton6.IsChecked, Is.False);
+            });
         }
 
         [Test]
