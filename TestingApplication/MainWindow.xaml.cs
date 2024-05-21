@@ -92,11 +92,11 @@ namespace TestingApplication
 
         private void RadioButton_Click(object sender, RoutedEventArgs e)
         {
-            RadiobuttonWindow radiobtnWindow = new RadiobuttonWindow();
-            radiobtnWindow.Owner = this;
+            RadioButtonWindow radioButtonWindow = new RadioButtonWindow();
+            radioButtonWindow.Owner = this;
             //Added for fixing blank window issue
-            Application.Current.MainWindow = radiobtnWindow;
-            radiobtnWindow.Show();
+            Application.Current.MainWindow = radioButtonWindow;
+            radioButtonWindow.Show();
         }
     }
 }

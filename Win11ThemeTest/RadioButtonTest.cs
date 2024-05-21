@@ -9,25 +9,29 @@ using System.Xml.Linq;
 using System.Text;
 using System.Configuration;
 
+
 namespace Win11ThemeTest
 {
     [TestFixture]
-    public class rbTests
+    public class radioButtonTests
     {
-        private Application app;
-        private Window window;
-        readonly Button? testButton;
+        private Application? app;
+        private Window? window;
+        public Button? testButton;
         public Window? radioBtnWindow;
-        RadioButton radioButton1;
-        RadioButton radioButton2;
-        RadioButton radioButton3;
-        RadioButton radioButton4;
-        RadioButton radioButton5;
-        RadioButton radioButton6;
+        readonly RadioButton? optionA;
+        readonly RadioButton? optionB;
+        readonly RadioButton? optionC;
+        readonly RadioButton? optionD;
 
-        public rbTests()
-        {
-          
+        readonly RadioButton? radioButton1;
+        readonly RadioButton? radioButton2;
+        readonly RadioButton? radioButton3;
+        readonly RadioButton? radioButton4;
+        readonly RadioButton? radioButton5;
+        readonly RadioButton? radioButton6;
+        public radioButtonTests()
+        {          
             try
             {
                 var appPath = ConfigurationManager.AppSettings["Testpath"];
@@ -37,11 +41,16 @@ namespace Win11ThemeTest
                 testButton = window.FindFirstDescendant(cf => cf.ByAutomationId("radioButton")).AsButton();
                 Mouse.Click(testButton.GetClickablePoint());
                 Wait.UntilInputIsProcessed(TimeSpan.FromMilliseconds(2000));
-                radioBtnWindow = window.FindFirstDescendant(cf => cf.ByName("RadiobuttonWindow")).AsWindow();
+                radioBtnWindow = window.FindFirstDescendant(cf => cf.ByName("RadioButtonWindow")).AsWindow();
+                optionA = radioBtnWindow.FindFirstDescendant(cf => cf.ByName("Option A")).AsRadioButton();
+                optionB = radioBtnWindow.FindFirstDescendant(cf => cf.ByName("Option B")).AsRadioButton();
+                optionC = radioBtnWindow.FindFirstDescendant(cf => cf.ByName("Option C")).AsRadioButton();
+                optionD = radioBtnWindow.FindFirstDescendant(cf => cf.ByName("Option D")).AsRadioButton();
+
                 radioButton1 = radioBtnWindow.FindFirstDescendant(cf => cf.ByName("RadioButton1")).AsRadioButton();
                 radioButton2 = radioBtnWindow.FindFirstDescendant(cf => cf.ByName("RadioButton2")).AsRadioButton();
                 radioButton3 = radioBtnWindow.FindFirstDescendant(cf => cf.ByName("RadioButton3")).AsRadioButton();
-                radioButton4 = radioBtnWindow.FindFirstDescendant(cf => cf.ByName("RadioButton4")).AsRadioButton();
+                radioButton4 = radioBtnWindow.FindFirstDescendant(cf => cf.ByName("RadioButton4")).AsRadioButton(); 
                 radioButton5 = radioBtnWindow.FindFirstDescendant(cf => cf.ByName("RadioButton5")).AsRadioButton();
                 radioButton6 = radioBtnWindow.FindFirstDescendant(cf => cf.ByName("RadioButton6")).AsRadioButton();
             }
@@ -75,12 +84,83 @@ namespace Win11ThemeTest
             }
         }
 
+        //Check if the radio buttons are initially unselected.
         [Test]
-        public void RadioButtonTest_1()
+        public void RadioButton_isUncheck()
         {
             Assert.Multiple(() =>
             {
-                // Checking if a radio button in both the groups are clickable
+                Assert.That(optionA.IsChecked, Is.False);
+                Assert.That(optionB.IsChecked, Is.False);
+                Assert.That(optionC.IsChecked, Is.False);
+                Assert.That(optionD.IsChecked, Is.False);                
+            });
+        }
+
+        //Validate that clicking on the label associated with a radio button selects the button.
+        [Test]
+        public void RadioButton1_labelCheck()
+        {
+            Mouse.Click(optionA.GetClickablePoint());
+            Assert.That(optionA.IsChecked, Is.True);            
+        }
+
+        // Re-checking on a checked radio button does not affect it's checked state
+        [Test]
+        public void RadioButton1_state()
+        {
+
+            Assert.Multiple(() =>
+            {
+                Assert.That(optionA.IsChecked, Is.True);
+                Assert.That(optionB.IsChecked, Is.False);
+                Assert.That(optionC.IsChecked, Is.False);
+                Assert.That(optionD.IsChecked, Is.False);
+            });
+
+            optionD.Click();
+
+            Assert.Multiple(() =>
+            {
+                Assert.That(optionA.IsChecked, Is.False);
+                Assert.That(optionB.IsChecked, Is.False);
+                Assert.That(optionC.IsChecked, Is.False);
+                Assert.That(optionD.IsChecked, Is.True);
+            });
+        }
+
+        //Verify that only one radio button can be selected at a time.
+        //Confirm that selecting one radio button deselects any previously selected option.
+        [Test]
+        public void RadioButton_selection()
+        {
+            Mouse.Click(optionA.GetClickablePoint());
+            Assert.Multiple(() =>
+            {
+                Assert.That(optionA.IsChecked, Is.True);
+                Assert.That(optionB.IsChecked, Is.False);
+                Assert.That(optionC.IsChecked, Is.False);
+                Assert.That(optionD.IsChecked, Is.False);
+            });
+
+            //select option B and make sure option A gets deselected
+            Mouse.Click(optionB.GetClickablePoint());
+
+            Assert.Multiple(() =>
+            {
+                Assert.That(optionA.IsChecked, Is.False);
+                Assert.That(optionB.IsChecked, Is.True);
+                Assert.That(optionC.IsChecked, Is.False);
+                Assert.That(optionD.IsChecked, Is.False);
+            });
+        }
+
+        // Checking if a radio button in both the groups are clickable
+        [Test]
+        public void RadioButton_groupCheck()
+        {
+            Assert.Multiple(() =>
+            {                            
                 Assert.That(radioButton1.IsChecked, Is.False);
                 Assert.That(radioButton2.IsChecked, Is.False);
                 Assert.That(radioButton3.IsChecked, Is.False);
@@ -88,8 +168,10 @@ namespace Win11ThemeTest
                 Assert.That(radioButton5.IsChecked, Is.False);
                 Assert.That(radioButton6.IsChecked, Is.False);
             });
-            Mouse.Click(radioButton1.GetClickablePoint());
-            Mouse.Click(radioButton5.GetClickablePoint());
+            
+            radioButton1.Click();
+            radioButton5.Click();
+            
             Assert.Multiple(() =>
             {
                 Assert.That(radioButton1.IsChecked, Is.True);
@@ -101,78 +183,74 @@ namespace Win11ThemeTest
             });
         }
 
+        // Checking or Selecting a disabled radio button
         [Test]
-        public void RadioButtonTest_2()
-        {
-            // Re-checking on a checked radio button does not affect it's checked state
-            Assert.That(radioButton1.IsChecked, Is.True);
-            Assert.That(radioButton5.IsChecked, Is.True);
-
-            Mouse.Click(radioButton1.GetClickablePoint());
-            Mouse.Click(radioButton5.GetClickablePoint());
-            
-            Assert.That(radioButton1.IsChecked, Is.True);
-            Assert.That(radioButton5.IsChecked, Is.True);
-        }
-
-        [Test]
-        public void RadioButtonTest_3()
-        {
-            // Checking a different radio button
-            Assert.That(radioButton1.IsChecked, Is.True);
-            Assert.That(radioButton2.IsChecked, Is.False);
-            Assert.That(radioButton3.IsChecked, Is.False);
-
-            Mouse.Click(radioButton2.GetClickablePoint());
-
-            Assert.That(radioButton1.IsChecked, Is.False);
-            Assert.That(radioButton2.IsChecked, Is.True);
-            Assert.That(radioButton3.IsChecked, Is.False);
-        }
-
-        [Test]
-        public void RadioButtonTest_4()
-        {
-            // Checking or Selecting a disabled radio button
+        public void RadioButtonTest_KeyboardSelect()
+        {            
             Assert.That(radioButton3.IsChecked, Is.False);
             Mouse.Click(radioButton3.GetClickablePoint());
             Assert.That(radioButton3.IsChecked, Is.False);
 
-            radioButton1.Focus();
+            radioButton1.Focus();   
 
             Keyboard.Press(FlaUI.Core.WindowsAPI.VirtualKeyShort.TAB);
             Keyboard.Release(FlaUI.Core.WindowsAPI.VirtualKeyShort.TAB);
 
             Keyboard.Press(FlaUI.Core.WindowsAPI.VirtualKeyShort.TAB);
             Keyboard.Release(FlaUI.Core.WindowsAPI.VirtualKeyShort.TAB);
+            // Get the current mouse position
+            //var mousePosition = Mouse.Position;
 
-            /** 
-             * 
-             * 
-             * TODO: Implement Focus Testing
-             * Verify that the currently focused radiobutton is not radiobutton3
-             * 
-             */
+            // Output the mouse position
+           // Console.WriteLine($"Mouse Position: X = {mousePosition.X}, Y = {mousePosition.Y}");
+
+            // Get the element at the mouse position
+            using var automation2 = new UIA3Automation();
             
+            //var automation = new FlaUI.UIA3.Core.AutomationElement.Automation();
+            //var element = automation2.FromPoint(mousePosition);
+            var element = automation2.FocusedElement();
+            // Check if an element is found at the mouse position
+            if (element != null)
+            {
+                // Get the element's name (or any other property) to identify the focused element
+                var elementName = element.Name;
+
+                // Output the focused element's name
+                Console.WriteLine($"Focused Element: {elementName}");
+                Assert.That(radioButton4.Name, Is.EqualTo(elementName));
+                
+            }                    
         }
 
+        // Test to confirm click in one group does not affect checked radio button in another group  
         [Test]
         public void RadioButtonTest_5()
         {
-            // Test to confirm click in one group does not affect checked radio button in another group
+            //Group 1 radio button
+            radioButton2.Click();
             Assert.That(radioButton2.IsChecked, Is.True);
 
-            Mouse.Click(radioButton4.GetClickablePoint());
-            Mouse.Click(radioButton5.GetClickablePoint());
-            Mouse.Click(radioButton6.GetClickablePoint());
+            //Group 2 radio button
+            radioButton5.Click();
+            Assert.That(radioButton5.IsChecked, Is.True);
 
-            Assert.That(radioButton2.IsChecked, Is.True);
+            Assert.Multiple(() =>
+            {
+                Assert.That(radioButton1.IsChecked, Is.False);
+                Assert.That(radioButton2.IsChecked, Is.True);
+                Assert.That(radioButton3.IsChecked, Is.False);
+                Assert.That(radioButton4.IsChecked, Is.False);
+                Assert.That(radioButton5.IsChecked, Is.True);
+                Assert.That(radioButton6.IsChecked, Is.False);
+            });
         }
 
+        // Test to confirm radio buttons can be checked using space bar
         [Test]
         public void RadioButtonTest_6()
-        {
-            // Test to confirm radio buttons can be checked using space bar
+        {     
+            radioButton2.Click();
             Assert.That(radioButton1.IsChecked, Is.False);
             Assert.That(radioButton2.IsChecked, Is.True);
 
@@ -182,21 +260,30 @@ namespace Win11ThemeTest
 
             Keyboard.Press(FlaUI.Core.WindowsAPI.VirtualKeyShort.SPACE);
             Keyboard.Release(FlaUI.Core.WindowsAPI.VirtualKeyShort.SPACE);
-
+            Wait.UntilInputIsProcessed();
             Assert.That(radioButton1.IsChecked, Is.True);
             Assert.That(radioButton2.IsChecked, Is.False);
         }
 
+        // Test to confirm correct initialization from code behind
         [Test]
         public void RadioButtonTest_7()
-        {
-            // Test to confirm correct initialization from code behind
+        {            
             Assert.That(radioButton4.IsEnabled, Is.True);
-            Assert.That(radioButton5.IsEnabled, Is.True);
-            Assert.That(radioButton6.IsEnabled, Is.False);
+            Assert.That(radioButton5.IsEnabled, Is.True);                 
+        }
 
-            // Close the window
+        [Test]
+        public void RadioButtonTest5_cleanUp()
+        {
+            Assert.That(radioBtnWindow, Is.Not.Null);
+            radioBtnWindow.Close();
+            Wait.UntilInputIsProcessed();
+            Assert.That(radioBtnWindow.IsOffscreen, Is.True);
+            Wait.UntilInputIsProcessed();
+            Assert.That(window, Is.Not.Null);
             window.Close();
+            Assert.That(window.IsOffscreen, Is.True);
         }
     }
 }

@@ -11,17 +11,18 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
+using TestingApplication.ViewModel;
 
 namespace TestingApplication
 {
     /// <summary>
-    /// Interaction logic for RadiobuttonWindow.xaml
+    /// Interaction logic for RadioButtonWindow.xaml
     /// </summary>
-    public partial class RadiobuttonWindow : Window
+    public partial class RadioButtonWindow : Window
     {
-        public RadiobuttonWindow()
+        public RadioButtonWindow()
         {
             InitializeComponent();
-        }
+        }    
     }
 }
