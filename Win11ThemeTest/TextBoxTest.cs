@@ -159,11 +159,11 @@ namespace Win11ThemeTest
         [Test]
         public void TextBox_multiLineTextbox()
         {
-            string testDescription = "New line text.\n Line1\nLine2 \nLine3";
+            string testDescription = "New line text.\nLine1\nLine2 \nLine3";
             Assert.That(multiLineTextBox, Is.Not.Null);
-            multiLineTextBox.Enter(testDescription);
+            multiLineTextBox.Text = testDescription;
             Wait.UntilInputIsProcessed(TimeSpan.FromMilliseconds(800));
-            string expectedText = "New line text. Line1Line2 Line3";
+            string expectedText = "New line text." + "\n" +"Line1" + "\n" +"Line2 " + "\n" +"Line3";
             // Get text from the textbox and verify
             Assert.That(expectedText, Is.EqualTo(multiLineTextBox.Text));
         }
@@ -342,7 +342,7 @@ namespace Win11ThemeTest
         public void TextBox_fontFamily()
         {
             string expected_FontFamily = "Segoe UI";
-            Assert.That(textBox, Is.Not.Null    );
+            Assert.That(textBox, Is.Not.Null);
             textBox.Enter("Hello World!");
             var colorRange = textBox.Patterns.Text.Pattern;
             var textFont = (string)colorRange.DocumentRange.GetAttributeValue(automation.TextAttributeLibrary.FontName);
