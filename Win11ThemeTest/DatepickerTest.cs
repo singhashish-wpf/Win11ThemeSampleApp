@@ -212,16 +212,19 @@ namespace Win11ThemeTest
         {
             Assert.That(calBtn, Is.Not.Null);
             calBtn.Click();
+            Wait.UntilInputIsProcessed();
             Assert.That(datePicker, Is.Not.Null);
             calWidget = datePicker.FindFirstChild(cf => cf.ByControlType(ControlType.Calendar));
             if (calWidget == null)
             {
                 calBtn.Click();
+                Wait.UntilInputIsProcessed();
                 calWidget = datePicker.FindFirstChild(cf => cf.ByControlType(ControlType.Calendar));
             }
             Assert.That(calWidget, Is.Not.Null);
             headerBtn = calWidget.FindFirstChild(cf => cf.ByAutomationId("PART_HeaderButton"));
             headerBtn.Click();
+            Wait.UntilInputIsProcessed();
             string headerName = headerBtn.Name;
             DateTime currentMonth = DateTime.Today;
             int year = currentMonth.Year;
@@ -263,18 +266,22 @@ namespace Win11ThemeTest
         {
             Assert.That(calBtn, Is.Not.Null);
             calBtn.Click();
+            Wait.UntilInputIsProcessed();
             Assert.That(datePicker, Is.Not.Null);
             calWidget = datePicker.FindFirstChild(cf => cf.ByControlType(ControlType.Calendar));
             if (calWidget == null)
             {
                 calBtn.Click();
+                Wait.UntilInputIsProcessed();
                 calWidget = datePicker.FindFirstChild(cf => cf.ByControlType(ControlType.Calendar));
             }
             Assert.That(calWidget, Is.Not.Null);
             headerBtn = calWidget.FindFirstChild(cf => cf.ByAutomationId("PART_HeaderButton"));
             nextBtn = calWidget.FindFirstChild(cf => cf.ByAutomationId("PART_NextButton"));
             headerBtn.Click();
+            Wait.UntilInputIsProcessed();
             nextBtn.Click();
+            Wait.UntilInputIsProcessed();
             string headerName = headerBtn.Name;
             DateTime nextYear = DateTime.Today.AddYears(1);
             int year = nextYear.Year;
@@ -282,7 +289,9 @@ namespace Win11ThemeTest
             //reset
             prevBtn = calWidget.FindFirstChild(cf => cf.ByControlType(ControlType.Button));
             prevBtn.Click();
+            Wait.UntilInputIsProcessed();
             calBtn.Click();
+            Wait.UntilInputIsProcessed();
         }
 
         //test for click year button
@@ -319,20 +328,25 @@ namespace Win11ThemeTest
         {
             Assert.That(calBtn, Is.Not.Null);
             calBtn.Click();
+            Wait.UntilInputIsProcessed();
             Assert.That(datePicker, Is.Not.Null);
             calWidget = datePicker.FindFirstChild(cf => cf.ByControlType(ControlType.Calendar));
             if (calWidget == null)
             {
                 calBtn.Click();
+                Wait.UntilInputIsProcessed();
                 calWidget = datePicker.FindFirstChild(cf => cf.ByControlType(ControlType.Calendar));
             }
             Assert.That(calWidget, Is.Not.Null);
             headerBtn = calWidget.FindFirstChild(cf => cf.ByAutomationId("PART_HeaderButton"));
             headerBtn.Click();
+            Wait.UntilInputIsProcessed();
             headerBtn.Click();
+            Wait.UntilInputIsProcessed();
             string headerName = headerBtn.Name;
             prevBtn = calWidget.FindFirstChild(cf => cf.ByControlType(ControlType.Button));
             prevBtn.Click();
+            Wait.UntilInputIsProcessed();
             string prevHeaderName = headerBtn.Name;
             DateTime currentMonth = DateTime.Today;
             int year = currentMonth.Year;

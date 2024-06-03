@@ -134,8 +134,7 @@ namespace Win11ThemeTest
         public void ComboBox3_mouseClick()
         {
             Assert.That(comboBox, Is.Not.Null);
-            Mouse.MoveTo(comboBox.GetClickablePoint());
-            Mouse.Click();
+            comboBox.Click();
             Assert.That(comboBox.ExpandCollapseState, Is.EqualTo(ExpandCollapseState.Expanded));
             comboBox.Collapse();
         }
