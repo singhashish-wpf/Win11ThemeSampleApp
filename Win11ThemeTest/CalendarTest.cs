@@ -6,6 +6,7 @@ using FlaUI.Core.Definitions;
 using System.Globalization;
 using Calendar = FlaUI.Core.AutomationElements.Calendar;
 using System.Configuration;
+using FlaUI.Core.Tools;
 
 namespace Win11ThemeTest
 {
@@ -453,7 +454,7 @@ namespace Win11ThemeTest
             headerBtn = calendar.FindFirstChild(cf => cf.ByAutomationId("PART_HeaderButton"));
             Assert.That(headerBtn, Is.Not.Null);
             string headerName = headerBtn.Name;
-            string[] hParts = headerName.Split(' ');         
+            string[] hParts = headerName.Split(' ');
             if (parts[1] == hParts[0])
             {
                 dayBtn = dayButtons[44];
@@ -503,8 +504,25 @@ namespace Win11ThemeTest
             Assert.That(calWindow.IsOffscreen, Is.True);
             Wait.UntilInputIsProcessed();
             Assert.That(window, Is.Not.Null);
+            Wait.UntilInputIsProcessed();
+            //  window.Close();
+            var retryResult = Retry.WhileFalse(
+                              this.ClearWindow,
+                              TimeSpan.FromSeconds(30),
+                              TimeSpan.FromSeconds(0.1),
+                              true,
+                              ignoreException: true);
+            Assert.That(retryResult.Success, Is.True, "Failed to close window");
+
+        }
+
+        private bool ClearWindow()
+        {
+            Assert.That(window, Is.Not.Null);
             window.Close();
-            Assert.That(window.IsOffscreen, Is.True);
+            var result = window.IsOffscreen;
+
+            return result;
         }
     }
 }

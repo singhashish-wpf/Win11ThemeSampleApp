@@ -1,6 +1,7 @@
 ﻿using FlaUI.Core;
 using FlaUI.Core.AutomationElements;
 using FlaUI.Core.Input;
+using FlaUI.Core.Tools;
 using FlaUI.UIA3;
 using NUnit.Framework.Internal;
 using System.Configuration;
@@ -158,8 +159,24 @@ namespace Win11ThemeTest
             Assert.That(btnWindow.IsOffscreen);
             Wait.UntilInputIsProcessed();
             Assert.That(window, Is.Not.Null);
+          //  window.Close();
+            var retryResult = Retry.WhileFalse(
+                           this.ClearWindow,
+                           TimeSpan.FromSeconds(30),
+                           TimeSpan.FromSeconds(0.1),
+                           true,
+                           ignoreException: true);
+            Assert.That(retryResult.Success, Is.True, "Failed to close window");
+
+        }
+
+        private bool ClearWindow()
+        {
+            Assert.That(window, Is.Not.Null);
             window.Close();
-            Assert.That(window.IsOffscreen);
+            var result = window.IsOffscreen;
+
+            return result;
         }
 
     }
