@@ -24,7 +24,11 @@ namespace Win11ThemeTest
         {
             try
             {
-                var appPath = ConfigurationManager.AppSettings["Testpath"];
+                //Check if the previous windows are closed
+                Win11ThemeTest.Tests tests = new Win11ThemeTest.Tests();
+                tests.IfExists();
+                //Launch Application
+                var appPath = ConfigurationManager.AppSettings["Testpath"];                
                 app = Application.Launch(appPath);
                 mainWindow = app.GetMainWindow(automation);
                 txtButton = mainWindow.FindFirstDescendant(cf => cf.ByAutomationId("txtBoxButton")).AsButton();

@@ -24,7 +24,11 @@ namespace Win11ThemeTest
         {
             try
             {
-                var appPath = ConfigurationManager.AppSettings["Testpath"];
+                //Check if the previous windows are closed
+                Win11ThemeTest.Tests tests = new Win11ThemeTest.Tests();
+                tests.IfExists();
+                //Launch Application
+                var appPath = ConfigurationManager.AppSettings["Testpath"];               
                 app = Application.Launch(appPath);
                 using var automation = new UIA3Automation();
                 window = app.GetMainWindow(automation);
@@ -64,6 +68,7 @@ namespace Win11ThemeTest
                 }
             }
         }
+
         #region simplecheckbox
         //test if checkbox is available in window
         [Test]

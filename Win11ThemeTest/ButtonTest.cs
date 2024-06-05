@@ -16,12 +16,13 @@ namespace Win11ThemeTest
         readonly Button? testButton;
         readonly Button? button;
         readonly Button? disabledButton;
-
+       
         public ButtonTest()
         {
             try
-            {
-                var appPath = ConfigurationManager.AppSettings["Testpath"];
+            {              
+                //Launch Application
+                var appPath = ConfigurationManager.AppSettings["Testpath"];                              
                 app = Application.Launch(appPath);
                 using var automation = new UIA3Automation();
                 window = app.GetMainWindow(automation);
@@ -61,7 +62,7 @@ namespace Win11ThemeTest
 
             }
         }
-
+        
         //test if button is available in window
         [Test]
         public void Button1_isButtonAvailable()
@@ -159,25 +160,9 @@ namespace Win11ThemeTest
             Assert.That(btnWindow.IsOffscreen);
             Wait.UntilInputIsProcessed();
             Assert.That(window, Is.Not.Null);
-          //  window.Close();
-            var retryResult = Retry.WhileFalse(
-                           this.ClearWindow,
-                           TimeSpan.FromSeconds(30),
-                           TimeSpan.FromSeconds(0.1),
-                           true,
-                           ignoreException: true);
-            Assert.That(retryResult.Success, Is.True, "Failed to close window");
-
-        }
-
-        private bool ClearWindow()
-        {
-            Assert.That(window, Is.Not.Null);
             window.Close();
-            var result = window.IsOffscreen;
+            Assert.That(window.IsOffscreen);
 
-            return result;
         }
-
     }
 }
