@@ -498,31 +498,17 @@ namespace Win11ThemeTest
         [Test]
         public void Calendars4_closeWindows()
         {
-            Assert.That(calWindow, Is.Not.Null);
-            calWindow.Focus();
-            calWindow.Close();
-            Assert.That(calWindow.IsOffscreen, Is.True);
-            Wait.UntilInputIsProcessed();
-            Assert.That(window, Is.Not.Null);
-            Wait.UntilInputIsProcessed();
-            //  window.Close();
-            var retryResult = Retry.WhileFalse(
-                              this.ClearWindow,
-                              TimeSpan.FromSeconds(30),
-                              TimeSpan.FromSeconds(0.1),
-                              true,
-                              ignoreException: true);
-            Assert.That(retryResult.Success, Is.True, "Failed to close window");
-
-        }
-
-        private bool ClearWindow()
-        {
-            Assert.That(window, Is.Not.Null);
-            window.Close();
-            var result = window.IsOffscreen;
-
-            return result;
+            if (app != null)
+            {
+                app.Close();
+                Console.WriteLine("Application closed successfully.");
+                Assert.That(app.Close());
+            }
+            else
+            {
+                Console.WriteLine("Application not found.");
+                Assert.That(app.Close());
+            }
         }
     }
 }

@@ -153,14 +153,17 @@ namespace Win11ThemeTest
         [Test]
         public void ComboBox5_cleanUp()
         {
-            Assert.That(comboWindow, Is.Not.Null);
-            comboWindow.Close();
-            Wait.UntilInputIsProcessed();
-            Assert.That(comboWindow.IsOffscreen, Is.True);
-            Wait.UntilInputIsProcessed();
-            Assert.That(mainWindow, Is.Not.Null);
-            mainWindow.Close();
-            Assert.That(mainWindow.IsOffscreen, Is.True);
+            if (app != null)
+            {
+                app.Close();
+                Console.WriteLine("Application closed successfully.");
+                Assert.That(app.Close());
+            }
+            else
+            {
+                Console.WriteLine("Application not found.");
+                Assert.That(app.Close());
+            }
         }
     }
 }

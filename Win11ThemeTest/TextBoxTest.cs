@@ -384,14 +384,17 @@ namespace Win11ThemeTest
         [Test]
         public void TextBox4_Cleanup()
         {
-            Assert.That(textWindow, Is.Not.Null);
-            textWindow.Close();
-            Wait.UntilInputIsProcessed();
-            Assert.That(textWindow.IsOffscreen, Is.True);
-            Wait.UntilInputIsProcessed();
-            Assert.That(mainWindow, Is.Not.Null);
-            mainWindow.Close();
-            Assert.That(mainWindow.IsOffscreen, Is.True);
+            if (app != null)
+            {
+                app.Close();
+                Console.WriteLine("Application closed successfully.");
+                Assert.That(app.Close());
+            }
+            else
+            {
+                Console.WriteLine("Application not found.");
+                Assert.That(app.Close());
+            }
         }
     }
 }

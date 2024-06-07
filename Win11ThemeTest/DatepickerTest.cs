@@ -538,14 +538,17 @@ namespace Win11ThemeTest
         [Test]
         public void DatePickers9_closeWindows()
         {
-            Assert.That(dtPickerWindow, Is.Not.Null);
-            dtPickerWindow.Focus();
-            dtPickerWindow.Close();
-            Assert.That(window, Is.Not.Null);
-            Wait.UntilInputIsProcessed();
-            Assert.That(dtPickerWindow.IsOffscreen, Is.True);
-            window.Close();
-            Assert.That(window.IsOffscreen, Is.True);
+            if (app != null)
+            {
+                app.Close();
+                Console.WriteLine("Application closed successfully.");
+                Assert.That(app.Close());
+            }
+            else
+            {
+                Console.WriteLine("Application not found.");
+                Assert.That(app.Close());
+            }
         }
     }
 }

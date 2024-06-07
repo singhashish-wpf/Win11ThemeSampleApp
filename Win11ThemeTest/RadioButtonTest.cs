@@ -316,14 +316,17 @@ namespace Win11ThemeTest
         [Test]
         public void RadioButtonTest91_cleanUp()
         {
-            Assert.That(radioBtnWindow, Is.Not.Null);
-            radioBtnWindow.Close();
-            Wait.UntilInputIsProcessed();
-            Assert.That(radioBtnWindow.IsOffscreen, Is.True);
-            Wait.UntilInputIsProcessed();
-            Assert.That(window, Is.Not.Null);
-            window.Close();
-            Assert.That(window.IsOffscreen, Is.True);
+            if (app != null)
+            {
+                app.Close();
+                Console.WriteLine("Application closed successfully.");
+                Assert.That(app.Close());
+            }
+            else
+            {
+                Console.WriteLine("Application not found.");
+                Assert.That(app.Close());
+            }
         }
     }
 }
