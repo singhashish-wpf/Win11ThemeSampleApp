@@ -20,11 +20,7 @@ namespace Win11ThemeTest
         {
             try
             {
-                //Check if the previous windows are closed
-                Win11ThemeTest.Tests tests = new Win11ThemeTest.Tests();
-                tests.IfExists();
-                //Launch Application
-                var appPath = ConfigurationManager.AppSettings["Testpath"];               
+                var appPath = ConfigurationManager.AppSettings["Testpath"];
                 app = Application.Launch(appPath);
                 using var automation = new UIA3Automation();
                 mainWindow = app.GetMainWindow(automation);

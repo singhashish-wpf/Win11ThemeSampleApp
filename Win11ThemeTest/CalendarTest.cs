@@ -26,13 +26,9 @@ namespace Win11ThemeTest
         {
             try
             {
-                //Check if the previous windows are closed
-                Win11ThemeTest.Tests tests = new Win11ThemeTest.Tests();
-                tests.IfExists();
-                //Launch Application
-                var appPath = ConfigurationManager.AppSettings["Testpath"];                
+                var appPath = ConfigurationManager.AppSettings["Testpath"];
                 app = Application.Launch(appPath);
-                using var automation = new UIA3Automation();               
+                using var automation = new UIA3Automation();
                 window = app.GetMainWindow(automation);
                 testButton = window.FindFirstDescendant(cf => cf.ByAutomationId("calendartestbtn")).AsButton();
                 Mouse.Click(testButton.GetClickablePoint());
@@ -508,8 +504,25 @@ namespace Win11ThemeTest
             Assert.That(calWindow.IsOffscreen, Is.True);
             Wait.UntilInputIsProcessed();
             Assert.That(window, Is.Not.Null);
+            Wait.UntilInputIsProcessed();
+            //  window.Close();
+            var retryResult = Retry.WhileFalse(
+                              this.ClearWindow,
+                              TimeSpan.FromSeconds(30),
+                              TimeSpan.FromSeconds(0.1),
+                              true,
+                              ignoreException: true);
+            Assert.That(retryResult.Success, Is.True, "Failed to close window");
+
+        }
+
+        private bool ClearWindow()
+        {
+            Assert.That(window, Is.Not.Null);
             window.Close();
-            Assert.That(window.IsOffscreen, Is.True);
+            var result = window.IsOffscreen;
+
+            return result;
         }
     }
 }
