@@ -37,7 +37,7 @@ namespace TestingApplication
             btnwindow.Show();
         }
 
-        private void calendarButton_Click(object sender, RoutedEventArgs e)
+        private void CalendarButton_Click(object sender, RoutedEventArgs e)
         {          
             CalendarWindow clndrwindow = new CalendarWindow();
             clndrwindow.Owner = this;
@@ -46,7 +46,7 @@ namespace TestingApplication
             clndrwindow.Show();
         }
 
-        private void textBoxButton_Click(object sender, RoutedEventArgs e)
+        private void TextBoxButton_Click(object sender, RoutedEventArgs e)
         {
             TextWindow tw = new TextWindow();
             tw.Owner = this;
@@ -54,7 +54,7 @@ namespace TestingApplication
             tw.Show();
         }
 
-        private void comboBoxButton_Click(object sender, RoutedEventArgs e)
+        private void ComboBoxButton_Click(object sender, RoutedEventArgs e)
         {
             ComboBoxViewModel vm = new ComboBoxViewModel();
             ComboBoxWindow cbw = new ComboBoxWindow(vm);
@@ -62,7 +62,7 @@ namespace TestingApplication
             cbw.Show();
         }
 
-        private void checkboxButton_Click(object sender, RoutedEventArgs e)
+        private void CheckboxButton_Click(object sender, RoutedEventArgs e)
         {
             CheckBoxViewModel viewModel=new CheckBoxViewModel();
             CheckboxWindow checkboxWindow = new CheckboxWindow(viewModel);
@@ -72,13 +72,31 @@ namespace TestingApplication
             checkboxWindow.Show();
         }
 
-        private void listboxButton_Click(object sender, RoutedEventArgs e)
+        private void ListboxButton_Click(object sender, RoutedEventArgs e)
         {
             ListboxWindow lstbxwindow = new ListboxWindow();
             lstbxwindow.Owner = this;
             //Added for fixing blank window issue
             Application.Current.MainWindow = lstbxwindow;
             lstbxwindow.Show();
+        }
+
+        private void DatepickerButton_Click(object sender, RoutedEventArgs e)
+        {
+           DatepickerWindow dtWindow = new DatepickerWindow();
+            dtWindow.Owner = this;
+            //Added for fixing blank window issue
+            Application.Current.MainWindow = dtWindow;
+            dtWindow.Show();
+        }
+
+        private void RadioButton_Click(object sender, RoutedEventArgs e)
+        {
+            RadioButtonWindow radioButtonWindow = new RadioButtonWindow();
+            radioButtonWindow.Owner = this;
+            //Added for fixing blank window issue
+            Application.Current.MainWindow = radioButtonWindow;
+            radioButtonWindow.Show();
         }
     }
 }

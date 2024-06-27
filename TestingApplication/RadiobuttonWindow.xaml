@@ -1,0 +1,25 @@
+﻿<Window x:Class="TestingApplication.RadioButtonWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:TestingApplication"
+        mc:Ignorable="d"
+        Title="RadioButtonWindow" Height="450" Width="800">
+    <Grid Margin="25,35,52,27">
+        <StackPanel Margin="0,0,0,162" HorizontalAlignment="Left" Width="341">
+            <RadioButton Content="Option A" />
+            <RadioButton Content="Option B" />
+            <RadioButton Content="Option C" />
+            <RadioButton Content="Option D" />            
+        </StackPanel>
+		<StackPanel Margin="351,5,21,54">
+            <RadioButton Content="RadioButton1" GroupName="radio_group_one"/>
+            <RadioButton Content="RadioButton2" GroupName="radio_group_one"/>
+            <RadioButton Content="RadioButton3" IsEnabled="False" />
+            <RadioButton Content="RadioButton4" />
+            <RadioButton Content="RadioButton5" GroupName="radio_group_two" />
+            <RadioButton Content="RadioButton6" GroupName="radio_group_two"/>
+        </StackPanel>
+    </Grid>
+</Window>

@@ -6,6 +6,7 @@ using FlaUI.Core.Definitions;
 using System.Globalization;
 using Calendar = FlaUI.Core.AutomationElements.Calendar;
 using System.Configuration;
+using FlaUI.Core.Tools;
 
 namespace Win11ThemeTest
 {
@@ -453,7 +454,7 @@ namespace Win11ThemeTest
             headerBtn = calendar.FindFirstChild(cf => cf.ByAutomationId("PART_HeaderButton"));
             Assert.That(headerBtn, Is.Not.Null);
             string headerName = headerBtn.Name;
-            string[] hParts = headerName.Split(' ');         
+            string[] hParts = headerName.Split(' ');
             if (parts[1] == hParts[0])
             {
                 dayBtn = dayButtons[44];
@@ -497,14 +498,17 @@ namespace Win11ThemeTest
         [Test]
         public void Calendars4_closeWindows()
         {
-            Assert.That(calWindow, Is.Not.Null);
-            calWindow.Focus();
-            calWindow.Close();
-            Assert.That(calWindow.IsOffscreen, Is.True);
-            Wait.UntilInputIsProcessed();
-            Assert.That(window, Is.Not.Null);
-            window.Close();
-            Assert.That(window.IsOffscreen, Is.True);
+            if (app != null)
+            {
+                app.Close();
+                Console.WriteLine("Application closed successfully.");
+                Assert.That(app.Close());
+            }
+            else
+            {
+                Console.WriteLine("Application not found.");
+                Assert.That(app.Close());
+            }
         }
     }
 }

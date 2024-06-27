@@ -13,11 +13,13 @@
             <Slider  />
             <TextBox Text="TextBox Content..." />
             <Button Name="testbtn" Content="Test Button" Click="Button_Click"/>
-            <Button Name="calendartestbtn" Content="Test Calendar" Click="calendarButton_Click"/>
-            <Button Name="txtBoxButton" Content="TextBox Button" Width="129" Click="textBoxButton_Click" />
-            <Button Name="cmbBoxButton" Content="Combo Button" Width="200" Click="comboBoxButton_Click" />
-             <Button Name="testchkbtn" Content="Test Checkbox" Click="checkboxButton_Click"/>
-            <Button Name="listBoxtestbtn" Content="Test Listbox" RenderTransformOrigin="1.562,1.132" Width="104" Click="listboxButton_Click"/>
+            <Button Name="calendartestbtn" Content="Test Calendar" Click="CalendarButton_Click"/>
+            <Button Name="txtBoxButton" Content="TextBox Button" Width="129" Click="TextBoxButton_Click" />
+            <Button Name="cmbBoxButton" Content="Combo Button" Width="200" Click="ComboBoxButton_Click" />
+             <Button Name="testchkbtn" Content="Test Checkbox" Click="CheckboxButton_Click"/>
+            <Button Name="listBoxtestbtn" Content="Test Listbox" RenderTransformOrigin="1.562,1.132" Width="104" Click="ListboxButton_Click"/>
+            <Button Name="datepickertestbtn" Content="Test Datepicker" RenderTransformOrigin="1.562,1.132" Width="138" Click="DatepickerButton_Click"/>
+            <Button Name="radioButton" Content="Test Radio Button" Click="RadioButton_Click" />
         </StackPanel>
     </Grid>
 </Window>
