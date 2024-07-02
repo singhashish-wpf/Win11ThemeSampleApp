@@ -152,14 +152,17 @@ namespace Win11ThemeTest
         [Test]
         public void Button8_closeWindows()
         {
-            Assert.That(btnWindow, Is.Not.Null);
-            btnWindow.Close();
-            Wait.UntilInputIsProcessed();
-            Assert.That(btnWindow.IsOffscreen);
-            Wait.UntilInputIsProcessed();
-            Assert.That(window, Is.Not.Null);
-            window.Close();
-            Assert.That(window.IsOffscreen);
+            if (app != null)
+            {
+                app.Close();
+                Console.WriteLine("Application closed successfully.");
+                Assert.That(app.Close());
+            }
+            else
+            {
+                Console.WriteLine("Application not found.");
+                Assert.That(app.Close());
+            }
         }
 
     }

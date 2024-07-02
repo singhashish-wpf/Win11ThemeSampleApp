@@ -8,16 +8,18 @@
         Title="MainWindow" Height="450" Width="800" Left="0" Top="0" WindowStartupLocation="CenterScreen">
     <Grid>
         <StackPanel Margin="10">
-            <Button Content="Click Me" Click="clickEvent" Width="200" />
+            <Button Content="Click Me" Click="ClickEvent" Width="200" />
             <TextBlock Text="Loren Ipsum Dolor Sit" />
             <Slider  />
             <TextBox Text="TextBox Content..." />
             <Button Name="testbtn" Content="Test Button" Click="Button_Click"/>
-            <Button Name="calendartestbtn" Content="Test Calendar" Click="calendarButton_Click"/>
-            <Button Name="txtBoxButton" Content="TextBox Button" Width="129" Click="textBoxButton_Click" />
-            <Button Name="cmbBoxButton" Content="Combo Button" Width="200" Click="comboBoxButton_Click" />
-             <Button Name="testchkbtn" Content="Test Checkbox" Click="checkboxButton_Click"/>
-            <Button Name="listBoxtestbtn" Content="Test Listbox" RenderTransformOrigin="1.562,1.132" Width="104" Click="listboxButton_Click"/>
+            <Button Name="calendartestbtn" Content="Test Calendar" Click="CalendarButton_Click"/>
+            <Button Name="txtBoxButton" Content="TextBox Button" Width="129" Click="TextBoxButton_Click" />
+            <Button Name="cmbBoxButton" Content="Combo Button" Width="200" Click="ComboBoxButton_Click" />
+             <Button Name="testchkbtn" Content="Test Checkbox" Click="CheckboxButton_Click"/>
+            <Button Name="listBoxtestbtn" Content="Test Listbox" RenderTransformOrigin="1.562,1.132" Width="104" Click="ListboxButton_Click"/>
+            <Button Name="radioButton" Content="Test Radio Button" Click="RadioButton_Click" />
+            <Button Name="sliderButton" Content="Slider Button" Width="120" Click="SliderButton_Click"/>
         </StackPanel>
     </Grid>
 </Window>
