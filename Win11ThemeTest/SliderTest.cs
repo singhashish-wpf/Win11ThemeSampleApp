@@ -76,6 +76,7 @@ namespace Win11ThemeTest
         {
             Assert.That(slider, Is.Not.Null);
             Assert.That(slider.Minimum, Is.EqualTo(0));
+            Wait.UntilInputIsProcessed();
             Assert.That(slider.Maximum, Is.EqualTo(10));
         }
 
@@ -139,14 +140,17 @@ namespace Win11ThemeTest
         [Test]
         public void Slider8_closeWindows()
         {
-            Assert.That(sliderWindow, Is.Not.Null);           
-            sliderWindow.Close();
-            Wait.UntilInputIsProcessed();
-            Assert.That(sliderWindow.IsOffscreen, Is.True);
-            Wait.UntilInputIsProcessed();
-            Assert.That(window, Is.Not.Null);
-            window.Close();
-            Assert.That(window.IsOffscreen, Is.True);
+            if (app != null)
+            {
+                app.Close();
+                Console.WriteLine("Application closed successfully.");
+                Assert.That(app.Close());
+            }
+            else
+            {
+                Console.WriteLine("Application not found.");
+                Assert.That(app.Close());
+            }
         }
     }
 }

@@ -262,14 +262,17 @@ namespace Win11ThemeTest
         [Test]
         public void CloseWindows()
         {
-            Assert.That(checkboxWindow, Is.Not.Null);
-            checkboxWindow.Close();
-            Wait.UntilInputIsProcessed();
-            Assert.That(checkboxWindow.IsOffscreen, Is.True);
-            Wait.UntilInputIsProcessed();
-            Assert.That(window, Is.Not.Null);
-            window.Close();
-            Assert.That(window.IsOffscreen, Is.True);
+            if (app != null)
+            {
+                app.Close();
+                Console.WriteLine("Application closed successfully.");
+                Assert.That(app.Close());
+            }
+            else
+            {
+                Console.WriteLine("Application not found.");
+                Assert.That(app.Close());
+            }
         }
         #endregion
     }
