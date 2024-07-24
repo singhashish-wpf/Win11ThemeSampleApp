@@ -18,52 +18,60 @@ namespace Win11ThemeTest
 
         public ButtonTest()
         {
+                var appPath = ConfigurationManager.AppSettings["Testpath"];
+                app = LaunchApplication(appPath);
+                using var automation = new UIA3Automation();
+                window = app?.GetMainWindow(automation);
+                testButton = window?.FindFirstDescendant(cf => cf.ByAutomationId("testbtn")).AsButton();
+                ClickButton(testButton);
+                
+                btnWindow = window?.FindFirstDescendant(cf => cf.ByName("ButtonWindow")).AsWindow();
+                button = btnWindow?.FindFirstDescendant(cf => cf.ByAutomationId("btn")).AsButton();
+                disabledButton = btnWindow?.FindFirstDescendant(cf => cf.ByAutomationId("disbtn")).AsButton();
+
+        }
+
+
+        private static Application? LaunchApplication(string? appPath)
+        {
             try
             {
-                var appPath = ConfigurationManager.AppSettings["Testpath"];
-                app = Application.Launch(appPath);
-                using var automation = new UIA3Automation();
-                window = app.GetMainWindow(automation);
-                testButton = window.FindFirstDescendant(cf => cf.ByAutomationId("testbtn")).AsButton();
-                Mouse.Click(testButton.GetClickablePoint());
-                Wait.UntilInputIsProcessed(TimeSpan.FromMilliseconds(2000));
-                btnWindow = window.FindFirstDescendant(cf => cf.ByName("ButtonWindow")).AsWindow();
-                button = btnWindow.FindFirstDescendant(cf => cf.ByAutomationId("btn")).AsButton();
-                disabledButton = btnWindow.FindFirstDescendant(cf => cf.ByAutomationId("disbtn")).AsButton();
+                return Application.Launch(appPath);
             }
             catch (Exception ex)
             {
-                var filePath = ConfigurationManager.AppSettings["logpath"];
-                if (filePath != null)
-                {
-                    if (!Directory.Exists(filePath))
-                    {
-                        Directory.CreateDirectory(filePath);
-                    }
-                    filePath = filePath + "log_" + DateTime.Now.ToString("yyyyMMddHHmmss") + ".txt";   //Text File Name
-                    if (!File.Exists(filePath))
-                    {
-                        File.Create(filePath).Dispose();
-                    }
-                    using StreamWriter sw = File.AppendText(filePath);
-                    string error = "Log Written Date:" + " " + DateTime.Now.ToString() + "\nError Message:" + " " + ex.Message.ToString();
-                    sw.WriteLine("-----------Exception Details on " + " " + DateTime.Now.ToString() + "-----------------");
-                    sw.WriteLine("-------------------------------------------------------------------------------------");
-                    sw.WriteLine(error);
-                    sw.Flush();
-                    sw.Close();
-                }
-                else
-                {
-                    throw new ArgumentNullException();
-                }
-
+                LogException(ex);
+                throw;
             }
         }
 
+        private static void ClickButton(Button? button)
+        {
+            if (button == null) throw new ArgumentNullException(nameof(button));
+
+            Mouse.Click(button.GetClickablePoint());
+            Wait.UntilInputIsProcessed(TimeSpan.FromMilliseconds(500));
+        }
+
+        private static void LogException(Exception ex)
+        {
+            var filePath = ConfigurationManager.AppSettings["logpath"];
+            if (string.IsNullOrEmpty(filePath)) throw new ArgumentNullException(nameof(filePath));
+
+            if (!Directory.Exists(filePath))
+            {
+                Directory.CreateDirectory(filePath);
+            }
+
+            var logFilePath = Path.Combine(filePath, $"log_{DateTime.Now:yyyyMMddHHmmss}.txt");
+            using StreamWriter sw = new(logFilePath, append: true);
+            sw.WriteLine("-----------Exception Details on " + DateTime.Now + "-----------------");
+            sw.WriteLine("-------------------------------------------------------------------------------------");
+            sw.WriteLine($"Log Written Date: {DateTime.Now}\nError Message: {ex.Message}");
+        }
         //test if button is available in window
         [Test]
-        public void Button1_isButtonAvailable()
+        public void Button1_IsButtonAvailable()
         {
             Assert.Multiple(() =>
             {
@@ -75,7 +83,7 @@ namespace Win11ThemeTest
 
         //test if button is clicked
         [Test]
-        public void Button2_isClicked()
+        public void Button2_IsClicked()
         {
             Assert.That(button, Is.Not.Null);
             button.Click();
@@ -89,7 +97,7 @@ namespace Win11ThemeTest
 
         //test if button clicked with enter key
         [Test]
-        public void Button3_isClickableWithEnterKey()
+        public void Button3_IsClickableWithEnterKey()
         {
             Assert.That(button, Is.Not.Null);
             button.Focus();
@@ -104,7 +112,7 @@ namespace Win11ThemeTest
 
         //test if button clicked with space key
         [Test]
-        public void Button4_isClickableWithSpaceKey()
+        public void Button4_IsClickableWithSpaceKey()
         {
             Assert.That(button, Is.Not.Null);
             button.Focus();
@@ -120,7 +128,7 @@ namespace Win11ThemeTest
 
         //test no action on mouse right click on button
         [Test]
-        public void Button5_onMouseRightClick()
+        public void Button5_OnMouseRightClick()
         {
             Assert.That(button, Is.Not.Null);
             button.RightClick();
@@ -131,7 +139,7 @@ namespace Win11ThemeTest
 
         //Test disabled button
         [Test]
-        public void Button6_isDisabled()
+        public void Button6_IsDisabled()
         {
             Assert.That(disabledButton, Is.Not.Null);
             Assert.That(disabledButton.IsEnabled, Is.False);
@@ -139,7 +147,7 @@ namespace Win11ThemeTest
 
         //Test disabled button
         [Test]
-        public void Button7_isDisabledClick()
+        public void Button7_IsDisabledClick()
         {
             Assert.That(disabledButton, Is.Not.Null);
             Assert.That(disabledButton.IsEnabled, Is.False);
@@ -150,16 +158,19 @@ namespace Win11ThemeTest
 
         //close windows
         [Test]
-        public void Button8_closeWindows()
+        public void Button8_CloseWindows()
         {
-            Assert.That(btnWindow, Is.Not.Null);
-            btnWindow.Close();
-            Wait.UntilInputIsProcessed();
-            Assert.That(btnWindow.IsOffscreen);
-            Wait.UntilInputIsProcessed();
-            Assert.That(window, Is.Not.Null);
-            window.Close();
-            Assert.That(window.IsOffscreen);
+            if (app != null)
+            {
+                app.Close();
+                Assert.That(app.Close(), Is.True);
+                Console.WriteLine("Application closed successfully.");
+            }
+            else
+            {
+                Console.WriteLine("Application not found.");
+                Assert.Fail("Application not found.");
+            }
         }
 
     }

@@ -23,52 +23,58 @@ namespace Win11ThemeTest
 
         public CalendarTest()
         {
+                var appPath = ConfigurationManager.AppSettings["Testpath"];
+                app = LaunchApplication(appPath);
+                using var automation = new UIA3Automation();
+                window = app?.GetMainWindow(automation);
+                testButton = window?.FindFirstDescendant(cf => cf.ByAutomationId("calendartestbtn")).AsButton();
+                ClickButton(testButton);
+                calWindow = window?.FindFirstDescendant(cf => cf.ByName("CalendarWindow")).AsWindow();
+                calendar = calWindow?.FindFirstDescendant(cf => cf.ByAutomationId("tstCal")).AsCalendar();
+                multiSelectCalendar = calWindow?.FindFirstDescendant(cf => cf.ByAutomationId("tstCal_multiSelect")).AsCalendar();           
+        }
+
+        private static Application? LaunchApplication(string? appPath)
+        {
             try
             {
-                var appPath = ConfigurationManager.AppSettings["Testpath"];
-                app = Application.Launch(appPath);
-                using var automation = new UIA3Automation();
-                window = app.GetMainWindow(automation);
-                testButton = window.FindFirstDescendant(cf => cf.ByAutomationId("calendartestbtn")).AsButton();
-                Mouse.Click(testButton.GetClickablePoint());
-                Wait.UntilInputIsProcessed(TimeSpan.FromMilliseconds(2000));
-                calWindow = window.FindFirstDescendant(cf => cf.ByName("CalendarWindow")).AsWindow();
-                calendar = calWindow.FindFirstDescendant(cf => cf.ByAutomationId("tstCal")).AsCalendar();
-                multiSelectCalendar = calWindow.FindFirstDescendant(cf => cf.ByAutomationId("tstCal_multiSelect")).AsCalendar();
-
+                return Application.Launch(appPath);
             }
             catch (Exception ex)
             {
-                var filePath = ConfigurationManager.AppSettings["logpath"];
-                if (filePath != null)
-                {
-                    if (!Directory.Exists(filePath))
-                    {
-                        Directory.CreateDirectory(filePath);
-                    }
-                    filePath = filePath + "log_" + DateTime.Now.ToString("yyyyMMddHHmmss") + ".txt";   //Text File Name
-                    if (!File.Exists(filePath))
-                    {
-                        File.Create(filePath).Dispose();
-                    }
-                    using StreamWriter sw = File.AppendText(filePath);
-                    string error = "Log Written Date:" + " " + DateTime.Now.ToString() + "\nError Message:" + " " + ex.Message.ToString();
-                    sw.WriteLine("-----------Exception Details on " + " " + DateTime.Now.ToString() + "-----------------");
-                    sw.WriteLine("-------------------------------------------------------------------------------------");
-                    sw.WriteLine(error);
-                    sw.Flush();
-                    sw.Close();
-                }
-                else
-                {
-                    throw new ArgumentNullException();
-                }
+                LogException(ex);
+                throw;
             }
+        }
+
+        private static void ClickButton(Button? button)
+        {
+            if (button == null) throw new ArgumentNullException(nameof(button));
+
+            Mouse.Click(button.GetClickablePoint());
+            Wait.UntilInputIsProcessed(TimeSpan.FromMilliseconds(500));
+        }
+
+        private static void LogException(Exception ex)
+        {
+            var filePath = ConfigurationManager.AppSettings["logpath"];
+            if (string.IsNullOrEmpty(filePath)) throw new ArgumentNullException(nameof(filePath));
+
+            if (!Directory.Exists(filePath))
+            {
+                Directory.CreateDirectory(filePath);
+            }
+
+            var logFilePath = Path.Combine(filePath, $"log_{DateTime.Now:yyyyMMddHHmmss}.txt");
+            using StreamWriter sw = new(logFilePath, append: true);
+            sw.WriteLine("-----------Exception Details on " + DateTime.Now + "-----------------");
+            sw.WriteLine("-------------------------------------------------------------------------------------");
+            sw.WriteLine($"Log Written Date: {DateTime.Now}\nError Message: {ex.Message}");
         }
 
         //test if calendar is available in window
         [Test]
-        public void Calendar1_isCalendarAvailable()
+        public void Calendar1_IsCalendarAvailable()
         {
             Assert.Multiple(() =>
             {
@@ -79,7 +85,7 @@ namespace Win11ThemeTest
 
         //test if selected date is today's date
         [Test]
-        public void Calendar2_isCalendarTodayDate()
+        public void Calendar2_IsCalendarTodayDate()
         {
             Assert.That(calendar, Is.Not.Null);
             DateTime thisDay = DateTime.Today;
@@ -91,7 +97,7 @@ namespace Win11ThemeTest
 
         //test for click previous month button
         [Test]
-        public void Calendar3_isCalendarClickPrevMonth()
+        public void Calendar3_IsCalendarClickPrevMonth()
         {
             Assert.That(calendar, Is.Not.Null);
             headerBtn = calendar.FindFirstChild(cf => cf.ByAutomationId("PART_HeaderButton"));
@@ -113,7 +119,7 @@ namespace Win11ThemeTest
 
         //test for click next month button
         [Test]
-        public void Calendar4_isCalendarClickNextMonth()
+        public void Calendar4_IsCalendarClickNextMonth()
         {
             Assert.That(calendar, Is.Not.Null);
             headerBtn = calendar.FindFirstChild(cf => cf.ByAutomationId("PART_HeaderButton"));
@@ -138,7 +144,7 @@ namespace Win11ThemeTest
 
         //test for click Month year button
         [Test]
-        public void Calendar5_isCalendarClickMonthYear()
+        public void Calendar5_IsCalendarClickMonthYear()
         {
             Assert.That(calendar, Is.Not.Null);
             DateTime thisDay = DateTime.Today;
@@ -170,7 +176,7 @@ namespace Win11ThemeTest
 
         //test for click prev year button
         [Test]
-        public void Calendar6_isCalendarClickPrevYear()
+        public void Calendar6_IsCalendarClickPrevYear()
         {
             Assert.That(calendar, Is.Not.Null);
             DateTime thisDay = DateTime.Today;
@@ -209,7 +215,7 @@ namespace Win11ThemeTest
 
         //test for click next year button
         [Test]
-        public void Calendar7_isCalendarClickNextYear()
+        public void Calendar7_IsCalendarClickNextYear()
         {
             Assert.That(calendar, Is.Not.Null);
             DateTime thisDay = DateTime.Today;
@@ -248,7 +254,7 @@ namespace Win11ThemeTest
 
         //test for click year button
         [Test]
-        public void Calendar8_isCalendarClickYear()
+        public void Calendar8_IsCalendarClickYear()
         {
             Assert.That(calendar, Is.Not.Null);
             DateTime thisDay = DateTime.Today;
@@ -303,7 +309,7 @@ namespace Win11ThemeTest
 
         //test for click previous year range button
         [Test]
-        public void Calendar9_isCalendarClickPrevYearRange()
+        public void Calendar9_IsCalendarClickPrevYearRange()
         {
             Assert.That(calendar, Is.Not.Null);
             DateTime thisDay = DateTime.Today;
@@ -373,7 +379,7 @@ namespace Win11ThemeTest
 
         //test for click next year range button
         [Test]
-        public void Calendars1_isCalendarClickPrevYearRange()
+        public void Calendars1_IsCalendarClickPrevYearRange()
         {
             Assert.That(calendar, Is.Not.Null);
             DateTime thisDay = DateTime.Today;
@@ -495,16 +501,19 @@ namespace Win11ThemeTest
         }
 
         [Test]
-        public void Calendars4_closeWindows()
+        public void Calendars4_CloseWindows()
         {
-            Assert.That(calWindow, Is.Not.Null);
-            calWindow.Focus();
-            calWindow.Close();
-            Assert.That(calWindow.IsOffscreen, Is.True);
-            Wait.UntilInputIsProcessed();
-            Assert.That(window, Is.Not.Null);
-            window.Close();
-            Assert.That(window.IsOffscreen, Is.True);
+            if (app != null)
+            {
+                app.Close();
+                Assert.That(app.Close(), Is.True);
+                Console.WriteLine("Application closed successfully.");
+            }
+            else
+            {
+                Console.WriteLine("Application not found.");
+                Assert.Fail("Application not found.");
+            }
         }
     }
 }

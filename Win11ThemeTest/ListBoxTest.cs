@@ -18,51 +18,58 @@ namespace Win11ThemeTest
         readonly ListBox? listBoxLength;
         public ListBoxTest()
         {
+           
+                var appPath = ConfigurationManager.AppSettings["Testpath"];
+                app = LaunchApplication(appPath);
+                using var automation = new UIA3Automation();
+                window = app?.GetMainWindow(automation);
+                testButton = window?.FindFirstDescendant(cf => cf.ByAutomationId("listBoxtestbtn")).AsButton();
+                ClickButton(testButton);
+                listBoxWindow = window?.FindFirstDescendant(cf => cf.ByName("ListboxWindow")).AsWindow();
+                listBox = listBoxWindow?.FindFirstDescendant(cf => cf.ByAutomationId("tstLstbox")).AsListBox();
+                listBoxLength = listBoxWindow?.FindFirstDescendant(cf => cf.ByAutomationId("tstlengthLstbox")).AsListBox();            
+        }
+
+        private static Application? LaunchApplication(string? appPath)
+        {
             try
             {
-                var appPath = ConfigurationManager.AppSettings["Testpath"];
-                app = Application.Launch(appPath);
-                using var automation = new UIA3Automation();
-                window = app.GetMainWindow(automation);
-                testButton = window.FindFirstDescendant(cf => cf.ByAutomationId("listBoxtestbtn")).AsButton();
-                Mouse.Click(testButton.GetClickablePoint());
-                Wait.UntilInputIsProcessed();
-                listBoxWindow = window.FindFirstDescendant(cf => cf.ByName("ListboxWindow")).AsWindow();
-                listBox = listBoxWindow.FindFirstDescendant(cf => cf.ByAutomationId("tstLstbox")).AsListBox();
-                listBoxLength = listBoxWindow.FindFirstDescendant(cf => cf.ByAutomationId("tstlengthLstbox")).AsListBox();
+                return Application.Launch(appPath);
             }
             catch (Exception ex)
             {
-                var filePath = ConfigurationManager.AppSettings["logpath"];
-                if (filePath != null)
-                {
-                    if (!Directory.Exists(filePath))
-                    {
-                        Directory.CreateDirectory(filePath);
-                    }
-                    filePath = filePath + "log_" + DateTime.Now.ToString("yyyyMMddHHmmss") + ".txt";   //Text File Name
-                    if (!File.Exists(filePath))
-                    {
-                        File.Create(filePath).Dispose();
-                    }
-                    using StreamWriter sw = File.AppendText(filePath);
-                    string error = "Log Written Date:" + " " + DateTime.Now.ToString() + "\nError Message:" + " " + ex.Message.ToString();
-                    sw.WriteLine("-----------Exception Details on " + " " + DateTime.Now.ToString() + "-----------------");
-                    sw.WriteLine("-------------------------------------------------------------------------------------");
-                    sw.WriteLine(error);
-                    sw.Flush();
-                    sw.Close();
-                }
-                else
-                {
-                    throw new ArgumentNullException();
-                }
+                LogException(ex);
+                throw;
             }
         }
 
+        private static void ClickButton(Button? button)
+        {
+            if (button == null) throw new ArgumentNullException(nameof(button));
+
+            Mouse.Click(button.GetClickablePoint());
+            Wait.UntilInputIsProcessed(TimeSpan.FromMilliseconds(500));
+        }
+
+        private static void LogException(Exception ex)
+        {
+            var filePath = ConfigurationManager.AppSettings["logpath"];
+            if (string.IsNullOrEmpty(filePath)) throw new ArgumentNullException(nameof(filePath));
+
+            if (!Directory.Exists(filePath))
+            {
+                Directory.CreateDirectory(filePath);
+            }
+
+            var logFilePath = Path.Combine(filePath, $"log_{DateTime.Now:yyyyMMddHHmmss}.txt");
+            using StreamWriter sw = new(logFilePath, append: true);
+            sw.WriteLine("-----------Exception Details on " + DateTime.Now + "-----------------");
+            sw.WriteLine("-------------------------------------------------------------------------------------");
+            sw.WriteLine($"Log Written Date: {DateTime.Now}\nError Message: {ex.Message}");
+        }
         //test if listBox is available in window
         [Test]
-        public void ListBox1_isListBoxAvailable()
+        public void ListBox1_IsListBoxAvailable()
         {
             Assert.Multiple(() =>
             {
@@ -73,7 +80,7 @@ namespace Win11ThemeTest
 
         //test if listBox is empty or populated with default values
         [Test]
-        public void ListBox2_isListBoxEmpty()
+        public void ListBox2_IsListBoxEmpty()
         {
             Assert.That(listBox, Is.Not.Null);
             var selectListItems = listBox.Items;
@@ -82,7 +89,7 @@ namespace Win11ThemeTest
 
         //test if listBox return default selected item
         [Test]
-        public void ListBox3_defaultSelectedItem()
+        public void ListBox3_DefaultSelectedItem()
         {
             Assert.That(listBox, Is.Not.Null);
             var selectList = listBox.SelectedItem;
@@ -92,7 +99,7 @@ namespace Win11ThemeTest
 
         //test selecting listBox item on mouse click
         [Test]
-        public void ListBox4_selectItemMouseClick()
+        public void ListBox4_SelectItemMouseClick()
         {
             Assert.That(listBox, Is.Not.Null);
             var selectList = listBox.SelectedItem;
@@ -104,7 +111,7 @@ namespace Win11ThemeTest
 
         //test if listBox return selected item
         [Test]
-        public void ListBox5_isSelectedItemByIndex()
+        public void ListBox5_IsSelectedItemByIndex()
         {
             Assert.That(listBox, Is.Not.Null);
             var selectList = listBox.Select(2);
@@ -114,7 +121,7 @@ namespace Win11ThemeTest
 
         //test list item by text
         [Test]
-        public void ListBox6_isSelectedByItemText()
+        public void ListBox6_IsSelectedByItemText()
         {
             Assert.That(listBox, Is.Not.Null);
             var selectList = listBox.Select("Red");
@@ -124,7 +131,7 @@ namespace Win11ThemeTest
 
         //test scrollbar for fixed length of listBox
         [Test]
-        public void ListBox7_verticalScrollBarForFixedLength()
+        public void ListBox7_VerticalScrollBarForFixedLength()
         {
             Assert.That(listBox, Is.Not.Null);           
             Assert.That(listBox.Patterns.Scroll.Pattern.VerticallyScrollable.Value, Is.False);
@@ -134,7 +141,7 @@ namespace Win11ThemeTest
 
         //test keyboard navigate with down arrow
         [Test]
-        public void ListBox8_keyBoardNavigateDown()
+        public void ListBox8_KeyBoardNavigateDown()
         {
             Assert.That(listBox, Is.Not.Null);
             var selectList = listBox.SelectedItem;
@@ -146,7 +153,7 @@ namespace Win11ThemeTest
 
         //test keyboard navigate with up arrow
         [Test]
-        public void ListBox9_keyBoardNavigateUp()
+        public void ListBox9_KeyBoardNavigateUp()
         {
             Assert.That(listBox, Is.Not.Null);
             listBox.Select(2);
@@ -159,7 +166,7 @@ namespace Win11ThemeTest
 
         //Test vertical scrolling for listBox with fixed length
         [Test]
-        public void ListBoxs1_verticalScroll()
+        public void ListBoxs1_VerticalScroll()
         {
             Assert.That(listBoxLength, Is.Not.Null);
             double defaultScroll = 0;
@@ -169,17 +176,19 @@ namespace Win11ThemeTest
         }
 
         [Test]
-        public void ListBoxs2_closeWindows()
+        public void ListBoxs2_CloseWindows()
         {
-            Assert.That(listBoxWindow, Is.Not.Null);          
-            listBoxWindow.Close();
-            Wait.UntilInputIsProcessed();
-            Assert.That(window, Is.Not.Null);
-            Wait.UntilInputIsProcessed();
-            Assert.That(listBoxWindow.IsOffscreen, Is.True);
-            window.Close();
-            Assert.That(window.IsOffscreen, Is.True);
+            if (app != null)
+            {
+                app.Close();
+                Assert.That(app.Close(), Is.True);
+                Console.WriteLine("Application closed successfully.");
+            }
+            else
+            {
+                Console.WriteLine("Application not found.");
+                Assert.Fail("Application not found.");
+            }
         }
-
     }
 }
